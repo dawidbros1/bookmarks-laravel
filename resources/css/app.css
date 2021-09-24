@@ -1,0 +1,44 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.simple-error{
+    color: red;
+    margin-top: -10px;
+    font-size: 13px;
+    margin-left: 5px;
+    padding-bottom: 5px;
+}
+
+.mt--5
+{
+    margin-top: -5px;
+}
+
+/* Scaloing h-1 : 0.25rem */
+
+.h-40{
+    height: 10rem;
+}
+
+.full{
+    width: 100%;
+    height: calc(100% - 1.25rem); /* 1.25 to watość h-15 w title*/
+}
+
+@responsive{
+    .w-1\/9{
+        width: 11.111111%;
+    }
+}
+
+.full-center{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.right-28{
+    right: 7rem;
+}
