@@ -50,7 +50,7 @@ class PageController extends Controller
     }
 
     //! EDIT
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
         $page = $this->pageRepository->getModel()->find($id);
 
@@ -72,6 +72,16 @@ class PageController extends Controller
 
         return redirect(url()->previous())
             ->with('success', 'Strona została edytowana');
+    }
+
+
+    public function changeVisibility($id)
+    {
+        $page = $this->pageRepository->getModel()->find($id);
+        $page->update(['hidden' => !$page->hidden]);
+
+        return redirect(url()->previous())
+            ->with('success', 'Widoczność strony została zmieniona');
     }
 
     //! DELETE

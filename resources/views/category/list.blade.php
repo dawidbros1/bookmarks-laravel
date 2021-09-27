@@ -8,8 +8,8 @@
     <x-slot name="content">
         <div>
             <x-items-header basic="{{ route('category.list') }}"
-                hidden="{{ route('category.list', ['show' => 'hidden']) }}"
-                all="{{ route('category.list', ['show' => 'all']) }}">
+                hidden="{{ route('category.list', ['type' => 'hidden']) }}"
+                all="{{ route('category.list', ['type' => 'all']) }}">
 
                 <x-slot name="header"> Moje kategorie </x-slot>
             </x-items-header>

@@ -42,37 +42,23 @@ class PageRepository
             ->get();
     }
 
-    // Scalic te dwie funcji niżej i wyżej i pozamieniać w kodzie
+    public function getAllByParentIdTypeHidden($parent_id, $type, $hidden)
+    {
+        return $this->model
+            ->where('parent_id', $parent_id)
+            ->where('type', $type)
+            ->where('hidden', $hidden)
+            ->get();
+    }
 
-    // public function getAllByCategoryIds($ids)
+
+    // public function deleteAllBySubcategoryId(int $subcategory_id)
     // {
-    //     return $this->model
-    //         ->whereIn('category_id', $ids)
-    //         ->get();
+    //     $this->model->where('subcategory_id', $subcategory_id)->delete();
     // }
 
-    // public function getAllByIds(array $ids)
+    // public function deleteAllBySubcategoryArrayId(array $ids)
     // {
-    //     return $this->model
-    //         ->whereIN('id', $ids)
-    //         ->get();
+    //     $this->model->whereIn('subcategory_id', $ids)->delete();
     // }
-
-    public function deleteAllBySubcategoryId(int $subcategory_id)
-    {
-        $this->model->where('subcategory_id', $subcategory_id)->delete();
-    }
-
-    public function deleteAllBySubcategoryArrayId(array $ids)
-    {
-        // Usuń stron po subcategory_ids
-        $this->model->whereIn('subcategory_id', $ids)->delete();
-    }
-
-    public function multiUpdateOrders(array $ids, array $orders)
-    {
-        foreach ($ids as $key => $id) {
-            $this->model::where('id', $ids[$key])->update(['order' => $orders[$key]]);
-        }
-    }
 }

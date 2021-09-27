@@ -43,7 +43,7 @@ class SubcategoryController extends Controller
     }
 
     //! EDIT
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
         // $this->authorize('edit', [new Subcategory, $id]);
         $subcategory = $this->subcategoryRepository->getModel()->find($id);
@@ -78,7 +78,7 @@ class SubcategoryController extends Controller
         $subcategory->update(['hidden' => !$subcategory->hidden]);
 
         return redirect(url()->previous())
-            ->with('success', 'Widoczność strony została zmieniona');
+            ->with('success', 'Widoczność podkategorii została zmieniona');
     }
 
     //!  DELETE
@@ -95,10 +95,13 @@ class SubcategoryController extends Controller
     }
 
     //! SHOW
-    public function show($id)
+    public function show($id, $type = null)
     {
         $subcategory = $this->subcategoryRepository->getModel()->find($id);
-        $pages = $this->pageRepository->getAllByIdAndType($id, 'subcategory');
+
+        if ($type == null) $pages = $this->pageRepository->getAllByParentIdTypeHidden($id, 'subcategory', 0);
+        else if ($type == "hidden") $pages = $this->pageRepository->getAllByParentIdTypeHidden($id, 'subcategory', 1);
+        else if ($type == "all") $pages = $this->pageRepository->getAllByIdAndType($id, 'subcategory');
 
         return view('subcategory.show', [
             'subcategory' => $subcategory,

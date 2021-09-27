@@ -23,10 +23,8 @@ class CategoryController extends Controller
     }
 
     //! LIST
-    public function list(Request $request)
+    public function list($type = null)
     {
-        $type = $request->input('show');
-
         if ($type == null) $categories = $this->categoryRepository->getAllByHidden(0);
         else if ($type == "hidden") $categories = $this->categoryRepository->getAllByHidden(1);
         else if ($type == "all") $categories = $this->categoryRepository->getAll();
@@ -91,7 +89,7 @@ class CategoryController extends Controller
         $category->update(['hidden' => !$category->hidden]);
 
         return redirect(url()->previous())
-            ->with('success', 'Widoczność strony została zmieniona');
+            ->with('success', 'Widoczność kategorii została zmieniona');
     }
 
     //! DELETE
@@ -107,16 +105,20 @@ class CategoryController extends Controller
     }
 
     //! SHOW
-    public function show(Request $request, $id)
+    public function show($id, $type = null)
     {
-        $type = $request->input('show');
-
-        if ($type == null) $subcategories = $this->subcategoryRepository->getAllByCategoryIdAndHidden($id, 0);
-        else if ($type == "hidden") $subcategories = $this->subcategoryRepository->getAllByCategoryIdAndHidden($id, 1);
-        else if ($type == "all") $subcategories = $this->subcategoryRepository->getAllByCategoryId($id);
+        if ($type == null) {
+            $subcategories = $this->subcategoryRepository->getAllByCategoryIdAndHidden($id, 0);
+            $pages = $this->pageRepository->getAllByParentIdTypeHidden($id, 'category', 0);
+        } else if ($type == "hidden") {
+            $subcategories = $this->subcategoryRepository->getAllByCategoryIdAndHidden($id, 1);
+            $pages = $this->pageRepository->getAllByParentIdTypeHidden($id, 'category', 1);
+        } else if ($type == "all") {
+            $subcategories = $this->subcategoryRepository->getAllByCategoryId($id);
+            $pages = $this->pageRepository->getAllByIdAndType($id, 'category');
+        }
 
         $category = $this->categoryRepository->getModel()->find($id);
-        $pages = $this->pageRepository->getAllByIdAndType($id, 'category');
 
         return view('category.show', [
             'category' => $category,
