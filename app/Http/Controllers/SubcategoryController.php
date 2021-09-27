@@ -72,6 +72,15 @@ class SubcategoryController extends Controller
             ->with('success', 'Podkategoria została edytowana');
     }
 
+    public function changeVisibility($id)
+    {
+        $subcategory = $this->subcategoryRepository->getModel()->find($id);
+        $subcategory->update(['hidden' => !$subcategory->hidden]);
+
+        return redirect(url()->previous())
+            ->with('success', 'Widoczność strony została zmieniona');
+    }
+
     //!  DELETE
     public function delete($id)
     {

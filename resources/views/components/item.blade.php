@@ -7,11 +7,26 @@
 
         {{ $content }}
 
-
-        @if ($routeToSettings != '')
+        @if ($changeVisibility != '')
             <div class="h-auto">
-                <a href="{{ $routeToSettings }}" class="absolute right-1 bottom-1">
-                    <img src="{{ URL::asset('/images/settings.png') }}" alt="profile Pic" height="20" width="20"
+                @if ($attributes['hidden'])
+                    <a href="{{ $changeVisibility }}" class="absolute left-1 bottom-1">
+                        <img src="{{ URL::asset('/images/hidden.png') }}" alt="changeVisibility Pic" height="20"
+                            width="20" class="bg-gray-100">
+                    </a>
+                @else
+                    <a href="{{ $changeVisibility }}" class="absolute left-1 bottom-1">
+                        <img src="{{ URL::asset('/images/block.png') }}" alt="changeVisibility Pic" height="20"
+                            width="20" class="bg-gray-100">
+                    </a>
+                @endif
+            </div>
+        @endif
+
+        @if ($settings != '')
+            <div class="h-auto">
+                <a href="{{ $settings }}" class="absolute right-1 bottom-1">
+                    <img src="{{ URL::asset('/images/settings.png') }}" alt="settings Pic" height="20" width="20"
                         class="bg-gray-100">
                 </a>
             </div>

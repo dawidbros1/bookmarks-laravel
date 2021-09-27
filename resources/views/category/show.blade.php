@@ -27,13 +27,16 @@
 
         @if ($subcategories->first() != null)
             <div>
-                <x-items-header>
+                <x-items-header basic="{{ route('category.show', ['id' => $category->id]) }}"
+                    hidden="{{ route('category.show', ['id' => $category->id, 'show' => 'hidden']) }}"
+                    all="{{ route('category.show', ['id' => $category->id, 'show' => 'all']) }}">
+
                     <x-slot name="header"> Podkategorie </x-slot>
                 </x-items-header>
 
                 <div class="flex flex-wrap px-1">
                     @foreach ($subcategories as $subcategory)
-                        <x-item>
+                        <x-item hidden="{{ $subcategory->hidden }}">
                             <x-slot name="title">{{ $subcategory->name }}</x-slot>
                             <x-slot name="content">
 
@@ -42,10 +45,13 @@
                                 </a>
 
                             </x-slot>
-                            <x-slot name="routeToSettings">
-                                {{-- @if ($author) --}}
+
+                            <x-slot name="changeVisibility">
+                                {{ route('subcategory.changeVisibility', ['id' => $subcategory->id]) }}
+                            </x-slot>
+
+                            <x-slot name="settings">
                                 {{ route('subcategory.edit', ['id' => $subcategory->id]) }}
-                                {{-- @endif --}}
                             </x-slot>
                         </x-item>
                     @endforeach
@@ -53,7 +59,7 @@
             </div>
         @endif
 
-        @if ($pages->first() != null)
+        {{-- @if ($pages->first() != null)
             <div class="pb-10">
                 <x-items-header>
                     <x-slot name="header"> Strony </x-slot>
@@ -67,15 +73,20 @@
                                     <img src="{{ $page->image_url }}" alt="Obrazek" class="full">
                                 </a>
                             </x-slot>
-                            <x-slot name="routeToSettings">
-                                {{-- @if ($author) --}}
+
+                            <x-slot name="changeVisibility">
+                                {{ route('subcategory.changeVisibility', ['id' => $subcategory->id]) }}
+                            </x-slot>
+
+                            <x-slot name="settings">
+
                                 {{ route('page.edit', ['id' => $page->id, 'type' => 'category']) }}
-                                {{-- @endif --}}
+
                             </x-slot>
                         </x-item>
                     @endforeach
                 </div>
             </div>
-        @endif
+        @endif --}}
     </x-slot>
 </x-main-layout>

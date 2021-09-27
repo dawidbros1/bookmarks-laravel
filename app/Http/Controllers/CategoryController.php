@@ -23,9 +23,13 @@ class CategoryController extends Controller
     }
 
     //! LIST
-    public function list()
+    public function list(Request $request)
     {
-        $categories = $this->categoryRepository->all();
+        $type = $request->input('show');
+
+        if ($type == null) $categories = $this->categoryRepository->getAllByHidden(0);
+        else if ($type == "hidden") $categories = $this->categoryRepository->getAllByHidden(1);
+        else if ($type == "all") $categories = $this->categoryRepository->getAll();
 
         return view('category.list', [
             'categories' => $categories,
@@ -80,6 +84,16 @@ class CategoryController extends Controller
             ->with('success', 'Kategoria została edytowana');
     }
 
+    public function changeVisibility($id)
+    {
+        $this->authorize('author', [new Category, $id]);
+        $category = $this->categoryRepository->getModel()->find($id);
+        $category->update(['hidden' => !$category->hidden]);
+
+        return redirect(url()->previous())
+            ->with('success', 'Widoczność strony została zmieniona');
+    }
+
     //! DELETE
     public function delete($id)
     {
@@ -93,10 +107,15 @@ class CategoryController extends Controller
     }
 
     //! SHOW
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        $type = $request->input('show');
+
+        if ($type == null) $subcategories = $this->subcategoryRepository->getAllByCategoryIdAndHidden($id, 0);
+        else if ($type == "hidden") $subcategories = $this->subcategoryRepository->getAllByCategoryIdAndHidden($id, 1);
+        else if ($type == "all") $subcategories = $this->subcategoryRepository->getAllByCategoryId($id);
+
         $category = $this->categoryRepository->getModel()->find($id);
-        $subcategories = $this->subcategoryRepository->getAllByCategoryId($id);
         $pages = $this->pageRepository->getAllByIdAndType($id, 'category');
 
         return view('category.show', [

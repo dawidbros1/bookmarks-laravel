@@ -27,7 +27,7 @@ class CategoryRepository
         return $this->subcategoryRepository;
     }
 
-    public function all()
+    public function getAll()
     {
         return $this->model
             ->orderBy('order')
@@ -35,26 +35,11 @@ class CategoryRepository
             ->get();
     }
 
-    // public function getAllByIds($ids)
-    // {
-    //     return $this->model
-    //         ->whereIn('id', $ids)
-    //         ->get();
-    // }
-
-    // public function multiUpdateOrders(array $ids, array $orders)
-    // {
-    //     foreach ($ids as $key => $id) {
-    //         $this->model::where('id', $ids[$key])->update(['order' => $orders[$key]]);
-    //     }
-    // }
-
-    // public function deleteByIds($ids)
-    // {
-    //     $subcategories = $this->subcategoryRepository->getAllByCategoryIds($ids);
-    //     $subcategories_id = $subcategories->pluck('id')->toArray();
-    //     $this->subcategoryRepository->getModel()->destroy($subcategories_id);
-    //     $this->subcategoryRepository->getPageRepository()->deleteAllBySubcategoryArrayId($subcategories_id);
-    //     $this->getModel()->destroy($ids);
-    // }
+    public function getAllByHidden($hidden)
+    {
+        return $this->model
+            ->orderBy('order')
+            ->where(['user_id' => Auth::id(), 'hidden' => $hidden])
+            ->get();
+    }
 }

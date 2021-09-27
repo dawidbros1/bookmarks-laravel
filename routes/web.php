@@ -48,10 +48,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::get('/create', [CategoryController::class, 'create'])->name('create');
             Route::post('/store', [CategoryController::class, 'store'])->name('store');
             Route::get('/list', [CategoryController::class, 'list'])->name('list');
+            Route::get('/show/{id}', [CategoryController::class, 'show'])->name('show');
 
             Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('edit');
             Route::post('/update/{id}', [CategoryController::class, 'update'])->name('update');
-            Route::get('/show/{id}', [CategoryController::class, 'show'])->name('show');
+            Route::get('/changeVisibility/{id}', [CategoryController::class, 'changeVisibility'])->name('changeVisibility');
+
             Route::delete('/delete/{id}', [CategoryController::class, 'delete'])->name('delete');
         }
     );
@@ -68,6 +70,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::get('/show/{id}', [SubcategoryController::class, 'show'])->name('show');
             Route::get('/edit/{id}', [SubcategoryController::class, 'edit'])->name('edit');
             Route::post('/update/{id}', [SubcategoryController::class, 'update'])->name('update');
+            Route::get('/changeVisibility/{id}', [SubcategoryController::class, 'changeVisibility'])->name('changeVisibility');
             Route::delete('/delete/{id}', [SubcategoryController::class, 'delete'])->name('delete');
         }
     );
