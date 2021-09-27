@@ -40,6 +40,8 @@ class PageController extends Controller
     public function store(Store $request)
     {
         $data = $request->validated();
+        if ($request->input('public') != NULL) $data['public'] = true;
+        else $data['public'] = false;
         // $this->authorize('store', [new Page, $data['subcategory_id']]);
         $this->pageRepository->getModel()->store($data);
 
@@ -52,6 +54,8 @@ class PageController extends Controller
     {
         $page = $this->pageRepository->getModel()->find($id);
 
+        $type = $page->type;
+
         return view(
             'page.edit',
             ['page' => $page]
@@ -62,6 +66,8 @@ class PageController extends Controller
     {
         // $this->authorize('update', [new Page, $id, $newSCID]);
         $data = $request->validated();
+        if ($request->input('public') != NULL) $data['public'] = true;
+        else $data['public'] = false;
         $this->pageRepository->getModel()->find($id)->update($data);
 
         return redirect(url()->previous())

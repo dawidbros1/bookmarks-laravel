@@ -26,8 +26,6 @@ class Store extends FormRequest
         return [
             'name' => ['min:1, max:255'],
             'image_url' => ["min:1, max:255"],
-            'public' => ['boolean'],
-            'hidden' => ['boolean'],
         ];
     }
 }

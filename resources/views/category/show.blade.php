@@ -4,19 +4,17 @@
             {{ $category->name }}
         </h2>
 
-        {{-- @if ($current_subcategory->parent_subcategory_id != 0)
-        <x-back-button-upper action="{{ route('subcategory.list', ['id' => $current_subcategory->parent_subcategory_id]) }}">
-        </x-back-button-upper>
-        @else
-        @auth
+        {{-- <x-back-button-upper action="{{ route('subcategory.show', ['id' => $category->id]) }}">
+        </x-back-button-upper> --}}
+
+        {{-- @auth --}}
         <x-back-button-upper action="{{ route('category.list') }}">
         </x-back-button-upper>
-        @endauth
-        @endif --}}
+        {{-- @endauth --}}
+
     </x-slot>
 
     <x-slot name="content">
-        {{-- @if ($author) --}}
         <div class="flex flex-wrap text-center py-2">
             <a href="{{ route('subcategory.create', ['category_id' => $category->id]) }}" class="w-2/4 border-r-2">
                 Dodaj podkategorię
@@ -26,13 +24,13 @@
                 Dodaj stronę
             </a>
         </div>
-        {{-- @endif --}}
 
         @if ($subcategories->first() != null)
             <div>
-                {{-- <x-items-header action="{{ route('subcategory.reorder', ['id' => $current_subcategory->id]) }}" author="{{ $author }}"> --}}
-                {{-- <x-slot name="title">Kategorie</x-slot> --}}
-                {{-- </x-items-header> --}}
+                <x-items-header>
+                    <x-slot name="header"> Podkategorie </x-slot>
+                </x-items-header>
+
                 <div class="flex flex-wrap px-1">
                     @foreach ($subcategories as $subcategory)
                         <x-item>
@@ -57,10 +55,9 @@
 
         @if ($pages->first() != null)
             <div class="pb-10">
-                {{-- <x-items-header action="{{ route('page.reorder', ['subcategory_id' => $current_subcategory->id]) }}" --}}
-                {{-- author="{{ $author }}"> --}}
-                {{-- <x-slot name="title">Strony</x-slot> --}}
-                {{-- </x-items-header> --}}
+                <x-items-header>
+                    <x-slot name="header"> Strony </x-slot>
+                </x-items-header>
                 <div class="flex flex-wrap px-1">
                     @foreach ($pages as $page)
                         <x-item>

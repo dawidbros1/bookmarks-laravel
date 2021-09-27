@@ -1,12 +1,12 @@
 <div x-data="{ open: false }">
     <x-jet-button @click="open = ! open"
-        {{ $attributes->merge(['class' => 'bg-red-500 absolute right-28 bottom-0']) }}>
+        {{ $attributes->merge(['class' => 'bg-red-500 absolute right-28 bottom-4']) }}>
         <div :class="{'hidden':  open, 'block': ! open }">USUŃ</div>
         <div :class="{'hidden': ! open, 'block': open }">UKRYJ</div>
     </x-jet-button>
 
     <div :class="{'hidden': ! open, 'block': open }"
-        class="border-2 border-red-600 full-center w-3/4 lg:w-2/4 2xl:w-1/4 bg-gray-100 relative p-2">
+        class="border-2 border-red-600 full-center w-3/4 lg:w-2/4 2xl:w-1/4 bg-gray-100 relative p-2 hidden">
         <div class="p-2">Czy jesteś pewny, ze chcesz usunąć ten element? </div>
 
         <x-form-section action="{{ $attributes['action'] }}">

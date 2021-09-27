@@ -18,7 +18,7 @@ class Subcategory extends Model
         'name',
         'image_url',
         'hidden',
-        'public', // Zmienne do których ma dostęp użytkownik
+        'public',
     ];
 
     public function store(array $data)
@@ -26,8 +26,7 @@ class Subcategory extends Model
         $this->category_id = $data['category_id'];
         $this->name = $data['name'];
         $this->image_url = $data['image_url'];
-        // $this->public = $data['public'];
-        $this->public = true;
+        $this->public = $data['public'];
         $this->save();
     }
 

@@ -27,8 +27,6 @@ class Store extends FormRequest
             'name' => ['min:1, max:255'],
             'category_id' => ['integer'],
             'image_url' => ["min:1, max:255"],
-            'public' => ['boolean'],
-            'hidden' => ['boolean'],
         ];
     }
 }

@@ -48,6 +48,11 @@
                     <div class="simple-error">{{ $message }}</div>
                 @enderror
 
+                <div class="mb-2">
+                    Czy strona ma być publiczna?
+                    <input type="checkbox" name="public" @if ($page->public) checked @endif>
+                </div>
+
                 <x-jet-button type="submit" class="ml-2">Zapisz</x-jet-button>
 
             </x-slot>
@@ -55,6 +60,11 @@
 
         <x-delete-item-button action="{{ route('page.delete', ['id' => $page->id]) }}">
         </x-delete-item-button>
-        {{-- <x-back-button action="{{ route('subcategory.list', ['id' => $page->subcategory_id]) }}"> </x-back-button> --}}
+
+
+        <x-back-button action="{{ route($page->type . '.show', ['id' => $page->parent_id]) }}">
+        </x-back-button>
+
+
     </x-slot>
 </x-main-layout>

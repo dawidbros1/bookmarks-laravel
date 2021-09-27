@@ -46,6 +46,11 @@
                     <div class="simple-error">{{ $message }}</div>
                 @enderror
 
+                <div class="mb-2">
+                    Czy strona ma być publiczna?
+                    <input type="checkbox" name="public">
+                </div>
+
                 <input type="hidden" name="type" value="{{ $type }}">
                 <input type="hidden" name="parent_id" value="{{ $parent->id }}">
 

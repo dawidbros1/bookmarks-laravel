@@ -20,8 +20,7 @@ class Page extends Model
         $this->name = $data['name'];
         $this->image_url = $data['image_url'];
         $this->link = $data['link'];
-        // $this->public = $data['public'];
-        $this->public = true;
+        $this->public = $data['public'];
         $this->save();
     }
 }

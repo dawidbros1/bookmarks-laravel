@@ -32,6 +32,10 @@ class SubcategoryController extends Controller
     {
         $data = $request->validated();
         // $this->authorize('create', [new Subcategory(), $id]);
+
+        if ($request->input('public') != NULL) $data['public'] = true;
+        else $data['public'] = false;
+
         $this->subcategoryRepository->getModel()->store($data);
 
         return redirect(url()->previous())
@@ -56,6 +60,13 @@ class SubcategoryController extends Controller
         // $this->authorize('update', [new Subcategory(), $id]);
         $subcategory = $this->subcategoryRepository->getModel()->find($id);
         $data = $request->validated();
+
+        if ($request->input('public') != NULL) $data['public'] = true;
+        else $data['public'] = false;
+
+        // var_dump($data);
+        // die();
+
         $subcategory->update($data);
         return redirect(url()->previous())
             ->with('success', 'Podkategoria została edytowana');

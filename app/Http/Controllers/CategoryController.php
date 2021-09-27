@@ -41,6 +41,10 @@ class CategoryController extends Controller
     public function store(Store $request)
     {
         $data = $request->validated();
+
+        if ($request->input('public') != NULL) $data['public'] = true;
+        else $data['public'] = false;
+
         $this->categoryRepository->getModel()->store($data);
 
         return redirect(url()->previous())
@@ -66,6 +70,10 @@ class CategoryController extends Controller
         $this->authorize('author', [new Category, $id]);
         $category = $this->categoryRepository->getModel()->find($id);
         $data = $request->validated();
+
+        if ($request->input('public') != NULL) $data['public'] = true;
+        else $data['public'] = false;
+
         $category->update($data);
 
         return redirect(url()->previous())
@@ -76,16 +84,8 @@ class CategoryController extends Controller
     public function delete($id)
     {
         $this->authorize('author', [new Category, $id]);
-
         $category = $this->categoryRepository->getModel()->find($id);
         $category->deleteWithContent($this->subcategoryRepository);
-
-
-        // $subcategories = $this->subcategoryRepository->getAllByCategoryId($id);
-        // $subcategory_ids = $subcategories->pluck('id')->toArray();
-
-        // $this->subcategoryRepository->getModel()->destroy($subcategory_ids);
-        // $this->categoryRepository->getModel()->destroy($id);
 
         return redirect()
             ->route('category.list')

@@ -29,16 +29,18 @@
                     <div class="simple-error">{{ $message }}</div>
                 @enderror
 
+                <div class="mb-2">
+                    Czy kategoria ma być publiczna?
+                    <input type="checkbox" name="public">
+                </div>
 
-                Czy kategoria ma być publiczna?
-                <input type = "checkbox">
-
-                <x-jet-button type="submit" class="ml-2">Zapisz</x-jet-button>
+                <x-jet-button type="submit"
+                    class="">Zapisz</x-jet-button>
             </x-slot>
         </x-form-section>
 
-        <x-back-button action="{{ route('category.list') }}">
-        </x-back-button>
-
-    </x-slot>
+        <x-back-button action="
+                    {{ route('category.list') }}">
+                    </x-back-button>
+            </x-slot>
 </x-main-layout>

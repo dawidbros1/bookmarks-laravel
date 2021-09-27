@@ -26,8 +26,7 @@ class Category extends Model
         $this->user_id = Auth::id();
         $this->name = $data['name'];
         $this->image_url = $data['image_url'];
-        // $this->public = $data['public'];
-        $this->public = true;
+        $this->public = $data['public'];
         $this->save();
     }
 
