@@ -27,19 +27,18 @@ class SubcategoryRepository
         return $this->pageRepository;
     }
 
-    public function getAllByCategoryId(int $id)
+    public function getAllByParameters(int $id, int $hidden = -1)
     {
-        return $this->model
-            ->orderBy('order')
-            ->where('category_id', $id)
-            ->get();
-    }
-
-    public function getAllByCategoryIdAndHidden($id ,$hidden)
-    {
-        return $this->model
-            ->orderBy('order')
-            ->where(['category_id' => $id, 'hidden' => $hidden])
-            ->get();
+        if ($hidden == -1) {
+            return $this->model
+                ->orderBy('order')
+                ->where(['category_id' => $id])
+                ->get();
+        } else {
+            return $this->model
+                ->orderBy('order')
+                ->where(['category_id' => $id, 'hidden' => $hidden])
+                ->get();
+        }
     }
 }

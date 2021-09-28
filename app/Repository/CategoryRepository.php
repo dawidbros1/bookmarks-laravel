@@ -27,19 +27,18 @@ class CategoryRepository
         return $this->subcategoryRepository;
     }
 
-    public function getAll()
+    public function getAllByParameters(int $hidden = -1)
     {
-        return $this->model
-            ->orderBy('order')
-            ->where('user_id', Auth::id())
-            ->get();
-    }
-
-    public function getAllByHidden($hidden)
-    {
-        return $this->model
-            ->orderBy('order')
-            ->where(['user_id' => Auth::id(), 'hidden' => $hidden])
-            ->get();
+        if ($hidden == -1) {
+            return $this->model
+                ->orderBy('order')
+                ->where(['user_id' => Auth::id()])
+                ->get();
+        } else {
+            return $this->model
+                ->orderBy('order')
+                ->where(['user_id' => Auth::id(), 'hidden' => $hidden])
+                ->get();
+        }
     }
 }

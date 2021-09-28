@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Models\Page;
-use App\Repository\PageRepository as PageRepositoryInterface;
 
 class PageRepository
 {
@@ -19,46 +18,22 @@ class PageRepository
         return $this->model;
     }
 
-    public function getAllByIdAndType(int $parent_id, string $type)
+    // parent ID can be INT OR ARRAY OF INT
+    public function getAllByParameters($parent_id, string $type, int $hidden = -1)
     {
-        return $this->model
-            ->orderBy('order')
-            ->where(['parent_id' => $parent_id, 'type' => $type])
-            ->get();
+        if (gettype($parent_id) == "integer") $parent_id = [$parent_id];
+
+        if ($hidden == -1) {
+            return $this->model
+                ->orderBy('order')
+                ->where('type', $type)
+                ->whereIN('parent_id', $parent_id)
+                ->get();
+        } else {
+            return $this->model
+                ->orderBy('order')
+                ->where(['parent_id' => $parent_id, 'type' => $type, 'hidden' => $hidden])
+                ->get();
+        }
     }
-
-    public function getAllByIdsAndType(array $ids, string $type)
-    {
-        return $this->model
-            ->whereIN('parent_id', $ids)
-            ->where('type', $type)
-            ->get();
-    }
-
-    public function getAllBySubcategoryIds($ids)
-    {
-        return $this->model
-            ->whereIn('subcategory_id', $ids)
-            ->get();
-    }
-
-    public function getAllByParentIdTypeHidden($parent_id, $type, $hidden)
-    {
-        return $this->model
-            ->where('parent_id', $parent_id)
-            ->where('type', $type)
-            ->where('hidden', $hidden)
-            ->get();
-    }
-
-
-    // public function deleteAllBySubcategoryId(int $subcategory_id)
-    // {
-    //     $this->model->where('subcategory_id', $subcategory_id)->delete();
-    // }
-
-    // public function deleteAllBySubcategoryArrayId(array $ids)
-    // {
-    //     $this->model->whereIn('subcategory_id', $ids)->delete();
-    // }
 }
