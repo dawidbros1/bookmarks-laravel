@@ -13,7 +13,8 @@
                 <x-jet-nav-link href="{{ route('news') }}" :active="request()->routeIs('news')">Aktualności
                 </x-jet-nav-link>
 
-                <x-jet-nav-link href="{{ route('category.list') }}" :active="request()->routeIs('category.list')">Moje
+                <x-jet-nav-link href="{{ route('category.list', ['view' => 'visible']) }}"
+                    :active="request()->routeIs('category.list')">Moje
                     kategorie
                 </x-jet-nav-link>
 

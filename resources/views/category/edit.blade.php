@@ -39,8 +39,8 @@
             </x-slot>
         </x-form-section>
 
-
-        <x-delete-item-button action="{{ route('category.delete', ['id' => $category->id]) }}"></x-delete-item-button>
-        <x-back-button action="{{ route('category.list') }}"></x-back-button>
+        <x-delete-item-button action="{{ route('category.delete', ['id' => $category->id, 'view' => $view]) }}">
+        </x-delete-item-button>
+        <x-back-button action="{{ route('category.list', ['view' => $view]) }}"></x-back-button>
     </x-slot>
 </x-main-layout>

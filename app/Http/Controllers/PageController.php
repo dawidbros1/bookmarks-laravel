@@ -23,7 +23,7 @@ class PageController extends Controller
     }
 
     //! CREATE
-    public function create($type, $parent_id)
+    public function create(Request $request, $type, $parent_id)
     {
         // $this->authorize('create', [new Page, $parent_id]);
         // $subcategory = $this->subcategoryRepository->getModel()->find($subcategory_id);
@@ -34,7 +34,7 @@ class PageController extends Controller
             $parent = $this->subcategoryRepository->getModel()->find($parent_id);
         }
 
-        return view('page.create', ['parent' => $parent, 'type' => $type]);
+        return view('page.create', ['parent' => $parent, 'type' => $type, 'view' => $request->input('view')]);
     }
 
     public function store(Store $request)
@@ -50,15 +50,16 @@ class PageController extends Controller
     }
 
     //! EDIT
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $page = $this->pageRepository->getModel()->find($id);
 
-        $type = $page->type;
-
         return view(
             'page.edit',
-            ['page' => $page]
+            [
+                'page' => $page,
+                'view' => $request->input('view')
+            ]
         );
     }
 
@@ -85,7 +86,7 @@ class PageController extends Controller
     }
 
     //! DELETE
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
         // $this->authorize('delete', [new Page, $id]);
         $page = $this->pageRepository->getModel()->find($id);
@@ -94,7 +95,7 @@ class PageController extends Controller
         $page->destroy($id);
 
         return redirect()
-            ->route($type . '.show', ['id' => $parent_id])
+            ->route($type . '.show', ['id' => $parent_id, 'view' => $request->input('view')])
             ->with('success', 'Strona została usunięta');
     }
 }

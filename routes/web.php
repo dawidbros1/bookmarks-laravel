@@ -45,15 +45,20 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             'as' => 'category.'
         ],
         function () {
+            // CREATE
             Route::get('/create', [CategoryController::class, 'create'])->name('create');
             Route::post('/store', [CategoryController::class, 'store'])->name('store');
-            Route::get('/list/{type?}', [CategoryController::class, 'list'])->name('list');
-            Route::get('/show/{id}/{type?}', [CategoryController::class, 'show'])->name('show');
 
+            // LIST & SHOW
+            Route::get('/{view}/list', [CategoryController::class, 'list'])->name('list');
+            Route::get('/{view}/show/{id}', [CategoryController::class, 'show'])->name('show');
+
+            // EDIT
             Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('edit');
             Route::post('/update/{id}', [CategoryController::class, 'update'])->name('update');
             Route::get('/changeVisibility/{id}', [CategoryController::class, 'changeVisibility'])->name('changeVisibility');
 
+            // DELETE
             Route::delete('/delete/{id}', [CategoryController::class, 'delete'])->name('delete');
         }
     );
@@ -67,7 +72,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         function () {
             Route::get('/create/{category_id}', [SubcategoryController::class, 'create'])->name('create');
             Route::post('/store', [SubcategoryController::class, 'store'])->name('store');
-            Route::get('/show/{id}/{type?}', [SubcategoryController::class, 'show'])->name('show');
+            Route::get('/show/{view}/{id}', [SubcategoryController::class, 'show'])->name('show');
             Route::get('/edit/{id}', [SubcategoryController::class, 'edit'])->name('edit');
             Route::post('/update/{id}', [SubcategoryController::class, 'update'])->name('update');
             Route::get('/changeVisibility/{id}', [SubcategoryController::class, 'changeVisibility'])->name('changeVisibility');

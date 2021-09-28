@@ -58,13 +58,10 @@
             </x-slot>
         </x-form-section>
 
-        <x-delete-item-button action="{{ route('page.delete', ['id' => $page->id]) }}">
+        <x-delete-item-button action="{{ route('page.delete', ['id' => $page->id, 'view' => $view]) }}">
         </x-delete-item-button>
 
-
-        <x-back-button action="{{ route($page->type . '.show', ['id' => $page->parent_id]) }}">
+        <x-back-button action="{{ route($page->type . '.show', ['id' => $page->parent_id, 'view' => $view]) }}">
         </x-back-button>
-
-
     </x-slot>
 </x-main-layout>

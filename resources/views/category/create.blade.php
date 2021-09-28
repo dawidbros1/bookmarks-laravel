@@ -40,7 +40,7 @@
         </x-form-section>
 
         <x-back-button action="
-                    {{ route('category.list') }}">
+                    {{ route('category.list', ['view' => 'visible']) }}">
                     </x-back-button>
             </x-slot>
 </x-main-layout>

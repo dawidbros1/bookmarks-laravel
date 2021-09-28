@@ -14,23 +14,49 @@ class CategoryController extends Controller
     private CategoryRepository $categoryRepository;
     private SubcategoryRepository $subcategoryRepository;
     private PageRepository $pageRepository;
+    private $type;
 
     public function __construct(CategoryRepository $categoryRepository)
     {
         $this->categoryRepository = $categoryRepository;
         $this->subcategoryRepository = $this->categoryRepository->getSubcategoryRepository();
         $this->pageRepository = $this->subcategoryRepository->getPageRepository();
+        $this->type = "category";
     }
 
-    //! LIST
-    public function list($type = null)
+    //! Pokazanie zawartości
+    public function list($view)
     {
-        if ($type == null) $categories = $this->categoryRepository->getAllByHidden(0);
-        else if ($type == "hidden") $categories = $this->categoryRepository->getAllByHidden(1);
-        else if ($type == "all") $categories = $this->categoryRepository->getAll();
+        if ($view == 'visible') $categories = $this->categoryRepository->getAllByParameters(0);
+        else if ($view == "hidden") $categories = $this->categoryRepository->getAllByParameters(1);
+        else if ($view == "all") $categories = $this->categoryRepository->getAllByParameters();
 
         return view('category.list', [
             'categories' => $categories,
+            'view' => $view
+        ]);
+    }
+
+    public function show($view, $id)
+    {
+        if ($view == "visible") {
+            $subcategories = $this->subcategoryRepository->getAllByParameters($id, 0);
+            $pages = $this->pageRepository->getAllByParameters($id, $this->type, 0);
+        } else if ($view == "hidden") {
+            $subcategories = $this->subcategoryRepository->getAllByParameters($id, 1);
+            $pages = $this->pageRepository->getAllByParameters($id, $this->type, 1);
+        } else if ($view == "all") {
+            $subcategories = $this->subcategoryRepository->getAllByParameters($id);
+            $pages = $this->pageRepository->getAllByParameters($id, $this->type);
+        }
+
+        $category = $this->categoryRepository->getModel()->find($id);
+
+        return view('category.show', [
+            'category' => $category,
+            'subcategories' => $subcategories,
+            'pages' => $pages,
+            'view' => $view
         ]);
     }
 
@@ -63,6 +89,7 @@ class CategoryController extends Controller
             'category.edit',
             [
                 'category' => $category,
+                'view' => $request->input('view')
             ]
         );
     }
@@ -93,37 +120,14 @@ class CategoryController extends Controller
     }
 
     //! DELETE
-    public function delete($id)
+    public function delete(Request $request, $id)
     {
         $this->authorize('author', [new Category, $id]);
         $category = $this->categoryRepository->getModel()->find($id);
         $category->deleteWithContent($this->subcategoryRepository);
 
         return redirect()
-            ->route('category.list')
+            ->route('category.list', ['view' => $request->input('view')])
             ->with('success', 'Kategoria została usunięta');
-    }
-
-    //! SHOW
-    public function show($id, $type = null)
-    {
-        if ($type == null) {
-            $subcategories = $this->subcategoryRepository->getAllByCategoryIdAndHidden($id, 0);
-            $pages = $this->pageRepository->getAllByParentIdTypeHidden($id, 'category', 0);
-        } else if ($type == "hidden") {
-            $subcategories = $this->subcategoryRepository->getAllByCategoryIdAndHidden($id, 1);
-            $pages = $this->pageRepository->getAllByParentIdTypeHidden($id, 'category', 1);
-        } else if ($type == "all") {
-            $subcategories = $this->subcategoryRepository->getAllByCategoryId($id);
-            $pages = $this->pageRepository->getAllByIdAndType($id, 'category');
-        }
-
-        $category = $this->categoryRepository->getModel()->find($id);
-
-        return view('category.show', [
-            'category' => $category,
-            'subcategories' => $subcategories,
-            'pages' => $pages
-        ]);
     }
 }

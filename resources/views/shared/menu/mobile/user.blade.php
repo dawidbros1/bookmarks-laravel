@@ -22,7 +22,7 @@
                     <div class="font-medium text-sm text-gray-500">Kategorie</div>
                 </div>
 
-                <x-jet-responsive-nav-link href="{{ route('category.list') }}"
+                <x-jet-responsive-nav-link href="{{ route('category.list', ['view' => 'visible']) }}"
                     :active="request()->routeIs('category.list')" class="py-1">
                     {{ __('Moje kategorie') }}
                 </x-jet-responsive-nav-link>
@@ -50,7 +50,7 @@
                     @csrf
 
                     <x-jet-responsive-nav-link href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                    this.closest('form').submit();" class="py-1">
+                                                                this.closest('form').submit();" class="py-1">
                         {{ __('Log Out') }}
                     </x-jet-responsive-nav-link>
                 </form>

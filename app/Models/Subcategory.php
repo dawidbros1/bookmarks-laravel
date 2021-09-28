@@ -32,7 +32,7 @@ class Subcategory extends Model
 
     public function deleteWithContent(PageRepository $pageRepository)
     {
-        $pages = $pageRepository->getAllByIdAndType($this->id, 'subcategory');
+        $pages = $pageRepository->getAllByParameters($this->id, 'subcategory');
         $page_ids = $pages->pluck('id')->toArray();
         $pageRepository->getModel()->destroy($page_ids);
 

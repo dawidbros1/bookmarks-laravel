@@ -36,11 +36,11 @@ class Category extends Model
         $pageRepository = $subcategoryRepository->getPageRepository();
 
         // Kasowanie podkategorii
-        $subcategories = $subcategoryRepository->getAllByCategoryId($this->id);
+        $subcategories = $subcategoryRepository->getAllByParameters($this->id);
         $this->deleteSubcategoriesWithContent($subcategoryRepository, $subcategories);
 
         // Kasowanie stron w kategorii
-        $pages = $pageRepository->getAllByIdAndType($this->id, 'category');
+        $pages = $pageRepository->getAllByParameters($this->id, 'category');
         $page_ids = $pages->pluck('id')->toArray();
         $pageRepository->getModel()->destroy($page_ids);
 
@@ -55,7 +55,7 @@ class Category extends Model
         $subcategory_ids = $subcategories->pluck('id')->toArray();
 
         // Usuwanie stron z podkategorii
-        $pages = $pageRepository->getAllByIdsAndType($subcategory_ids, 'subcategory');
+        $pages = $pageRepository->getAllByParameters($subcategory_ids, 'subcategory');
         $page_ids = $pages->pluck('id')->toArray();
         $pageRepository->getModel()->destroy($page_ids);
 

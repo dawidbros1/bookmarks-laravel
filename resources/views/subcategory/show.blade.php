@@ -4,29 +4,23 @@
             {{ $subcategory->name }}
         </h2>
 
-        <x-back-button-upper action="{{ route('category.show', ['id' => $subcategory->category_id]) }}">
+        <x-back-button-upper
+            action="{{ route('category.show', ['id' => $subcategory->category_id, 'view' => $view]) }}">
         </x-back-button-upper>
-
-
-        {{-- <x-back-button-upper action="{{ route('category.show', ['id' => $subcategory->cat]) }}">
-        </x-back-button-upper> --}}
-
     </x-slot>
 
     <x-slot name="content">
-        {{-- @if ($author) --}}
         <div class="flex flex-wrap text-center py-2">
-            <a href="{{ route('page.create', ['type' => 'subcategory', 'parent_id' => $subcategory->id]) }}"
+            <a href="{{ route('page.create', ['type' => 'subcategory', 'parent_id' => $subcategory->id, 'view' => $view]) }}"
                 class="w-full">
                 Dodaj stronę
             </a>
         </div>
-        {{-- @endif --}}
 
         <div class="pb-10">
-            <x-items-header basic="{{ route('subcategory.show', ['id' => $subcategory->id]) }}"
-                hidden="{{ route('subcategory.show', ['id' => $subcategory->id, 'type' => 'hidden']) }}"
-                all="{{ route('subcategory.show', ['id' => $subcategory->id, 'type' => 'all']) }}">
+            <x-items-header basic="{{ route('subcategory.show', ['id' => $subcategory->id, 'view' => 'visible']) }}"
+                hidden="{{ route('subcategory.show', ['id' => $subcategory->id, 'view' => 'hidden']) }}"
+                all="{{ route('subcategory.show', ['id' => $subcategory->id, 'view' => 'all']) }}">
 
                 <x-slot name="header"> Strony </x-slot>
             </x-items-header>
@@ -46,7 +40,7 @@
                         </x-slot>
 
                         <x-slot name="settings">
-                            {{ route('page.edit', ['id' => $page->id, 'type' => 'subcategory']) }}
+                            {{ route('page.edit', ['id' => $page->id, 'type' => 'subcategory', 'view' => $view]) }}
                         </x-slot>
                     </x-item>
                 @endforeach

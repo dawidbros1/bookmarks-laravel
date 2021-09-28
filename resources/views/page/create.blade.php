@@ -61,13 +61,10 @@
 
         {{-- <script src="{{ mix('js/pasteImg.js') }}"></script> --}}
 
-        @if ($type == 'category')
-            <x-back-button action="{{ route('category.show', ['id' => $parent->id]) }}">
-            </x-back-button>
-        @else
-            <x-back-button action="{{ route('subcategory.show', ['id' => $parent->id]) }}">
-            </x-back-button>
-        @endif
+
+        <x-back-button action="{{ route($type . '.show', ['id' => $parent->id, 'view' => $view]) }}">
+        </x-back-button>
+
 
     </x-slot>
 </x-main-layout>

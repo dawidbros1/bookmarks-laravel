@@ -47,7 +47,7 @@
             </x-slot>
         </x-form-section>
 
-        <x-back-button action="{{ route('category.show', ['id' => $category_id]) }}">
+        <x-back-button action="{{ route('category.show', ['id' => $category_id, 'view' => $view]) }}">
         </x-back-button>
 
     </x-slot>
