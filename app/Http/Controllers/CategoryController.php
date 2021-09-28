@@ -37,7 +37,7 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function show($view, $id)
+    public function show($view, int $id)
     {
         if ($view == "visible") {
             $subcategories = $this->subcategoryRepository->getAllByParameters($id, 0);

@@ -109,11 +109,6 @@ class SubcategoryController extends Controller
         else if ($view == "hidden") $pages = $this->pageRepository->getAllByParameters($id, $this->type, 1);
         else if ($view == "all") $pages = $this->pageRepository->getAllByParameters($id, $this->type);
 
-        // $pages = $this->pageRepository->getAllByParameters($id, $this->type, $hidden);
-
-        // var_dump($pages);
-        // die();
-
         return view('subcategory.show', [
             'subcategory' => $subcategory,
             'pages' => $pages,

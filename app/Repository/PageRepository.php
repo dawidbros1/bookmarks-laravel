@@ -21,7 +21,9 @@ class PageRepository
     // parent ID can be INT OR ARRAY OF INT
     public function getAllByParameters($parent_id, string $type, int $hidden = -1)
     {
-        if (gettype($parent_id) == "integer") $parent_id = [$parent_id];
+        if (gettype($parent_id) != "array") {
+            $parent_id = [$parent_id];
+        }
 
         if ($hidden == -1) {
             return $this->model
