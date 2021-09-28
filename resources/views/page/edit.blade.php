@@ -21,16 +21,15 @@
                 @enderror
 
                 {{-- Obrazek --}}
-
                 <div class="relative">
                     <x-jet-label for="image_url" class="pl-2"> Obrazek: </x-jet-label>
                     <x-jet-input name="image_url" value="{{ old('image_url', $page->image_url) }}" type="text"
                         class="border px-2 min-w-full mb-3" id="image_url">
                     </x-jet-input>
 
-                    {{-- <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20"
-                        class="bg-gray-100 absolute right-1 bottom-1 hover:cursor-pointer" title="Wklej obrazek podkategorii"
-                        onclick="pasteImg('{{ $image_url_paste }}');"> --}}
+                    <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20"
+                        class="bg-gray-100 absolute right-1 bottom-1 hover:cursor-pointer"
+                        title="Wklej obrazek podkategorii" onclick="pasteImg('{{ $parent_image }}');">
                 </div>
 
                 @error('image_url')
@@ -63,5 +62,7 @@
 
         <x-back-button action="{{ route($page->type . '.show', ['id' => $page->parent_id, 'view' => $view]) }}">
         </x-back-button>
+
+        <script src="{{ mix('js/pasteImg.js') }}"></script>
     </x-slot>
 </x-main-layout>

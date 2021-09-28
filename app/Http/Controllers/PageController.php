@@ -34,6 +34,8 @@ class PageController extends Controller
             $parent = $this->subcategoryRepository->getModel()->find($parent_id);
         }
 
+
+
         return view('page.create', ['parent' => $parent, 'type' => $type, 'view' => $request->input('view')]);
     }
 
@@ -54,11 +56,18 @@ class PageController extends Controller
     {
         $page = $this->pageRepository->getModel()->find($id);
 
+        if ($page->type == "category") {
+            $parent_image = $this->categoryRepository->getModel()->find($page->parent_id)->image_url;
+        } else if ($page->type == "subcategory") {
+            $parent_image = $this->subcategoryRepository->getModel()->find($page->parent_id)->image_url;
+        }
+
         return view(
             'page.edit',
             [
                 'page' => $page,
-                'view' => $request->input('view')
+                'view' => $request->input('view'),
+                'parent_image' => $parent_image,
             ]
         );
     }

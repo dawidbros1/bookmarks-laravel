@@ -27,9 +27,13 @@ class SubcategoryController extends Controller
     //! CREATE
     public function create(Request $request, $category_id)
     {
+        $category_image = $this->categoryRepository->getModel()->find($category_id)->image_url;
+
+
         return view('subcategory.create', [
             'category_id' => $category_id,
-            'view' => $request->input('view')
+            'view' => $request->input('view'),
+            'category_image' => $category_image,
         ]);
     }
 
@@ -52,11 +56,13 @@ class SubcategoryController extends Controller
     {
         // $this->authorize('edit', [new Subcategory, $id]);
         $subcategory = $this->subcategoryRepository->getModel()->find($id);
+        $category_image = $this->categoryRepository->getModel()->find($subcategory->category_id)->image_url;
         return view(
             'subcategory.edit',
             [
                 'subcategory' => $subcategory,
-                'view' => $request->input('view')
+                'view' => $request->input('view'),
+                'category_image' => $category_image,
             ]
         );
     }

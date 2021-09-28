@@ -26,7 +26,9 @@
                         class="border px-2 min-w-full mb-3" id="image_url">
                     </x-jet-input>
 
-                    {{-- <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20" class="bg-gray-100 absolute right-1 bottom-1 hover:cursor-pointer" title="Wklej obrazek nadrzędnej podkategorii"> --}}
+                    <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20"
+                        class="bg-gray-100 absolute right-1 bottom-1 hover:cursor-pointer"
+                        title="Wklej obrazek kategorii" onclick="pasteImg('{{ $category_image }}');">
                 </div>
 
                 @error('image_url')
@@ -42,12 +44,12 @@
             </x-slot>
         </x-form-section>
 
-        {{-- <script src="{{ mix('js/pasteImg.js') }}"></script> --}}
-
         <x-delete-item-button action="{{ route('subcategory.delete', ['id' => $subcategory->id, 'view' => $view]) }}">
         </x-delete-item-button>
 
         <x-back-button action="{{ route('category.show', ['id' => $subcategory->category_id, 'view' => $view]) }}">
         </x-back-button>
+
+        <script src="{{ mix('js/pasteImg.js') }}"></script>
     </x-slot>
 </x-main-layout>

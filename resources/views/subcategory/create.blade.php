@@ -10,8 +10,6 @@
 
         <x-form-section action="{{ route('subcategory.store') }}">
             <x-slot name="content">
-                {{-- <x-slot name="image_url_paste">{{ $subcategory->image_url }} Jeszcze nie wiem co to
-
                 {{-- Tutył --}}
                 <x-jet-label for="name" class="pl-2"> Nazwa kategorii: </x-jet-label>
                 <x-jet-input name="name" value="{{ old('name') }}" type="text" class="border px-2 min-w-full mb-3">
@@ -29,7 +27,7 @@
                     {{-- onclick="pasteImg('{{ $image_url_paste }}');" --}}
                     <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20"
                         class="bg-gray-100 absolute right-1 bottom-1 hover:cursor-pointer"
-                        title="Wklej obrazek nadrzędnej podkategorii">
+                        title="Wklej obrazek kategorii" onclick="pasteImg('{{ $category_image }}');">
                 </div>
 
                 @error('image_url')
@@ -50,5 +48,6 @@
         <x-back-button action="{{ route('category.show', ['id' => $category_id, 'view' => $view]) }}">
         </x-back-button>
 
+        <script src="{{ mix('js/pasteImg.js') }}"></script>
     </x-slot>
 </x-main-layout>
