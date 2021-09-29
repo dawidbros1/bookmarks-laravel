@@ -1,7 +1,7 @@
 <x-main-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edycja kategorii') }}
+            {{ __('Edycja podkategorii') }}
         </h2>
     </x-slot>
 
@@ -11,7 +11,7 @@
         <x-form-section action="{{ route('subcategory.update', ['id' => $subcategory->id]) }}">
             <x-slot name="content">
                 {{-- Tutył --}}
-                <x-jet-label for="name" class="pl-2"> Nazwa kategorii: </x-jet-label>
+                <x-jet-label for="name" class="pl-2"> Nazwa: </x-jet-label>
                 <x-jet-input name="name" value="{{ old('name', $subcategory->name) }}" type="text"
                     class="border px-2 min-w-full mb-3">
                 </x-jet-input>

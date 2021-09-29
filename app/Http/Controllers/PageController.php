@@ -25,8 +25,7 @@ class PageController extends Controller
     //! CREATE
     public function create(Request $request, $type, $parent_id)
     {
-        // $this->authorize('create', [new Page, $parent_id]);
-        // $subcategory = $this->subcategoryRepository->getModel()->find($subcategory_id);
+        $this->authorize('checkParent', [new Page, $type, $parent_id]);
 
         if ($type == "category") {
             $parent = $this->categoryRepository->getModel()->find($parent_id);
@@ -34,17 +33,17 @@ class PageController extends Controller
             $parent = $this->subcategoryRepository->getModel()->find($parent_id);
         }
 
-
-
         return view('page.create', ['parent' => $parent, 'type' => $type, 'view' => $request->input('view')]);
     }
 
     public function store(Store $request)
     {
         $data = $request->validated();
+        $this->authorize('checkParent', [new Page, $data['type'], $data['parent_id']]);
+
         if ($request->input('public') != NULL) $data['public'] = true;
         else $data['public'] = false;
-        // $this->authorize('store', [new Page, $data['subcategory_id']]);
+
         $this->pageRepository->getModel()->store($data);
 
         return redirect(url()->previous())
@@ -55,6 +54,7 @@ class PageController extends Controller
     public function edit(Request $request, $id)
     {
         $page = $this->pageRepository->getModel()->find($id);
+        $this->authorize('author', $page);
 
         if ($page->type == "category") {
             $parent_image = $this->categoryRepository->getModel()->find($page->parent_id)->image_url;
@@ -74,11 +74,14 @@ class PageController extends Controller
 
     public function update(Store $request, $id)
     {
-        // $this->authorize('update', [new Page, $id, $newSCID]);
         $data = $request->validated();
+        $page = $this->pageRepository->getModel()->find($id);
+        $this->authorize('author', $page);
+
         if ($request->input('public') != NULL) $data['public'] = true;
         else $data['public'] = false;
-        $this->pageRepository->getModel()->find($id)->update($data);
+
+        $page->update($data);
 
         return redirect(url()->previous())
             ->with('success', 'Strona została edytowana');
@@ -88,6 +91,7 @@ class PageController extends Controller
     public function changeVisibility($id)
     {
         $page = $this->pageRepository->getModel()->find($id);
+        $this->authorize('author', $page);
         $page->update(['hidden' => !$page->hidden]);
 
         return redirect(url()->previous())
@@ -97,14 +101,12 @@ class PageController extends Controller
     //! DELETE
     public function delete(Request $request, $id)
     {
-        // $this->authorize('delete', [new Page, $id]);
         $page = $this->pageRepository->getModel()->find($id);
-        $type = $page->type;
-        $parent_id = $page->parent_id;
+        $this->authorize('author', $page);
         $page->destroy($id);
-
+        
         return redirect()
-            ->route($type . '.show', ['id' => $parent_id, 'view' => $request->input('view')])
+            ->route($page->type . '.show', ['id' => $page->parent_id, 'view' => $request->input('view')])
             ->with('success', 'Strona została usunięta');
     }
 }

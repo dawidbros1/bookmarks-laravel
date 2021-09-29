@@ -11,7 +11,7 @@
         <x-form-section action="{{ route('page.update', ['id' => $page->id]) }}">
             <x-slot name="content">
                 {{-- Tutył --}}
-                <x-jet-label for="name" class="pl-2"> Nazwa strony: </x-jet-label>
+                <x-jet-label for="name" class="pl-2"> Nazwa: </x-jet-label>
                 <x-jet-input name="name" value="{{ old('name', $page->name) }}" type="text"
                     class="border px-2 min-w-full mb-3">
                 </x-jet-input>

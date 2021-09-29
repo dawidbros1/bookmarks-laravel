@@ -15,7 +15,7 @@ class CategoryController extends Controller
     private CategoryRepository $categoryRepository;
     private SubcategoryRepository $subcategoryRepository;
     private PageRepository $pageRepository;
-    private $type;
+    private string $type;
 
     public function __construct(CategoryRepository $categoryRepository)
     {
@@ -40,6 +40,9 @@ class CategoryController extends Controller
 
     public function show($view, int $id)
     {
+        $category = $this->categoryRepository->getModel()->find($id);
+        $this->authorize('author', $category);
+
         if ($view == "visible") {
             $subcategories = $this->subcategoryRepository->getAllByParameters($id, 0);
             $pages = $this->pageRepository->getAllByParameters($id, $this->type, 0);
@@ -50,8 +53,6 @@ class CategoryController extends Controller
             $subcategories = $this->subcategoryRepository->getAllByParameters($id);
             $pages = $this->pageRepository->getAllByParameters($id, $this->type);
         }
-
-        $category = $this->categoryRepository->getModel()->find($id);
 
         return view('category.show', [
             'category' => $category,
@@ -91,7 +92,6 @@ class CategoryController extends Controller
 
         if ($request->input('public') != NULL) $data['public'] = true;
         else $data['public'] = false;
-
         $this->categoryRepository->getModel()->store($data);
 
         return redirect(url()->previous())
@@ -101,8 +101,8 @@ class CategoryController extends Controller
     //! EDIT
     public function edit(Request $request, $id)
     {
-        $this->authorize('author', [new Category, $id]);
         $category = $this->categoryRepository->getModel()->find($id);
+        $this->authorize('author', $category);
 
         return view(
             'category.edit',
@@ -115,8 +115,8 @@ class CategoryController extends Controller
 
     public function update(Store $request, $id)
     {
-        $this->authorize('author', [new Category, $id]);
         $category = $this->categoryRepository->getModel()->find($id);
+        $this->authorize('author', $category);
         $data = $request->validated();
 
         if ($request->input('public') != NULL) $data['public'] = true;
@@ -130,8 +130,8 @@ class CategoryController extends Controller
 
     public function changeVisibility($id)
     {
-        $this->authorize('author', [new Category, $id]);
         $category = $this->categoryRepository->getModel()->find($id);
+        $this->authorize('author', $category);
         $category->update(['hidden' => !$category->hidden]);
 
         return redirect(url()->previous())
@@ -141,8 +141,8 @@ class CategoryController extends Controller
     //! DELETE
     public function delete(Request $request, $id)
     {
-        $this->authorize('author', [new Category, $id]);
         $category = $this->categoryRepository->getModel()->find($id);
+        $this->authorize('author', $category);
         $category->deleteWithContent($this->subcategoryRepository);
 
         return redirect()
