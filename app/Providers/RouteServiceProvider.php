@@ -47,6 +47,10 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
         });
+
+
+        Route::pattern('id', '[0-9]+');
+        Route::pattern('view', 'all|visible|hidden');
     }
 
     /**

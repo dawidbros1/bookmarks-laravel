@@ -38,4 +38,13 @@ class PageRepository
                 ->get();
         }
     }
+
+
+    public function getPublicDataParameters($id, $type)
+    {
+        return $this->model
+            ->orderBy('order')
+            ->where(['parent_id' => $id, 'type' => $type, 'public' => 1])
+            ->get();
+    }
 }

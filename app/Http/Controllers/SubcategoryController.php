@@ -24,6 +24,41 @@ class SubcategoryController extends Controller
         $this->type = "subcategory";
     }
 
+    //! Pokazanie zawartości
+    public function show($view, $id)
+    {
+        $subcategory = $this->subcategoryRepository->getModel()->find($id);
+
+        if ($view == 'visible') $pages = $this->pageRepository->getAllByParameters($id, $this->type, 0);
+        else if ($view == "hidden") $pages = $this->pageRepository->getAllByParameters($id, $this->type, 1);
+        else if ($view == "all") $pages = $this->pageRepository->getAllByParameters($id, $this->type);
+
+        return view('subcategory.show', [
+            'subcategory' => $subcategory,
+            'pages' => $pages,
+            'view' => $view
+        ]);
+    }
+
+    public function showPublic($id)
+    {
+        $subcategory = $this->subcategoryRepository->getModel()->find($id);
+
+        if ($subcategory->public == 0) {
+            return abort(403, 'Zasób nie jest publiczny');
+        }
+
+        $category = $this->categoryRepository->getModel()->find($subcategory->category_id);
+
+        $pages = $this->pageRepository->getPublicDataParameters($id, $this->type);
+
+        return view('subcategory.public', [
+            'category' => $category,
+            'subcategory' => $subcategory,
+            'pages' => $pages,
+        ]);
+    }
+
     //! CREATE
     public function create(Request $request, $category_id)
     {
@@ -104,21 +139,5 @@ class SubcategoryController extends Controller
         return redirect()
             ->route('category.show', ['id' => $category_id, 'view' => $request->input('view')])
             ->with('success', 'Podkategoria została usunięta');
-    }
-
-    //! SHOW
-    public function show($view, $id)
-    {
-        $subcategory = $this->subcategoryRepository->getModel()->find($id);
-
-        if ($view == 'visible') $pages = $this->pageRepository->getAllByParameters($id, $this->type, 0);
-        else if ($view == "hidden") $pages = $this->pageRepository->getAllByParameters($id, $this->type, 1);
-        else if ($view == "all") $pages = $this->pageRepository->getAllByParameters($id, $this->type);
-
-        return view('subcategory.show', [
-            'subcategory' => $subcategory,
-            'pages' => $pages,
-            'view' => $view
-        ]);
     }
 }

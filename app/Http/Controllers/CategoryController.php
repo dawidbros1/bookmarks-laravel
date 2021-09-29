@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Repository\CategoryRepository;
 use App\Repository\PageRepository;
 use App\Repository\SubcategoryRepository;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -57,6 +58,24 @@ class CategoryController extends Controller
             'subcategories' => $subcategories,
             'pages' => $pages,
             'view' => $view
+        ]);
+    }
+
+    public function showPublic($id)
+    {
+        $category = $this->categoryRepository->getModel()->find($id);
+
+        if ($category->public == 0) {
+            return abort(403, 'Zasób nie jest publiczny');
+        }
+
+        $subcategories = $this->subcategoryRepository->getPublicDataByCategoryId($id);
+        $pages = $this->pageRepository->getPublicDataParameters($id, $this->type);
+
+        return view('category.public', [
+            'category' => $category,
+            'subcategories' => $subcategories,
+            'pages' => $pages,
         ]);
     }
 

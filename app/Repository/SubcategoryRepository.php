@@ -41,4 +41,12 @@ class SubcategoryRepository
                 ->get();
         }
     }
+
+    public function getPublicDataByCategoryId($id)
+    {
+        return $this->model
+            ->orderBy('order')
+            ->where(['category_id' => $id, 'public' => 1])
+            ->get();
+    }
 }

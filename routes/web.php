@@ -48,16 +48,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             // CREATE
             Route::get('/create', [CategoryController::class, 'create'])->name('create');
             Route::post('/store', [CategoryController::class, 'store'])->name('store');
-
             // LIST & SHOW
             Route::get('/{view}/list', [CategoryController::class, 'list'])->name('list');
             Route::get('/{view}/show/{id}', [CategoryController::class, 'show'])->name('show');
-
             // EDIT
             Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('edit');
             Route::post('/update/{id}', [CategoryController::class, 'update'])->name('update');
             Route::get('/changeVisibility/{id}', [CategoryController::class, 'changeVisibility'])->name('changeVisibility');
-
             // DELETE
             Route::delete('/delete/{id}', [CategoryController::class, 'delete'])->name('delete');
         }
@@ -99,14 +96,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     //
 });
 
-// Bez logowania
-// Dostęp do listy gdy
-// Route::group(
-//     [
-//         'prefix' => "subcategory",
-//         'as' => 'subcategory.'
-//     ],
-//     function () {
-//         Route::get('/list/{id}', [SubcategoryController::class, 'list'])->name('list');
-//     }
-// );
+// Dane publiczne
+Route::get('category/public/show/{id}', [CategoryController::class, 'showPublic'])->name('category.public');
+Route::get('subcategory/public/show/{id}', [SubcategoryController::class, 'showPublic'])->name('subcategory.public');
