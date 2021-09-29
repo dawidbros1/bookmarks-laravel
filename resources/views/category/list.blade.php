@@ -22,6 +22,16 @@
                             <a href="{{ route('category.show', ['id' => $category->id, 'view' => 'visible']) }}">
                                 <img src="{{ $category->image_url }}" alt="Obrazek" class="full">
                             </a>
+
+                            {{-- Pobranie linku do udostępnienia --}}
+                            <div class="bg-gray-100 hover:cursor-pointer absolute right-1 bottom-8">
+                                <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20"
+                                    width="20" title="Skopiuj link do udostępnienia"
+                                    onclick="copyToClipBoard({{ $loop->index }})">
+
+                                <input type="hidden" class="copy"
+                                    value="{{ route('category.public', ['id' => $category->id]) }}">
+                            </div>
                         </x-slot>
 
                         <x-slot name="changeVisibility">

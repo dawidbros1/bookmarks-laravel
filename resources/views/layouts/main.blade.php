@@ -46,6 +46,8 @@
 
     @stack('modals')
     @livewireScripts
+
+    <script src="{{ mix('js/functions.js') }}"></script>
 </body>
 
 </html>

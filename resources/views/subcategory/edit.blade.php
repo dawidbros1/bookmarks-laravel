@@ -49,7 +49,5 @@
 
         <x-back-button action="{{ route('category.show', ['id' => $subcategory->category_id, 'view' => $view]) }}">
         </x-back-button>
-
-        <script src="{{ mix('js/pasteImg.js') }}"></script>
     </x-slot>
 </x-main-layout>

@@ -62,7 +62,5 @@
 
         <x-back-button action="{{ route($page->type . '.show', ['id' => $page->parent_id, 'view' => $view]) }}">
         </x-back-button>
-
-        <script src="{{ mix('js/pasteImg.js') }}"></script>
     </x-slot>
 </x-main-layout>

@@ -1163,6 +1163,12 @@ select {
 .left-1 {
 	left: 0.25rem;
 }
+.bottom-16 {
+	bottom: 4rem;
+}
+.bottom-8 {
+	bottom: 2rem;
+}
 .z-0 {
 	z-index: 0;
 }
@@ -1777,11 +1783,11 @@ select {
 .pb-2 {
 	padding-bottom: 0.5rem;
 }
-.pl-2 {
-	padding-left: 0.5rem;
-}
 .pb-10 {
 	padding-bottom: 2.5rem;
+}
+.pl-2 {
+	padding-left: 0.5rem;
 }
 .pt-8 {
 	padding-top: 2rem;
