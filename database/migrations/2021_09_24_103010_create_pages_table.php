@@ -22,6 +22,7 @@ class CreatePagesTable extends Migration
             $table->string('link', 255);
             $table->boolean('public')->default(1);
             $table->boolean('hidden')->default(0);
+            $table->boolean('open_in_new_window')->default(1);
             $table->integer('order')->default(1);
         });
     }

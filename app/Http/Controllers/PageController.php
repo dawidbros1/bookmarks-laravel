@@ -44,6 +44,9 @@ class PageController extends Controller
         if ($request->input('public') != NULL) $data['public'] = true;
         else $data['public'] = false;
 
+        if ($request->input('open_in_new_window') != NULL) $data['open_in_new_window'] = true;
+        else $data['open_in_new_window'] = false;
+
         $this->pageRepository->getModel()->store($data);
 
         return redirect(url()->previous())
@@ -81,6 +84,9 @@ class PageController extends Controller
         if ($request->input('public') != NULL) $data['public'] = true;
         else $data['public'] = false;
 
+        if ($request->input('open_in_new_window') != NULL) $data['open_in_new_window'] = true;
+        else $data['open_in_new_window'] = false;
+
         $page->update($data);
 
         return redirect(url()->previous())
@@ -104,7 +110,7 @@ class PageController extends Controller
         $page = $this->pageRepository->getModel()->find($id);
         $this->authorize('author', $page);
         $page->destroy($id);
-        
+
         return redirect()
             ->route($page->type . '.show', ['id' => $page->parent_id, 'view' => $request->input('view')])
             ->with('success', 'Strona została usunięta');

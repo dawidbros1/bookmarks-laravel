@@ -52,6 +52,11 @@
                     <input type="checkbox" name="public" @if ($page->public) checked @endif>
                 </div>
 
+                <div class="mb-2">
+                    Czy strona ma otwierać się w nowym oknie?
+                    <input type="checkbox" name="public" @if ($page->open_in_new_window) checked @endif>
+                </div>
+
                 <x-jet-button type="submit" class="ml-2">Zapisz</x-jet-button>
 
             </x-slot>

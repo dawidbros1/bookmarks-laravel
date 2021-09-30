@@ -47,7 +47,12 @@
 
                 <div class="mb-2">
                     Czy strona ma być publiczna?
-                    <input type="checkbox" name="public">
+                    <input type="checkbox" name="public" checked>
+                </div>
+
+                <div class="mb-2">
+                    Czy strona ma otwierać się w nowym oknie?
+                    <input type="checkbox" name="public" checked>
                 </div>
 
                 <input type="hidden" name="type" value="{{ $type }}">

@@ -36,7 +36,7 @@
 
                 <div class="mb-2">
                     Czy kategoria ma być publiczna?
-                    <input type="checkbox" name="public">
+                    <input type="checkbox" name="public" checked>
                 </div>
 
                 <input type="hidden" name="category_id" value="{{ $category_id }}">
