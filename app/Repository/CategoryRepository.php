@@ -27,6 +27,14 @@ class CategoryRepository
         return $this->subcategoryRepository;
     }
 
+    public function getAll()
+    {
+        return $this->model
+            ->orderBy('order')
+            ->where(['user_id' => Auth::id()])
+            ->get();
+    }
+
     public function getAllByParameters(int $hidden = -1)
     {
         if ($hidden == -1) {

@@ -74,23 +74,26 @@
                     <x-item hidden="{{ $page->hidden }}">
                         <x-slot name="title">{{ $page->name }}</x-slot>
                         <x-slot name="content">
-                            <a href="{{ $page->link }}" @if ($page->open_in_new_window)
-                                target="_blank"
-                @endif>
-                <img src="{{ $page->image_url }}" alt="Obrazek" class="full">
-                </a>
+                            <a href="{{ $page->link }}" @php
+                                if ($page->open_in_new_window) {
+                                    echo `target="_blank"`;
+                                }
+                            @endphp>
+                                <img src="{{ $page->image_url }}" alt="Obrazek" class="full">
+                            </a>
+                        </x-slot>
+
+                        <x-slot name="changeVisibility">
+                            {{ route('page.changeVisibility', ['id' => $page->id]) }}
+                        </x-slot>
+
+                        <x-slot name="settings">
+                            {{ route('page.edit', ['id' => $page->id, 'type' => 'category', 'view' => $view]) }}
+                        </x-slot>
+                    </x-item>
+                @endforeach
+            </div>
+        </div>
     </x-slot>
 
-    <x-slot name="changeVisibility">
-        {{ route('page.changeVisibility', ['id' => $page->id]) }}
-    </x-slot>
-
-    <x-slot name="settings">
-        {{ route('page.edit', ['id' => $page->id, 'type' => 'category', 'view' => $view]) }}
-    </x-slot>
-    </x-item>
-    @endforeach
-    </div>
-    </div>
-    </x-slot>
 </x-main-layout>

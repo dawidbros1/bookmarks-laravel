@@ -30,7 +30,7 @@ class CategoryController extends Controller
     {
         if ($view == 'visible') $categories = $this->categoryRepository->getAllByParameters(0);
         else if ($view == "hidden") $categories = $this->categoryRepository->getAllByParameters(1);
-        else if ($view == "all") $categories = $this->categoryRepository->getAllByParameters();
+        else if ($view == "all") $categories = $this->categoryRepository->getAll();
 
         return view('category.list', [
             'categories' => $categories,

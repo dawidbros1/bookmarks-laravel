@@ -92,6 +92,7 @@ class SubcategoryController extends Controller
     {
         $subcategory = $this->subcategoryRepository->getModel()->find($id);
         $this->authorize('author', $subcategory);
+        $categories = $this->categoryRepository->getAll();
 
         return view(
             'subcategory.edit',
@@ -99,6 +100,7 @@ class SubcategoryController extends Controller
                 'subcategory' => $subcategory,
                 'view' => $request->input('view'),
                 'category_image' => $this->categoryRepository->getModel()->find($subcategory->category_id)->image_url,
+                'categories' => $categories,
             ]
         );
     }
@@ -112,7 +114,13 @@ class SubcategoryController extends Controller
         if ($request->input('public') != NULL) $data['public'] = true;
         else $data['public'] = false;
 
+        if ($data['category_id'] != $subcategory->category_id) {
+            $category = $this->categoryRepository->getModel()->find($data['category_id']);
+            $this->authorize('categoryAuthor', [new Subcategory, $category]);
+        }
+
         $subcategory->update($data);
+
         return redirect(url()->previous())
             ->with('success', 'Podkategoria została edytowana');
     }

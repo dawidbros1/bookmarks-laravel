@@ -31,7 +31,7 @@
 
                 <div class="mb-2">
                     Czy kategoria ma być publiczna?
-                    <input type="checkbox" name="public" checked>
+                    <input type="checkbox" name="public">
                 </div>
 
                 <x-jet-button type="submit"

@@ -36,6 +36,18 @@
                 @enderror
 
                 <div class="mb-2">
+                    Zmień główną kategorię
+                    <select name="category_id"
+                        class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}" @if ($category->id == $subcategory->category_id) selected @endif>
+
+                                {{ $category->name }} </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-2">
                     Czy podkategoria ma być publiczna?
                     <input type="checkbox" name="public" @if ($subcategory->public) checked @endif>
                 </div>
@@ -44,7 +56,8 @@
             </x-slot>
         </x-form-section>
 
-        <x-delete-item-button action="{{ route('subcategory.delete', ['id' => $subcategory->id, 'view' => $view]) }}">
+        <x-delete-item-button
+            action="{{ route('subcategory.delete', ['id' => $subcategory->id, 'view' => $view]) }}">
         </x-delete-item-button>
 
         <x-back-button action="{{ route('category.show', ['id' => $subcategory->category_id, 'view' => $view]) }}">
