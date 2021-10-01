@@ -34,7 +34,7 @@
                                 if ($page->open_in_new_window) {
                                     echo `target="_blank"`;
                                 }
-                            @endphp>>
+                            @endphp>
                                 <img src="{{ $page->image_url }}" alt="Obrazek" class="full">
                             </a>
                         </x-slot>

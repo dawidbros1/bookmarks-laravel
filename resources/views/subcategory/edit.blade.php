@@ -36,7 +36,7 @@
                 @enderror
 
                 <div class="mb-2">
-                    Zmień główną kategorię
+                    Kategoria głowna:
                     <select name="category_id"
                         class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
                         @foreach ($categories as $category)

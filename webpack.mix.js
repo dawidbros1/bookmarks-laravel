@@ -18,6 +18,7 @@ mix.js('resources/js/app.js', 'public/js')
     ]);
 
 mix.js(['resources/js/functions.js'], 'public/js')
+mix.js(['resources/js/pageEdit.js'], 'public/js')
 
 if (mix.inProduction()) {
     mix.version();

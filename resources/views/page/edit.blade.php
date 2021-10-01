@@ -29,7 +29,7 @@
 
                     <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20"
                         class="bg-gray-100 absolute right-1 bottom-1 hover:cursor-pointer"
-                        title="Wklej obrazek podkategorii" onclick="pasteImg('{{ $parent_image }}');">
+                        title="Wklej obrazek podkategorii" onclick="pasteImg('{{ $parent->image_ult }}');">
                 </div>
 
                 @error('image_url')
@@ -46,6 +46,39 @@
                 @error('link')
                     <div class="simple-error">{{ $message }}</div>
                 @enderror
+
+                {{-- EDYCJA ROZMIESZCZENIA --}}
+
+                <p class="font-bold">Edycja rozmieszczenia</p>
+
+                <div class="mb-2">
+                    Kategoria główna
+                    <select name="category_id" id="select-category"
+                        class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                        @foreach ($categories as $category)
+                            <option data-id="{{ $category->id }}" value="{{ $category->id }}"
+                                @if ($category->id == $category_id) selected @endif>{{ $category->name }} </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-2">
+                    Umieść w
+                    <select name="subcategory_id"
+                        class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                        <option value="0" id = "default">Strona główna w wybranej kategorii</option>
+                        @foreach ($subcategories as $subcategory)
+                            <option
+                                class="subcategory-option @if ($subcategory->category_id != $category_id) hidden @endif" @if ($page->type == 'subcategory' && $page->parent_id == $subcategory->id) selected @endif
+                                data-category-id="
+                                {{ $subcategory->category_id }}" value="{{ $subcategory->id }}">
+                                {{ $subcategory->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                {{-- KONIEC EDYCJI ROZMIESZCZENIA --}}
 
                 <div class="mb-2">
                     Czy strona ma być publiczna?
@@ -67,5 +100,7 @@
 
         <x-back-button action="{{ route($page->type . '.show', ['id' => $page->parent_id, 'view' => $view]) }}">
         </x-back-button>
+
+        <script src="{{ mix('js/pageEdit.js') }}"></script>
     </x-slot>
 </x-main-layout>

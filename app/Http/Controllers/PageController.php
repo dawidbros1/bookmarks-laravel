@@ -59,10 +59,16 @@ class PageController extends Controller
         $page = $this->pageRepository->getModel()->find($id);
         $this->authorize('author', $page);
 
+        $categories = $this->categoryRepository->getAll();
+        $category_ids = $categories->pluck('id')->toArray();
+        $subcategories = $this->subcategoryRepository->getAllByCategoryIds($category_ids);
+
         if ($page->type == "category") {
-            $parent_image = $this->categoryRepository->getModel()->find($page->parent_id)->image_url;
+            $parent = $this->categoryRepository->getModel()->find($page->parent_id);
+            $category_id = $parent->id;
         } else if ($page->type == "subcategory") {
-            $parent_image = $this->subcategoryRepository->getModel()->find($page->parent_id)->image_url;
+            $parent = $this->subcategoryRepository->getModel()->find($page->parent_id);
+            $category_id = $parent->category_id;
         }
 
         return view(
@@ -70,7 +76,10 @@ class PageController extends Controller
             [
                 'page' => $page,
                 'view' => $request->input('view'),
-                'parent_image' => $parent_image,
+                'parent' => $parent,
+                'categories' => $categories,
+                'subcategories' => $subcategories,
+                'category_id' => $category_id
             ]
         );
     }
@@ -86,6 +95,14 @@ class PageController extends Controller
 
         if ($request->input('open_in_new_window') != NULL) $data['open_in_new_window'] = true;
         else $data['open_in_new_window'] = false;
+
+        die();
+        //! Obsłużyć zmianę parenta strony
+        // Parent_id przechodzi przez walidator zatem jest w $data['parent_id]
+        // Pobierz aktualny category_id dla strony
+        // Pobierz nowy category id dla parent_id
+
+        die();
 
         $page->update($data);
 
