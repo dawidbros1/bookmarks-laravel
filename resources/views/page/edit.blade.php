@@ -49,7 +49,7 @@
 
                 {{-- EDYCJA ROZMIESZCZENIA --}}
 
-                <p class="font-bold">Edycja rozmieszczenia</p>
+                <p class="font-bold">Zaawansowane</p>
 
                 <div class="mb-2">
                     Kategoria główna
@@ -66,7 +66,7 @@
                     Umieść w
                     <select name="subcategory_id"
                         class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
-                        <option value="0" id = "default">Strona główna w wybranej kategorii</option>
+                        <option value="0" id="default">Wybranej kategorii</option>
                         @foreach ($subcategories as $subcategory)
                             <option
                                 class="subcategory-option @if ($subcategory->category_id != $category_id) hidden @endif" @if ($page->type == 'subcategory' && $page->parent_id == $subcategory->id) selected @endif

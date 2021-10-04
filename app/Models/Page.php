@@ -11,7 +11,7 @@ class Page extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['parent_id', 'name', 'image_url', 'hidden', 'link', 'public', 'type, open_in_new_window'];
+    protected $fillable = ['parent_id', 'name', 'image_url', 'hidden', 'link', 'public', 'type', 'open_in_new_window'];
 
     public function store(array $data)
     {

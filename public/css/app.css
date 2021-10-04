@@ -2041,6 +2041,11 @@ select {
     width: 100%;
     height: calc(100% - 1.25rem); /* 1.25 to watość h-15 w title*/
 }
+@responsive{
+    .w-1\/9{
+        width: 11.111111%;
+    }
+}
 .full-center{
     position: fixed;
     left: 50%;

@@ -96,7 +96,6 @@ class PageController extends Controller
         if ($request->input('open_in_new_window') != NULL) $data['open_in_new_window'] = true;
         else $data['open_in_new_window'] = false;
 
-        var_dump($request->all());
         $subcategory_id = $request->input('subcategory_id');
 
         if ($subcategory_id == 0) {
@@ -113,7 +112,7 @@ class PageController extends Controller
 
         $this->authorize('checkParent', [new Page, 'category', $category_id]);
         $page->update($data);
-
+        
         return redirect(url()->previous())
             ->with('success', 'Strona została edytowana');
     }
