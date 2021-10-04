@@ -96,14 +96,22 @@ class PageController extends Controller
         if ($request->input('open_in_new_window') != NULL) $data['open_in_new_window'] = true;
         else $data['open_in_new_window'] = false;
 
-        die();
-        //! Obsłużyć zmianę parenta strony
-        // Parent_id przechodzi przez walidator zatem jest w $data['parent_id]
-        // Pobierz aktualny category_id dla strony
-        // Pobierz nowy category id dla parent_id
+        var_dump($request->all());
+        $subcategory_id = $request->input('subcategory_id');
 
-        die();
+        if ($subcategory_id == 0) {
+            $category_id = $request->input('category_id');
+            $data['parent_id'] = $category_id;
+            $data['type'] = 'category';
+        } else {
+            $this->authorize('checkParent', [new Page, 'subcategory', $subcategory_id]);
+            $subcategory = $this->subcategoryRepository->getModel()->find($subcategory_id);
+            $category_id = $this->categoryRepository->getModel()->find($subcategory->category_id)->id;
+            $data['parent_id'] = $subcategory_id;
+            $data['type'] = 'subcategory';
+        }
 
+        $this->authorize('checkParent', [new Page, 'category', $category_id]);
         $page->update($data);
 
         return redirect(url()->previous())
