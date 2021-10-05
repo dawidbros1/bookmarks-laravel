@@ -30,7 +30,7 @@ class CategoryController extends Controller
     {
         if ($view == 'visible') $categories = $this->categoryRepository->getAllByParameters(0);
         else if ($view == "hidden") $categories = $this->categoryRepository->getAllByParameters(1);
-        else if ($view == "all") $categories = $this->categoryRepository->getAll();
+        else if ($view == "all") $categories = $this->categoryRepository->getAllByParameters();
 
         return view('category.list', [
             'categories' => $categories,
@@ -138,6 +138,40 @@ class CategoryController extends Controller
             ->with('success', 'Widoczność kategorii została zmieniona');
     }
 
+    //! MANAGE
+    public function manage()
+    {
+        $categories = $this->categoryRepository->getAllByParameters();
+        return view('category.manage', ['categories' => $categories]);
+    }
+
+    public function manageUpdate(Request $request)
+    {
+        $ids = $request->input('ids');
+        $hidden = $request->input('hidden');
+        $public = $request->input('public');
+        $count = 0;
+
+        $categories = $this->categoryRepository->getAllByIds($ids);
+        $this->authorize('categories', [new Category, $categories]);
+
+        $changeHidden = $this->updateColumn($ids, $hidden, 'hidden');
+        $changePublic = $this->updateColumn($ids, $public, 'public');
+
+        if ($changeHidden || $changePublic) $categories = $this->categoryRepository->getAllByIds($ids);
+
+        foreach ($categories as $key => $category) {
+            if ($category->public != $public[$key] || $category->hidden != $hidden[$key]) {
+                $data = ['hidden' => $hidden[$key], 'public' => $public[$key]];
+                $category->update($data);
+            }
+        }
+
+        return redirect()
+            ->route('category.manage')
+            ->with('success', 'Dane zostały zaktualizowane');
+    }
+
     //! DELETE
     public function delete(Request $request, $id)
     {
@@ -148,5 +182,25 @@ class CategoryController extends Controller
         return redirect()
             ->route('category.list', ['view' => $request->input('view')])
             ->with('success', 'Kategoria została usunięta');
+    }
+
+    // Pomocnicza funckja do metody manageUpdate
+    private function updateColumn($ids, $data, $column)
+    {
+        $zeroCounter = count(array_filter($data, function ($a) {
+            return ($a == 0);
+        }));
+
+        if ($zeroCounter == count($data)) {
+            // Wszystkie kategorie są ukryte
+            $this->categoryRepository->updateColumn($ids, $column, 0);
+            return true;
+        } elseif ($zeroCounter == 0) {
+            // Wszystkie kategorie są widoczne
+            $this->categoryRepository->updateColumn($ids, $column, 1);
+            return true;
+        }
+
+        return false;
     }
 }

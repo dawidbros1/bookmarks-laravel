@@ -21,6 +21,10 @@
                 <x-jet-nav-link href="{{ route('category.create') }}" :active="request()->routeIs('category.create')">
                     Dodaj kategorie
                 </x-jet-nav-link>
+
+                <x-jet-nav-link href="{{ route('category.manage') }}" :active="request()->routeIs('category.manage')">
+                    Zarządzaj
+                </x-jet-nav-link>
             @endauth
         </div>
     </div>

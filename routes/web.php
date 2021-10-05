@@ -38,6 +38,13 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/news', function () {
 
 // Dla zalogowanego użytkownika
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+
+    // Other
+    Route::get('manage', function () {
+        return view('manage');
+    })->name('manage');
+
+
     // Categories //
     Route::group(
         [
@@ -55,6 +62,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('edit');
             Route::post('/update/{id}', [CategoryController::class, 'update'])->name('update');
             Route::get('/changeVisibility/{id}', [CategoryController::class, 'changeVisibility'])->name('changeVisibility');
+            // MANAGE
+            Route::get('/manage', [CategoryController::class, 'manage'])->name('manage');
+            Route::post('/manage/update', [CategoryController::class, 'manageUpdate'])->name('manageUpdate');
             // DELETE
             Route::delete('/delete/{id}', [CategoryController::class, 'delete'])->name('delete');
         }

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Models\Category;
 use App\Repository\SubcategoryRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CategoryRepository
 {
@@ -27,11 +28,12 @@ class CategoryRepository
         return $this->subcategoryRepository;
     }
 
-    public function getAll()
+    public function getAllByIds($ids)
     {
         return $this->model
             ->orderBy('order')
             ->where(['user_id' => Auth::id()])
+            ->whereIN('id', $ids)
             ->get();
     }
 
@@ -48,5 +50,11 @@ class CategoryRepository
                 ->where(['user_id' => Auth::id(), 'hidden' => $hidden])
                 ->get();
         }
+    }
+
+    public function updateColumn(array $ids, string $column, int $value)
+    {
+        // DB::table('categories')->whereIn('id', $ids)->update([`'$column'`], $value);
+        DB::table('categories')->whereIn('id', $ids)->update(array($column => $value));
     }
 }
