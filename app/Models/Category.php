@@ -61,4 +61,10 @@ class Category extends Model
         // Usuwanie podkategorii
         $subcategoryRepository->getModel()->destroy($subcategory_ids);
     }
+
+    // Relacje [ 1 do n ] [ Jedna kategoria posiada wiele podkategorii ]
+    public function subcategory()
+    {
+        return $this->hasMany(Subcategory::class)->orderBy('order');
+    }
 }

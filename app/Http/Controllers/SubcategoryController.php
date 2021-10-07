@@ -136,10 +136,9 @@ class SubcategoryController extends Controller
     }
 
     //! MANAGE
-
     public function manage()
     {
-        $categories = $this->categoryRepository->getAllByParameters();
+        $categories = $this->categoryRepository->getAllByIdsWithRelation();
         return view('subcategory.manage', ['categories' => $categories]);
     }
 
@@ -149,24 +148,33 @@ class SubcategoryController extends Controller
         $hidden = $request->input('hidden');
         $public = $request->input('public');
 
-        $categories = $this->categoryRepository->getAllByIds($ids);
-        // $this->authorize('categories', [new Category, $categories]);
+        $subcategories = $this->subcategoryRepository->getAllByIds($ids);
+        $category_ids = array_unique($subcategories->pluck('category_id')->toArray());
+        $categories = $this->categoryRepository->getAllByIds($category_ids);
+
+        foreach ($categories as $category) {
+            $this->authorize('categoryAuthor', [new Subcategory, $category]);
+        }
 
         $changeHidden = $this->updateColumn($ids, $hidden, 'hidden');
         $changePublic = $this->updateColumn($ids, $public, 'public');
 
-        if ($changeHidden || $changePublic) $categories = $this->categoryRepository->getAllByIds($ids);
+        if ($changeHidden || $changePublic) $subcategories = $this->subcategoryRepository->getAllByIds($ids);
 
-        foreach ($categories as $key => $category) {
-            if ($category->public != $public[$key] || $category->hidden != $hidden[$key]) {
-                $data = ['hidden' => $hidden[$key], 'public' => $public[$key]];
-                $category->update($data);
+        //! Wymagana optymalizacja | Nowy pomysł
+        $subcategories = $this->sortSubcategories($subcategories, $ids);
+
+        for ($i = 0; $i < count($ids); $i++) {
+            $subcategory = $subcategories[$i];
+            if ($subcategory->public != $public[$i] || $subcategory->hidden != $hidden[$i]) {
+                $data = ['hidden' => $hidden[$i], 'public' => $public[$i]];
+                $subcategory->update($data);
             }
         }
 
         return redirect()
-            ->route('category.manage')
-            ->with('success', 'Dane zostały zaktualizowane');
+            ->route('subcategory.manage')
+            ->with('success', 'Dane zostały zaktualizowane:');
     }
 
     //!  DELETE
@@ -179,5 +187,44 @@ class SubcategoryController extends Controller
         return redirect()
             ->route('category.show', ['id' => $subcategory->category_id, 'view' => $request->input('view')])
             ->with('success', 'Podkategoria została usunięta');
+    }
+
+    // Pomocnicza funckje do metody manageUpdate
+    private function updateColumn($ids, $data, $column)
+    {
+        $zeroCounter = count(array_filter($data, function ($a) {
+            return ($a == 0);
+        }));
+
+        if ($zeroCounter == count($data)) {
+            // Wszystkie kategorie są ukryte
+            $this->categoryRepository->updateColumn($ids, $column, 0);
+            return true;
+        } elseif ($zeroCounter == 0) {
+            // Wszystkie kategorie są widoczne
+            $this->categoryRepository->updateColumn($ids, $column, 1);
+            return true;
+        }
+
+        return false;
+    }
+
+    private function sortSubcategories($subcategories, array $ids)
+    {
+        $output = [];
+        $counter = 0;
+
+        for ($i = 0; $i < count($ids); $i++) {
+
+            for ($j = 0; $j < count($subcategories); $j++) {
+                if ($subcategories[$j]->id == $ids[$i]) {
+                    array_push($output, $subcategories[$j]);
+                    break;
+                }
+                $counter++;
+            }
+        }
+
+        return $output;
     }
 }

@@ -54,7 +54,17 @@ class CategoryRepository
 
     public function updateColumn(array $ids, string $column, int $value)
     {
-        // DB::table('categories')->whereIn('id', $ids)->update([`'$column'`], $value);
         DB::table('categories')->whereIn('id', $ids)->update(array($column => $value));
+    }
+
+    // Pobieranie z relacjami
+
+    public function getAllByIdsWithRelation()
+    {
+        return $this->model
+            // ->orderBy('order')
+            ->where('user_id', Auth::id())
+            ->with('subcategory')
+            ->get();
     }
 }

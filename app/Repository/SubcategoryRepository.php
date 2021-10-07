@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Models\SubCategory;
 // use App\Repository\PageRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SubcategoryRepository
 {
@@ -25,6 +26,14 @@ class SubcategoryRepository
     public function getPageRepository()
     {
         return $this->pageRepository;
+    }
+
+    public function getAllByIds(array $ids)
+    {
+        return $this->model
+            // ->orderBy('order')
+            ->whereIN('id', $ids)
+            ->get();
     }
 
     public function getAllByCategoryIds(array $ids)
@@ -56,5 +65,10 @@ class SubcategoryRepository
             ->orderBy('order')
             ->where(['category_id' => $id, 'public' => 1])
             ->get();
+    }
+
+    public function updateColumn(array $ids, string $column, int $value)
+    {
+        DB::table('subcategories')->whereIn('id', $ids)->update(array($column => $value));
     }
 }

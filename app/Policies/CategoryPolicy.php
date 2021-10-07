@@ -20,6 +20,7 @@ class CategoryPolicy
 
     public function categories(User $user, Category $category, $categories)
     {
+        //! To jest źle zrobione -> Do poprawy
         foreach ($categories as $category) return $this->author($user, $category);
     }
 }
