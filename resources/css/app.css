@@ -42,3 +42,8 @@
 .right-28{
     right: 7rem;
 }
+
+.bg-gray-200
+{
+    background-color: rgba(229, 231, 235, 0,2);
+}

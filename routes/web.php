@@ -83,6 +83,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::get('/edit/{id}', [SubcategoryController::class, 'edit'])->name('edit');
             Route::post('/update/{id}', [SubcategoryController::class, 'update'])->name('update');
             Route::get('/changeVisibility/{id}', [SubcategoryController::class, 'changeVisibility'])->name('changeVisibility');
+            // MANAGE
+            Route::get('/manage', [SubcategoryController::class, 'manage'])->name('manage');
+            Route::post('/manage/update', [SubcategoryController::class, 'manageUpdate'])->name('manageUpdate');
             Route::delete('/delete/{id}', [SubcategoryController::class, 'delete'])->name('delete');
         }
     );

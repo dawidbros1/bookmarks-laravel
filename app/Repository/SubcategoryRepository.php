@@ -40,7 +40,7 @@ class SubcategoryRepository
         if ($hidden == -1) {
             return $this->model
                 ->orderBy('order')
-                ->whereIN(['category_id' => $id])
+                ->where('category_id', $id)
                 ->get();
         } else {
             return $this->model

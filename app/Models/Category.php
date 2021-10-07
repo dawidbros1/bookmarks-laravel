@@ -53,7 +53,6 @@ class Category extends Model
         // DANE
         $pageRepository = $subcategoryRepository->getPageRepository();
         $subcategory_ids = $subcategories->pluck('id')->toArray();
-
         // Usuwanie stron z podkategorii
         $pages = $pageRepository->getAllByParameters($subcategory_ids, 'subcategory');
         $page_ids = $pages->pluck('id')->toArray();

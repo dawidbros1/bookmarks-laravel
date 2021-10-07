@@ -150,7 +150,6 @@ class CategoryController extends Controller
         $ids = $request->input('ids');
         $hidden = $request->input('hidden');
         $public = $request->input('public');
-        $count = 0;
 
         $categories = $this->categoryRepository->getAllByIds($ids);
         $this->authorize('categories', [new Category, $categories]);

@@ -59,7 +59,7 @@ class PageController extends Controller
         $page = $this->pageRepository->getModel()->find($id);
         $this->authorize('author', $page);
 
-        $categories = $this->categoryRepository->getAll();
+        $categories = $this->categoryRepository->getAllByParameters();
         $category_ids = $categories->pluck('id')->toArray();
         $subcategories = $this->subcategoryRepository->getAllByCategoryIds($category_ids);
 
@@ -112,7 +112,7 @@ class PageController extends Controller
 
         $this->authorize('checkParent', [new Page, 'category', $category_id]);
         $page->update($data);
-        
+
         return redirect(url()->previous())
             ->with('success', 'Strona została edytowana');
     }

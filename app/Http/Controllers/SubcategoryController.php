@@ -92,7 +92,7 @@ class SubcategoryController extends Controller
     {
         $subcategory = $this->subcategoryRepository->getModel()->find($id);
         $this->authorize('author', $subcategory);
-        $categories = $this->categoryRepository->getAll();
+        $categories = $this->categoryRepository->getAllByParameters();
 
         return view(
             'subcategory.edit',
@@ -133,6 +133,40 @@ class SubcategoryController extends Controller
 
         return redirect(url()->previous())
             ->with('success', 'Widoczność podkategorii została zmieniona');
+    }
+
+    //! MANAGE
+
+    public function manage()
+    {
+        $categories = $this->categoryRepository->getAllByParameters();
+        return view('subcategory.manage', ['categories' => $categories]);
+    }
+
+    public function manageUpdate(Request $request)
+    {
+        $ids = $request->input('ids');
+        $hidden = $request->input('hidden');
+        $public = $request->input('public');
+
+        $categories = $this->categoryRepository->getAllByIds($ids);
+        // $this->authorize('categories', [new Category, $categories]);
+
+        $changeHidden = $this->updateColumn($ids, $hidden, 'hidden');
+        $changePublic = $this->updateColumn($ids, $public, 'public');
+
+        if ($changeHidden || $changePublic) $categories = $this->categoryRepository->getAllByIds($ids);
+
+        foreach ($categories as $key => $category) {
+            if ($category->public != $public[$key] || $category->hidden != $hidden[$key]) {
+                $data = ['hidden' => $hidden[$key], 'public' => $public[$key]];
+                $category->update($data);
+            }
+        }
+
+        return redirect()
+            ->route('category.manage')
+            ->with('success', 'Dane zostały zaktualizowane');
     }
 
     //!  DELETE
