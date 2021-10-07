@@ -1,10 +1,10 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\manage;
 
 use Illuminate\View\Component;
 
-class FormSection extends Component
+class Link extends Component
 {
     /**
      * Create a new component instance.
@@ -23,6 +23,6 @@ class FormSection extends Component
      */
     public function render()
     {
-        return view('components.form-section');
+        return view('components.manage.link');
     }
 }
