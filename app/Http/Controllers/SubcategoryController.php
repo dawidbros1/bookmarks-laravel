@@ -138,8 +138,30 @@ class SubcategoryController extends Controller
     //! MANAGE
     public function manage()
     {
-        $categories = $this->categoryRepository->getAllByIdsWithRelation();
-        return view('subcategory.manage', ['categories' => $categories]);
+        $categories = $this->categoryRepository->getAllByParameters();
+        $category_ids = $categories->pluck('id')->toArray();
+        $subcategories = $this->subcategoryRepository->getAllByCategoryIds($category_ids);
+
+        $package = [];
+        $category_names = [];
+        $indexes = [];
+
+        foreach ($categories as $key => $category) {
+            $package[$category->id] = [];
+            $indexes[$category->id] = [];
+            $category_names[$category->id] = $category->name;
+        }
+
+        foreach ($subcategories as $key => $subcategory) {
+            array_push($package[$subcategory->category_id], $subcategory);
+            array_push($indexes[$subcategory->category_id], $key);
+        }
+
+        return view('subcategory.manage', [
+            'package' => $package,
+            'category_names' => $category_names,
+            'indexes' => $indexes
+        ]);
     }
 
     public function manageUpdate(Request $request)
@@ -159,16 +181,18 @@ class SubcategoryController extends Controller
         $changeHidden = $this->updateColumn($ids, $hidden, 'hidden');
         $changePublic = $this->updateColumn($ids, $public, 'public');
 
-        if ($changeHidden || $changePublic) $subcategories = $this->subcategoryRepository->getAllByIds($ids);
-
-        //! Wymagana optymalizacja | Nowy pomysł
-        $subcategories = $this->sortSubcategories($subcategories, $ids);
-
-        for ($i = 0; $i < count($ids); $i++) {
-            $subcategory = $subcategories[$i];
-            if ($subcategory->public != $public[$i] || $subcategory->hidden != $hidden[$i]) {
-                $data = ['hidden' => $hidden[$i], 'public' => $public[$i]];
-                $subcategory->update($data);
+        if ($changeHidden == false || $changePublic == false) {
+            // Jedna kolumna została całościowo zaaktualizowana
+            if ($changeHidden == true || $changePublic == true) {
+                $subcategories = $this->subcategoryRepository->getAllByIds($ids);
+            }
+            // Żadna kolumna została całościowo zaaktualizowana
+            for ($i = 0; $i < count($ids); $i++) {
+                $subcategory = $subcategories[$i];
+                if ($subcategory->public != $public[$i] || $subcategory->hidden != $hidden[$i]) {
+                    $data = ['hidden' => $hidden[$i], 'public' => $public[$i]];
+                    $subcategory->update($data);
+                }
             }
         }
 
@@ -197,34 +221,16 @@ class SubcategoryController extends Controller
         }));
 
         if ($zeroCounter == count($data)) {
-            // Wszystkie kategorie są ukryte
-            $this->categoryRepository->updateColumn($ids, $column, 0);
+            // Wszystkie checkboxy niezaznaczone
+            $this->subcategoryRepository->updateColumn($ids, $column, 0);
             return true;
         } elseif ($zeroCounter == 0) {
-            // Wszystkie kategorie są widoczne
-            $this->categoryRepository->updateColumn($ids, $column, 1);
+            // Wszystkie checkboxy zaznaczone
+
+            $this->subcategoryRepository->updateColumn($ids, $column, 1);
             return true;
         }
 
         return false;
-    }
-
-    private function sortSubcategories($subcategories, array $ids)
-    {
-        $output = [];
-        $counter = 0;
-
-        for ($i = 0; $i < count($ids); $i++) {
-
-            for ($j = 0; $j < count($subcategories); $j++) {
-                if ($subcategories[$j]->id == $ids[$i]) {
-                    array_push($output, $subcategories[$j]);
-                    break;
-                }
-                $counter++;
-            }
-        }
-
-        return $output;
     }
 }

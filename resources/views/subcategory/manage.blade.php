@@ -17,42 +17,34 @@
                     </thead>
 
                     <tbody>
-                        <tr class="border-b-2">
+                        <tr>
                             <td></td>
                             <td class="text-center"><input type="checkbox" id="hiddenCheckboxButton"></td>
                             <td class="text-center"><input type="checkbox" id="publicCheckboxButton"></td>
                         </tr>
 
-                        @php
-                            $key = 0;
-                        @endphp
-
-                        @foreach ($categories as $category)
-
-                            @if (count($category->subcategory) != 0)
+                        @foreach ($package as $key => $items)
+                            @if (count($items) != 0)
                                 <tr>
-                                    <td colspan="3" class="font-bold">{{ $category->name }}</td>
+                                    <td colspan="3" class="font-bold">{{ $category_names[$key] }}</td>
                                 </tr>
-
-                                @foreach ($category->subcategory as $subcategory)
+                                @foreach ($items as $col => $subcategory)
                                     <tr class="border-b-2">
                                         <td class="pl-4">{{ $subcategory->name }}</td>
                                         <td class="text-center">
-                                            <input name="hidden[{{ $key }}]" type="hidden" value="0">
-                                            <input name="hidden[{{ $key }}]" type="checkbox" value="1"
+                                            <input name="hidden[{{ $indexes[$key][$col] }}]" type="hidden" value="0">
+                                            <input name="hidden[{{ $indexes[$key][$col] }}]" type="checkbox" value="1"
                                                 class="hiddenCheckbox" @if ($subcategory->hidden) checked @endif>
                                         </td>
                                         <td class="text-center">
-                                            <input name="public[{{ $key }}]" type="hidden" value="0">
-                                            <input name="public[{{ $key++ }}]" type="checkbox" value="1"
+                                            <input name="public[{{ $indexes[$key][$col] }}]" type="hidden" value="0">
+                                            <input name="public[{{ $indexes[$key][$col] }}]" type="checkbox" value="1"
                                                 class="publicCheckbox" @if ($subcategory->public) checked @endif>
                                         </td>
                                     </tr>
                                     <input type="hidden" name="ids[]" value="{{ $subcategory->id }}">
                                 @endforeach
                             @endif
-
-
                         @endforeach
                     </tbody>
                 </table>
