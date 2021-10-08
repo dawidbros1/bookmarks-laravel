@@ -8,7 +8,7 @@
     <x-slot name="content">
         <x-manage.main>
 
-            <x-form-section action="{{ route('update.subcategories.checkboxes') }}">
+            <x-form-section action="{{ route('update.checkboxesToPagesFromCategories') }}">
                 <table class="w-full">
                     <thead>
                         <th class="text-left w-4/6 md:w-9/12 lg:w-10/12">Nazwa</th>
@@ -26,7 +26,7 @@
                         @foreach ($package as $key => $items)
                             @if (count($items) != 0)
                                 <tr>
-                                    <td colspan="3" class="font-bold">{{ $category_names[$key] }}</td>
+                                    <td colspan="3" class="font-bold">{{ $page_names[$key] }}</td>
                                 </tr>
                                 @foreach ($items as $col => $subcategory)
                                     <tr class="border-b-2">

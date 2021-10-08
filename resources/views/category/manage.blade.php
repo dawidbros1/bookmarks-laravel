@@ -7,7 +7,7 @@
 
     <x-slot name="content">
         <x-manage.main>
-            <x-form-section action="{{ route('category.manageUpdate') }}">
+            <x-form-section action="{{ route('update.categories.checkboxes') }}">
                 <table class="w-full">
                     <thead>
                         <th class="text-left w-4/6 md:w-9/12 lg:w-10/12">Nazwa kategorii</th>

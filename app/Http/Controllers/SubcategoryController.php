@@ -164,7 +164,7 @@ class SubcategoryController extends Controller
         ]);
     }
 
-    public function manageUpdate(Request $request)
+    public function updateCheckboxes(Request $request)
     {
         $ids = $request->input('ids');
         $hidden = $request->input('hidden');
@@ -197,7 +197,7 @@ class SubcategoryController extends Controller
         }
 
         return redirect()
-            ->route('subcategory.manage')
+            ->route('manage.subcategories')
             ->with('success', 'Dane zostały zaktualizowane:');
     }
 
@@ -226,7 +226,6 @@ class SubcategoryController extends Controller
             return true;
         } elseif ($zeroCounter == 0) {
             // Wszystkie checkboxy zaznaczone
-
             $this->subcategoryRepository->updateColumn($ids, $column, 1);
             return true;
         }

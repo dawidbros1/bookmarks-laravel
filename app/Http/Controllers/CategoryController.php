@@ -145,7 +145,7 @@ class CategoryController extends Controller
         return view('category.manage', ['categories' => $categories]);
     }
 
-    public function manageUpdate(Request $request)
+    public function updateCheckboxes(Request $request)
     {
         $ids = $request->input('ids');
         $hidden = $request->input('hidden');
@@ -167,7 +167,7 @@ class CategoryController extends Controller
         }
 
         return redirect()
-            ->route('category.manage')
+            ->route('manage.categories')
             ->with('success', 'Dane zostały zaktualizowane');
     }
 

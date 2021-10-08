@@ -38,14 +38,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/news', function () {
 
 // Dla zalogowanego użytkownika
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-
-    // Other
-    Route::get('manage', function () {
-        return view('manage');
-    })->name('manage');
-
-
-    // Categories //
+    //! Categories
     Route::group(
         [
             'prefix' => "category",
@@ -62,15 +55,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('edit');
             Route::post('/update/{id}', [CategoryController::class, 'update'])->name('update');
             Route::get('/changeVisibility/{id}', [CategoryController::class, 'changeVisibility'])->name('changeVisibility');
-            // MANAGE
-            Route::get('/manage', [CategoryController::class, 'manage'])->name('manage');
-            Route::post('/manage/update', [CategoryController::class, 'manageUpdate'])->name('manageUpdate');
             // DELETE
             Route::delete('/delete/{id}', [CategoryController::class, 'delete'])->name('delete');
         }
     );
 
-    // SubCategories
+    //! Subcategories
     Route::group(
         [
             'prefix' => "subcategory",
@@ -84,13 +74,11 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::post('/update/{id}', [SubcategoryController::class, 'update'])->name('update');
             Route::get('/changeVisibility/{id}', [SubcategoryController::class, 'changeVisibility'])->name('changeVisibility');
             // MANAGE
-            Route::get('/manage', [SubcategoryController::class, 'manage'])->name('manage');
-            Route::post('/manage/update', [SubcategoryController::class, 'manageUpdate'])->name('manageUpdate');
             Route::delete('/delete/{id}', [SubcategoryController::class, 'delete'])->name('delete');
         }
     );
 
-    // Pages
+    //! Pages
     Route::group(
         [
             'prefix' => "page",
@@ -102,9 +90,62 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::get('/edit/{id}', [PageController::class, 'edit'])->name('edit');
             Route::post('/update/{id}', [PageController::class, 'update'])->name('update');
             Route::get('/changeVisibility/{id}', [PageController::class, 'changeVisibility'])->name('changeVisibility');
+            // MANAGE tylko strony z kategorii głównym
+            // Route::get('/category/manage', [PageController::class, 'manageFromCategories'])->name('manageFromCategoties');
+            // Route::post('/category/manage/update', [PageController::class, 'manageFromCategoriesUpdate'])->name('manageFromCategoriesUpdate');
+            // MANAGE tylko strony z podkategorii
+            // Route::get('/manage', [SubcategoryController::class, 'manage'])->name('manage');
+            // Route::post('/manage/update', [SubcategoryController::class, 'manageUpdate'])->name('manageUpdate');
             Route::delete('/delete/{id}', [PageController::class, 'delete'])->name('delete');
         }
     );
+
+
+    //! MANAGE VIEW
+    Route::group(
+        [
+            'prefix' => "manage",
+            'as' => 'manage.'
+        ],
+        function () {
+            Route::get('/categories', [CategoryController::class, 'manage'])->name('categories');
+            Route::get('/subcategories', [SubcategoryController::class, 'manage'])->name('subcategories');
+            Route::get('/category/pages', [PageController::class, 'managePagesFromCategories'])->name('PagesFromCategoties');
+        }
+    );
+
+    //! MANAGE UPDATA
+    Route::group(
+        [
+            'prefix' => "updata",
+            'as' => 'update.'
+        ],
+        function () {
+            Route::post('/categories/checkboxes', [CategoryController::class, 'updateCheckboxes'])->name('categories.checkboxes');
+            Route::post('/subcategory/checkboxes', [SubcategoryController::class, 'updateCheckboxes'])->name('subcategories.checkboxes');
+            Route::post('/category/pages/checkboxes', [PageController::class, 'updateCheckboxesToPagesFromCategories'])->name('checkboxesToPagesFromCategories');
+        }
+    );
+
+
+    // Kategorie
+
+
+    // Strony z kategorii
+
+
+
+
+    // Route::get('/manage/pages', [PageController::class, 'managePagesFromSubcategories'])->name('manage.PagesFromSubcategoties');
+
+
+    // Podkategorie
+
+    // Stony z podkategorii
+
+
+
+
 
     //
 });

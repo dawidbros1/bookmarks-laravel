@@ -128,6 +128,104 @@ class PageController extends Controller
             ->with('success', 'Widoczność strony została zmieniona');
     }
 
+    //! MANAGE
+    public function managePagesFromCategories()
+    {
+        $categories = $this->categoryRepository->getAllByParameters();
+        $category_ids = $categories->pluck('id')->toArray();
+        $pages = $this->pageRepository->getAllByParameters($category_ids, 'category');
+
+        $package = [];
+        $page_names = [];
+        $indexes = [];
+
+        //! Uprawnienia
+
+        foreach ($categories as $key => $category) {
+            $package[$category->id] = [];
+            $indexes[$category->id] = [];
+            $page_names[$category->id] = $category->name;
+        }
+
+        foreach ($pages as $key => $page) {
+            array_push($package[$page->parent_id], $page);
+            array_push($indexes[$page->parent_id], $key);
+        }
+
+        return view('page.manage', [
+            'package' => $package,
+            'page_names' => $page_names,
+            'indexes' => $indexes
+        ]);
+    }
+
+    public function updateCheckboxesToPagesFromCategories(Request $request)
+    {
+        $ids = $request->input('ids');
+        $hidden = $request->input('hidden');
+        $public = $request->input('public');
+
+        $pages = $this->pageRepository->getAllByIds($ids);
+        $category_ids = array_unique($pages->pluck('parent_id')->toArray());
+        $categories = $this->categoryRepository->getAllByIds($category_ids);
+
+        // foreach ($categories as $category) {
+        //     $this->authorize('categoryAuthor', [new Subcategory, $category]);
+        // }
+
+        $changeHidden = $this->updateColumn($ids, $hidden, 'hidden');
+        $changePublic = $this->updateColumn($ids, $public, 'public');
+
+        if ($changeHidden == false || $changePublic == false) {
+            // Jedna kolumna została całościowo zaaktualizowana
+            if ($changeHidden == true || $changePublic == true) {
+                $pages = $this->pageRepository->getAllByIds($ids);
+            }
+            // Żadna kolumna została całościowo zaaktualizowana
+            for ($i = 0; $i < count($ids); $i++) {
+                $page = $pages[$i];
+                if ($page->public != $public[$i] || $page->hidden != $hidden[$i]) {
+                    $data = ['hidden' => $hidden[$i], 'public' => $public[$i]];
+                    $page->update($data);
+                }
+            }
+        }
+
+        return redirect()
+            ->route('manage.PagesFromCategoties')
+            ->with('success', 'Dane zostały zaktualizowane:');
+    }
+
+    public function managePagesFromSubcategories()
+    {
+        $categories = $this->categoryRepository->getAllByParameters();
+        $category_ids = $categories->pluck('id')->toArray();
+        $pages = $this->pageRepository->getAllByParameters($category_ids, 'category');
+
+        $package = [];
+        $page_names = [];
+        $indexes = [];
+
+        //! Uprawnienia
+
+        foreach ($categories as $key => $category) {
+            $package[$category->id] = [];
+            $indexes[$category->id] = [];
+            $page_names[$category->id] = $category->name;
+        }
+
+        foreach ($pages as $key => $page) {
+            array_push($package[$page->parent_id], $page);
+            array_push($indexes[$page->parent_id], $key);
+        }
+
+        return view('page.manage', [
+            'package' => $package,
+            'page_names' => $page_names,
+            'indexes' => $indexes
+        ]);
+    }
+
     //! DELETE
     public function delete(Request $request, $id)
     {
@@ -138,5 +236,25 @@ class PageController extends Controller
         return redirect()
             ->route($page->type . '.show', ['id' => $page->parent_id, 'view' => $request->input('view')])
             ->with('success', 'Strona została usunięta');
+    }
+
+    // Pomocnicza funckje do metody manageUpdate
+    private function updateColumn($ids, $data, $column)
+    {
+        $zeroCounter = count(array_filter($data, function ($a) {
+            return ($a == 0);
+        }));
+
+        if ($zeroCounter == count($data)) {
+            // Wszystkie checkboxy niezaznaczone
+            $this->pageRepository->updateColumn($ids, $column, 0);
+            return true;
+        } elseif ($zeroCounter == 0) {
+            // Wszystkie checkboxy zaznaczone
+            $this->pageRepository->updateColumn($ids, $column, 1);
+            return true;
+        }
+
+        return false;
     }
 }
