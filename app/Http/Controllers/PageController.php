@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Page\Store;
+use App\Models\Category;
 use App\Models\Page;
 use App\Repository\CategoryRepository;
 use App\Repository\PageRepository;
@@ -169,9 +170,10 @@ class PageController extends Controller
         $category_ids = array_unique($pages->pluck('parent_id')->toArray());
         $categories = $this->categoryRepository->getAllByIds($category_ids);
 
-        // foreach ($categories as $category) {
-        //     $this->authorize('categoryAuthor', [new Subcategory, $category]);
-        // }
+
+        foreach ($categories as $category) {
+            $this->authorize('categoryAuthor', [new Page, $category]);
+        }
 
         $changeHidden = $this->updateColumn($ids, $hidden, 'hidden');
         $changePublic = $this->updateColumn($ids, $public, 'public');

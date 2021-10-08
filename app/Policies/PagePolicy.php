@@ -45,14 +45,22 @@ class PagePolicy
         return Response::allow();
     }
 
-    public function checkSubcategory($user, Subcategory $subcategory)
+    public function categoryAuthor($user, Page $page,  Category $category)
+    {
+        if ($category == null) return Response::deny('Zasób nie istnieje');
+        if ($category->user_id != $user->id) return Response::deny('Brak uprawnień do tego zasobu');
+        return Response::allow();
+    }
+
+    // Funkcje pomocnicze
+    private function checkSubcategory($user, Subcategory $subcategory)
     {
         if ($subcategory == null) return Response::deny('Zasób nie istnieje');
         $category = $this->category->find($subcategory->category_id);
         $this->checkCategory($user, $category);
     }
 
-    public function checkCategory($user, Category $category)
+    private function checkCategory($user, Category $category)
     {
         if ($category == null) return Response::deny('Zasób nie istnieje');
         if ($category->user_id != $user->id) return Response::deny('Brak uprawnień do tego zasobu');
