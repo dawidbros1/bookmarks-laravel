@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Manage;
 use App\Http\Requests\Subcategory\Store;
 use App\Models\Subcategory;
 use App\Repository\CategoryRepository;
@@ -138,30 +139,8 @@ class SubcategoryController extends Controller
     //! MANAGE
     public function manage()
     {
-        $categories = $this->categoryRepository->getAllByParameters();
-        $category_ids = $categories->pluck('id')->toArray();
-        $subcategories = $this->subcategoryRepository->getAllByCategoryIds($category_ids);
-
-        $package = [];
-        $category_names = [];
-        $indexes = [];
-
-        foreach ($categories as $key => $category) {
-            $package[$category->id] = [];
-            $indexes[$category->id] = [];
-            $category_names[$category->id] = $category->name;
-        }
-
-        foreach ($subcategories as $key => $subcategory) {
-            array_push($package[$subcategory->category_id], $subcategory);
-            array_push($indexes[$subcategory->category_id], $key);
-        }
-
-        return view('subcategory.manage', [
-            'package' => $package,
-            'category_names' => $category_names,
-            'indexes' => $indexes
-        ]);
+        $categories = $this->categoryRepository->getAllByIdsWithSubcategories();
+        return view('subcategory.manage', ['categories' => $categories]);
     }
 
     public function updateCheckboxes(Request $request)
@@ -178,23 +157,11 @@ class SubcategoryController extends Controller
             $this->authorize('categoryAuthor', [new Subcategory, $category]);
         }
 
-        $changeHidden = $this->updateColumn($ids, $hidden, 'hidden');
-        $changePublic = $this->updateColumn($ids, $public, 'public');
+        $hidden = Manage::filter($ids, $hidden);
+        $public = Manage::filter($ids, $public);
 
-        if ($changeHidden == false || $changePublic == false) {
-            // Jedna kolumna została całościowo zaaktualizowana
-            if ($changeHidden == true || $changePublic == true) {
-                $subcategories = $this->subcategoryRepository->getAllByIds($ids);
-            }
-            // Żadna kolumna została całościowo zaaktualizowana
-            for ($i = 0; $i < count($ids); $i++) {
-                $subcategory = $subcategories[$i];
-                if ($subcategory->public != $public[$i] || $subcategory->hidden != $hidden[$i]) {
-                    $data = ['hidden' => $hidden[$i], 'public' => $public[$i]];
-                    $subcategory->update($data);
-                }
-            }
-        }
+        Manage::updateColumn($hidden['zero'], $hidden['one'], 'hidden', $this->subcategoryRepository);
+        Manage::updateColumn($public['zero'], $public['one'], 'public', $this->subcategoryRepository);
 
         return redirect()
             ->route('manage.subcategories')
@@ -211,25 +178,5 @@ class SubcategoryController extends Controller
         return redirect()
             ->route('category.show', ['id' => $subcategory->category_id, 'view' => $request->input('view')])
             ->with('success', 'Podkategoria została usunięta');
-    }
-
-    // Pomocnicza funckje do metody manageUpdate
-    private function updateColumn($ids, $data, $column)
-    {
-        $zeroCounter = count(array_filter($data, function ($a) {
-            return ($a == 0);
-        }));
-
-        if ($zeroCounter == count($data)) {
-            // Wszystkie checkboxy niezaznaczone
-            $this->subcategoryRepository->updateColumn($ids, $column, 0);
-            return true;
-        } elseif ($zeroCounter == 0) {
-            // Wszystkie checkboxy zaznaczone
-            $this->subcategoryRepository->updateColumn($ids, $column, 1);
-            return true;
-        }
-
-        return false;
     }
 }
