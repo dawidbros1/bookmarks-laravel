@@ -62,7 +62,7 @@ class CategoryRepository
     public function getAllByIdsWithRelation()
     {
         return $this->model
-            // ->orderBy('order')
+            ->orderBy('order')
             ->where('user_id', Auth::id())
             ->with('subcategory')
             ->get();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Manage;
 use App\Http\Requests\Category\Store;
 use App\Models\Category;
 use App\Repository\CategoryRepository;
@@ -154,17 +155,11 @@ class CategoryController extends Controller
         $categories = $this->categoryRepository->getAllByIds($ids);
         $this->authorize('categories', [new Category, $categories]);
 
-        $changeHidden = $this->updateColumn($ids, $hidden, 'hidden');
-        $changePublic = $this->updateColumn($ids, $public, 'public');
+        $hidden = Manage::filter($ids, $hidden);
+        $public = Manage::filter($ids, $public);
 
-        if ($changeHidden || $changePublic) $categories = $this->categoryRepository->getAllByIds($ids);
-
-        foreach ($categories as $key => $category) {
-            if ($category->public != $public[$key] || $category->hidden != $hidden[$key]) {
-                $data = ['hidden' => $hidden[$key], 'public' => $public[$key]];
-                $category->update($data);
-            }
-        }
+        Manage::updateColumn($hidden['zero'], $hidden['one'], 'hidden', $this->categoryRepository);
+        Manage::updateColumn($public['zero'], $public['one'], 'public', $this->categoryRepository);
 
         return redirect()
             ->route('manage.categories')
@@ -181,25 +176,5 @@ class CategoryController extends Controller
         return redirect()
             ->route('category.list', ['view' => $request->input('view')])
             ->with('success', 'Kategoria została usunięta');
-    }
-
-    // Pomocnicza funckja do metody manageUpdate
-    private function updateColumn($ids, $data, $column)
-    {
-        $zeroCounter = count(array_filter($data, function ($a) {
-            return ($a == 0);
-        }));
-
-        if ($zeroCounter == count($data)) {
-            // Wszystkie kategorie są ukryte
-            $this->categoryRepository->updateColumn($ids, $column, 0);
-            return true;
-        } elseif ($zeroCounter == 0) {
-            // Wszystkie kategorie są widoczne
-            $this->categoryRepository->updateColumn($ids, $column, 1);
-            return true;
-        }
-
-        return false;
     }
 }
