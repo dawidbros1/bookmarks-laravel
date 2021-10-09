@@ -62,9 +62,15 @@ class Category extends Model
         $subcategoryRepository->getModel()->destroy($subcategory_ids);
     }
 
-    // Relacje [ 1 do n ] [ Jedna kategoria posiada wiele podkategorii ]
+    // Relacje
+    // [ 1 do n ] [ Jedna kategoria posiada wiele podkategorii ]
     public function subcategory()
     {
         return $this->hasMany(Subcategory::class)->orderBy('order');
+    }
+    // [ 1 do n ] [ Jedna kategoria posiada wiele stron ]
+    public function pages()
+    {
+        return $this->hasMany(Page::class, 'parent_id')->orderBy('order')->where('type', 'category');
     }
 }

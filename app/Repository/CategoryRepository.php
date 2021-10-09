@@ -57,14 +57,22 @@ class CategoryRepository
         DB::table('categories')->whereIn('id', $ids)->update(array($column => $value));
     }
 
-    // Pobieranie z relacjami
-
-    public function getAllByIdsWithRelation()
+    // Pobieranie danych z relacjami
+    public function getAllByIdsWithSubcategories()
     {
         return $this->model
             ->orderBy('order')
             ->where('user_id', Auth::id())
             ->with('subcategory')
+            ->get();
+    }
+
+    public function getAllByidsWithPages()
+    {
+        return $this->model
+            ->orderBy('order')
+            ->where('user_id', Auth::id())
+            ->with('pages')
             ->get();
     }
 }

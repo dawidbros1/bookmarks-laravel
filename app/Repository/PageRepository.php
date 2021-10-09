@@ -48,7 +48,6 @@ class PageRepository
         }
     }
 
-
     public function getPublicDataParameters($id, $type)
     {
         return $this->model
