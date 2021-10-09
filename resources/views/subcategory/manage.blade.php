@@ -28,12 +28,12 @@
                         @endphp
 
                         @foreach ($categories as $key => $category)
-                            @if (count($category->subcategory) != 0)
-                                <tr>
+                            @if (count($category->subcategories) != 0)
+                                <tr class="border-t-2 border-blue-600">
                                     <td colspan="3" class="font-bold">{{ $category->name }}</td>
                                 </tr>
-                                @foreach ($category->subcategory as $item)
-                                    <tr class="border-b-2">
+                                @foreach ($category->subcategories as $item)
+                                    <tr class="border-b">
                                         <td class="pl-4">{{ $item->name }}</td>
                                         <td class="text-center">
                                             <input name="hidden[{{ $index }}]" type="hidden" value="0">

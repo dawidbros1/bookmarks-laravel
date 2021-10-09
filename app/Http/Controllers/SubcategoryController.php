@@ -139,7 +139,7 @@ class SubcategoryController extends Controller
     //! MANAGE
     public function manage()
     {
-        $categories = $this->categoryRepository->getAllByIdsWithSubcategories();
+        $categories = $this->categoryRepository->getAllWithSubcategories();
         return view('subcategory.manage', ['categories' => $categories]);
     }
 

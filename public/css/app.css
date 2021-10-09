@@ -1563,6 +1563,15 @@ select {
 .border-r {
 	border-right-width: 1px;
 }
+.border-b-4 {
+	border-bottom-width: 4px;
+}
+.border-t-4 {
+	border-top-width: 4px;
+}
+.border-t-2 {
+	border-top-width: 2px;
+}
 .border-gray-300 {
 	--tw-border-opacity: 1;
 	border-color: rgba(209, 213, 219, var(--tw-border-opacity));
@@ -1597,6 +1606,10 @@ select {
 .border-red-400 {
 	--tw-border-opacity: 1;
 	border-color: rgba(248, 113, 113, var(--tw-border-opacity));
+}
+.border-blue-600 {
+	--tw-border-opacity: 1;
+	border-color: rgba(37, 99, 235, var(--tw-border-opacity));
 }
 .bg-white {
 	--tw-bg-opacity: 1;
@@ -1799,11 +1812,14 @@ select {
 .pl-2 {
 	padding-left: 0.5rem;
 }
+.pl-4 {
+	padding-left: 1rem;
+}
 .pt-8 {
 	padding-top: 2rem;
 }
-.pl-4 {
-	padding-left: 1rem;
+.pl-8 {
+	padding-left: 2rem;
 }
 .text-left {
 	text-align: left;

@@ -1,14 +1,14 @@
 <x-main-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Zarządzaj podkategoriami') }}
+            {{ __('Zarządzaj stronami') }}
         </h2>
     </x-slot>
 
     <x-slot name="content">
         <x-manage.main>
 
-            <x-form-section action="{{ route('update.checkboxesToPagesFromCategories') }}">
+            <x-form-section action="{{ route('update.pages.checkboxes', ['type' => 'category']) }}">
                 <table class="w-full">
                     <thead>
                         <th class="text-left w-4/6 md:w-9/12 lg:w-10/12">Nazwa</th>
@@ -29,11 +29,11 @@
 
                         @foreach ($categories as $category)
                             @if (count($category->pages) != 0)
-                                <tr>
+                                <tr class="border-t-2 border-blue-600">
                                     <td colspan="3" class="font-bold">{{ $category->name }}</td>
                                 </tr>
                                 @foreach ($category->pages as $item)
-                                    <tr class="border-b-2">
+                                    <tr class="border-t">
                                         <td class="pl-4">{{ $item->name }}</td>
                                         <td class="text-center">
                                             <input name="hidden[{{ $index }}]" type="hidden" value="0">

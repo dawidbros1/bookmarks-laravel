@@ -131,26 +131,34 @@ class PageController extends Controller
     }
 
     //! MANAGE
-    public function managePagesFromCategories()
+
+    public function manage(Request $request)
     {
-        $categories = $this->categoryRepository->getAllByidsWithPages();
-        return view('page.manageTypeCategory', ['categories' => $categories]);
+        $type = $request->input('type');
+        if ($type == "category") {
+            $categories = $this->categoryRepository->getAllWithPages();
+            return view('page.manageTypeCategory', ['categories' => $categories]);
+        } else {
+            $categories = $this->categoryRepository->getAllWithSubcategoriesWithPages();
+            return view('page.manageTypeSubcategory', ['categories' => $categories]);
+        }
     }
 
-    public function updateCheckboxesToPagesFromCategories(Request $request)
+    public function updateCheckboxes(Request $request, $type)
     {
         $ids = $request->input('ids');
         $hidden = $request->input('hidden');
         $public = $request->input('public');
-
         $pages = $this->pageRepository->getAllByIds($ids);
+        $parent_ids = $pages->pluck('parent_id')->toArray();
 
-        $category_ids = array_unique($pages->pluck('parent_id')->toArray());
-        $categories = $this->categoryRepository->getAllByIds($category_ids);
-
-        foreach ($categories as $category) {
-            $this->authorize('categoryAuthor', [new Page, $category]);
+        if ($type == "subcategory") {
+            $subcategories = $this->subcategoryRepository->getAllByIds($parent_ids);
+            $parent_ids = $subcategories->pluck('category_id')->toArray();
         }
+
+        $categories = $this->categoryRepository->getAllByIds($parent_ids);
+        //! Czy jestem autorem
 
         $hidden = Manage::filter($ids, $hidden);
         $public = Manage::filter($ids, $public);
@@ -158,149 +166,7 @@ class PageController extends Controller
         Manage::updateColumn($hidden['zero'], $hidden['one'], 'hidden', $this->pageRepository);
         Manage::updateColumn($public['zero'], $public['one'], 'public', $this->pageRepository);
 
-        return redirect()
-            ->route('manage.PagesFromCategoties')
-            ->with('success', 'Dane zostały zaktualizowane:');
-    }
-
-    public function managePagesFromSubcategories()
-    {
-        $categories = $this->categoryRepository->getAllByParameters();
-        $category_ids = $categories->pluck('id')->toArray();
-
-        $subcategories = $this->subcategoryRepository->getAllByCategoryIds($category_ids);
-        $subcategory_ids = $subcategories->pluck('id')->toArray();
-
-        $pages = $this->pageRepository->getAllByParameters($subcategory_ids, 'subcategory');
-
-        $package = [];
-        $category_names = [];
-        $subcategory_names = [];
-        $indexes = [];
-        $subcategory_ids = [];
-        $cat_indexes = [];
-
-        //! Uprawnienia
-
-        $my_categories = [];
-        $my_subcategories = [];
-        $pages_childs = [];
-        $subcategories_childs = [];
-
-        foreach ($categories as $category) {
-            $category->childs = [];
-            $my_categories[$category->id] = $category;
-            $subcategories_childs[$category->id] = [];
-        }
-
-        foreach ($subcategories as $subcategory) {
-            $subcategory->childs = [];
-            $my_subcategories[$subcategory->id] = [$subcategory];
-            $pages_childs[$subcategory->id] = [];
-        }
-
-        foreach ($pages as $page) {
-            array_push($pages_childs[$page->parent_id], $page);
-        }
-
-        foreach ($my_subcategories as $key => $sub) {
-            $sub[0]['childs'] = $pages_childs[$key];
-        }
-
-        foreach ($my_subcategories as $key => $sub) {
-            array_push($subcategories_childs[$sub[0]->category_id], $sub);
-        }
-
-        foreach ($subcategories_childs as $key => $child) {
-            $my_categories[$key]['childs'] = $child;
-        }
-
-        // return $my_categories;
-
-        // die();
-
-        //
-
-        // foreach ($categories as $category) {
-        //     array_push($category_names, $category->name);
-        //     array_push($cat_indexes, $category->id);
-        //     $subcategory_names[$category->id] = [];
-        // }
-
-        // foreach ($subcategories as $subcategory) {
-        //     array_push($subcategory_names[$subcategory->category_id], $subcategory->name);
-        //     array_push($subcategory_ids, $subcategory->id);
-        //     $package[$subcategory->id] = [];
-        //     $indexes[$subcategory->id] = [];
-        // }
-
-        // return $subcategory_names[2];
-        // die();
-
-
-        // foreach ($pages as $key => $page) {
-        //     array_push($package[$page->parent_id], $page);
-        //     array_push($indexes[$page->parent_id], $key);
-        // }
-
-        // return $subcategory_ids;/
-        // return $indexes;
-        // return $subcategory_ids;
-        // return $package;
-
-        // return view('page.manageTypeSubcategory', [
-        //     'package' => $package,
-        //     'category_names' => $category_names,
-        //     'subcategory_names' => $subcategory_names,
-        //     'indexes' => $indexes,
-        //     'subcategory_ids' => $subcategory_ids,
-        //     'cat_indexes' => $cat_indexes
-        // ]);
-
-
-        return view('page.manageTypeSubcategory', [
-            'package' => $my_categories,
-        ]);
-    }
-
-    public function updateCheckboxesToPagesFromSubcategories(Request $request)
-    {
-        $ids = $request->input('ids');
-        $hidden = $request->input('hidden');
-        $public = $request->input('public');
-
-        $pages = $this->pageRepository->getAllByIds($ids);
-        $subcategory_ids = $pages->pluck('parent_id')->toArray();
-
-        $subcategories = $this->subcategoryRepository->getAllByIds($subcategory_ids);
-        $category_ids = array_unique($subcategories->pluck('category_id')->toArray());
-        $categories = $this->categoryRepository->getAllByIds($category_ids);
-
-
-        // foreach ($categories as $category) {
-        //     $this->authorize('categoryAuthor', [new Page, $category]);
-        // }
-
-        $changeHidden = $this->updateColumn($ids, $hidden, 'hidden');
-        $changePublic = $this->updateColumn($ids, $public, 'public');
-
-        if ($changeHidden == false || $changePublic == false) {
-            // Jedna kolumna została całościowo zaaktualizowana
-            if ($changeHidden == true || $changePublic == true) {
-                $pages = $this->pageRepository->getAllByIds($ids);
-            }
-            // Żadna kolumna została całościowo zaaktualizowana
-            for ($i = 0; $i < count($ids); $i++) {
-                $page = $pages[$i];
-                if ($page->public != $public[$i] || $page->hidden != $hidden[$i]) {
-                    $data = ['hidden' => $hidden[$i], 'public' => $public[$i]];
-                    $page->update($data);
-                }
-            }
-        }
-
-        return redirect()
-            ->route('manage.PagesFromSubcategoties')
+        return redirect(url()->previous())
             ->with('success', 'Dane zostały zaktualizowane:');
     }
 
@@ -314,25 +180,5 @@ class PageController extends Controller
         return redirect()
             ->route($page->type . '.show', ['id' => $page->parent_id, 'view' => $request->input('view')])
             ->with('success', 'Strona została usunięta');
-    }
-
-    // Pomocnicza funckje do metody manageUpdate
-    private function updateColumn($ids, $data, $column)
-    {
-        $zeroCounter = count(array_filter($data, function ($a) {
-            return ($a == 0);
-        }));
-
-        if ($zeroCounter == count($data)) {
-            // Wszystkie checkboxy niezaznaczone
-            $this->pageRepository->updateColumn($ids, $column, 0);
-            return true;
-        } elseif ($zeroCounter == 0) {
-            // Wszystkie checkboxy zaznaczone
-            $this->pageRepository->updateColumn($ids, $column, 1);
-            return true;
-        }
-
-        return false;
     }
 }

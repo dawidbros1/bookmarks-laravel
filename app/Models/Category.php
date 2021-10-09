@@ -64,10 +64,11 @@ class Category extends Model
 
     // Relacje
     // [ 1 do n ] [ Jedna kategoria posiada wiele podkategorii ]
-    public function subcategory()
+    public function subcategories()
     {
         return $this->hasMany(Subcategory::class)->orderBy('order');
     }
+
     // [ 1 do n ] [ Jedna kategoria posiada wiele stron ]
     public function pages()
     {

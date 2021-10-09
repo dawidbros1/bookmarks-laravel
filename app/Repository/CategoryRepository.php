@@ -58,21 +58,30 @@ class CategoryRepository
     }
 
     // Pobieranie danych z relacjami
-    public function getAllByIdsWithSubcategories()
+    public function getAllWithSubcategories()
     {
         return $this->model
             ->orderBy('order')
             ->where('user_id', Auth::id())
-            ->with('subcategory')
+            ->with('subcategories')
             ->get();
     }
 
-    public function getAllByidsWithPages()
+    public function getAllWithPages()
     {
         return $this->model
             ->orderBy('order')
             ->where('user_id', Auth::id())
             ->with('pages')
+            ->get();
+    }
+
+    public function getAllWithSubcategoriesWithPages()
+    {
+        return $this->model
+            ->orderBy('order')
+            ->where('user_id', Auth::id())
+            ->with('subcategories.pages')
             ->get();
     }
 }

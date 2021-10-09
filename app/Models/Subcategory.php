@@ -35,7 +35,13 @@ class Subcategory extends Model
         $pages = $pageRepository->getAllByParameters($this->id, 'subcategory');
         $page_ids = $pages->pluck('id')->toArray();
         $pageRepository->getModel()->destroy($page_ids);
-
         $this->destroy($this->id);
+    }
+
+    // Relacje
+    // [ 1 do n ] [ Jedna podkategoria posiada wiele stron ]
+    public function pages()
+    {
+        return $this->hasMany(Page::class, 'parent_id')->orderBy('order')->where('type', 'subcategory');
     }
 }

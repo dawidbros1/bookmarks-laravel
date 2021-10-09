@@ -16,14 +16,14 @@
                     </thead>
 
                     <tbody>
-                        <tr class="border-b-2">
+                        <tr class="border-b-2 border-blue-600">
                             <td></td>
                             <td class="text-center"><input type="checkbox" id="hiddenCheckboxButton"></td>
                             <td class="text-center"><input type="checkbox" id="publicCheckboxButton"></td>
                         </tr>
 
                         @foreach ($categories as $key => $category)
-                            <tr class="border-b-2">
+                            <tr class="border-b">
                                 <td>{{ $category->name }}</td>
                                 <td class="text-center">
                                     <input name="hidden[{{ $key }}]" type="hidden" value="0">

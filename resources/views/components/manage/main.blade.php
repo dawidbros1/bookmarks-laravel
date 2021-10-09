@@ -8,8 +8,8 @@
                 Kategorie
             </x-manage.link>
 
-            <x-manage.link route="{{ route('manage.PagesFromCategoties') }}"
-                :active="request()->routeIs('manage.PagesFromCategoties')">
+            <x-manage.link route="{{ route('manage.category.pages', ['type' => 'category']) }}"
+                :active="request()->routeIs('manage.category.pages')">
                 <span class="ml-2">Strony</span>
             </x-manage.link>
 
@@ -18,9 +18,10 @@
                 Podkategorie
             </x-manage.link>
 
-            {{-- <x-manage.link route="{{ route('category.manage') }}" :active="request()->routeIs('page.manage')">
+            <x-manage.link route="{{ route('manage.subcategory.pages', ['type' => 'subcategory']) }}"
+                :active="request()->routeIs('manage.subcategory.pages')">
                 <span class="ml-2">Strony</span>
-            </x-manage.link> --}}
+            </x-manage.link>
         </nav>
     </div>
 
