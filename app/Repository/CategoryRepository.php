@@ -32,7 +32,6 @@ class CategoryRepository
     {
         return $this->model
             ->orderBy('order')
-            ->where(['user_id' => Auth::id()])
             ->whereIN('id', $ids)
             ->get();
     }

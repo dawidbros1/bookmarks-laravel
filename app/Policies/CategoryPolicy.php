@@ -20,7 +20,10 @@ class CategoryPolicy
 
     public function categories(User $user, Category $category, $categories)
     {
-        //! To jest źle zrobione -> Do poprawy
-        foreach ($categories as $category) return $this->author($user, $category);
+        foreach ($categories as $category) {
+            if ($user->id != $category->user_id) return Response::deny('Brak uprawnień do tego zasobu');
+        }
+
+        return Response::allow();
     }
 }

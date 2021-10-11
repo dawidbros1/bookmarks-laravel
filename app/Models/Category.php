@@ -34,9 +34,9 @@ class Category extends Model
     {
         // DANE
         $pageRepository = $subcategoryRepository->getPageRepository();
+        $subcategories = $subcategoryRepository->getAllByParameters($this->id);
 
         // Kasowanie podkategorii
-        $subcategories = $subcategoryRepository->getAllByParameters($this->id);
         $this->deleteSubcategoriesWithContent($subcategoryRepository, $subcategories);
 
         // Kasowanie stron w kategorii
