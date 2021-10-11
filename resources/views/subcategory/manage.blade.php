@@ -11,9 +11,15 @@
             <x-form-section action="{{ route('update.subcategories.checkboxes') }}">
                 <table class="w-full">
                     <thead>
-                        <th class="text-left w-4/6 md:w-9/12 lg:w-10/12">Nazwa</th>
-                        <th>Ukryta</th>
-                        <th>Publiczna</th>
+                        <th class="text-left w-10/12 lg:w-11/12">Nazwa</th>
+                        <th>
+                            <img class="block m-auto" src="{{ URL::asset('/images/block.png') }}" alt="profile Pic"
+                                height="25" width="25" title="Czy element ma być widoczny" )>
+                        </th>
+                        <th>
+                            <img class="block m-auto" src="{{ URL::asset('/images/open_lock.png') }}"
+                                alt="profile Pic" height="25" width="25" title="Czy element ma być publiczny" )>
+                        </th>
                     </thead>
 
                     <tbody>

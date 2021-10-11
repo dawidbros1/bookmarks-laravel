@@ -149,6 +149,7 @@ class PageController extends Controller
         $ids = $request->input('ids');
         $hidden = $request->input('hidden');
         $public = $request->input('public');
+        $open = $request->input('open');
         $pages = $this->pageRepository->getAllByIds($ids);
         $parent_ids = $pages->pluck('parent_id')->toArray();
 
@@ -162,9 +163,11 @@ class PageController extends Controller
 
         $hidden = Manage::filter($ids, $hidden);
         $public = Manage::filter($ids, $public);
+        $open = Manage::filter($ids, $open);
 
         Manage::updateColumn($hidden['zero'], $hidden['one'], 'hidden', $this->pageRepository);
         Manage::updateColumn($public['zero'], $public['one'], 'public', $this->pageRepository);
+        Manage::updateColumn($open['zero'], $open['one'], 'open_in_new_window', $this->pageRepository);
 
         return redirect(url()->previous())
             ->with('success', 'Dane zostały zaktualizowane:');
