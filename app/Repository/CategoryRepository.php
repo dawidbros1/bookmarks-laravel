@@ -75,12 +75,34 @@ class CategoryRepository
             ->get();
     }
 
+
+
     public function getAllWithSubcategoriesWithPages()
     {
         return $this->model
             ->orderBy('order')
             ->where('user_id', Auth::id())
             ->with('subcategories.pages')
+            ->get();
+    }
+
+    // Pojedyncze po ID z relacjami
+
+    public function getWithPages($id)
+    {
+        return $this->model
+            ->orderBy('order')
+            ->where(['user_id' => Auth::id(), 'id' => $id])
+            ->with('pages')
+            ->get();
+    }
+
+    public function getWithSubcategories($id)
+    {
+        return $this->model
+            ->orderBy('order')
+            ->where(['user_id' => Auth::id(), 'id' => $id])
+            ->with('subcategories')
             ->get();
     }
 }

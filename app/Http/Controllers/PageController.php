@@ -131,7 +131,6 @@ class PageController extends Controller
     }
 
     //! MANAGE
-
     public function manage(Request $request)
     {
         $type = $request->input('type');
@@ -144,6 +143,20 @@ class PageController extends Controller
         }
     }
 
+    public function managePagesFromCategory($id)
+    {
+        $category = $this->categoryRepository->getWithPages($id)->first();
+        //! AUTH
+        return view('page.manageFromCategory', ['category' => $category]);
+    }
+
+    public function manageAllFromSubcategory($id)
+    {
+        $subcategory = $this->subcategoryRepository->getWithPages($id)->first();
+        //! AUTH
+        return view('page.manageFromSubcategory', ['subcategory' => $subcategory]);
+    }
+
     public function updateCheckboxes(Request $request, $type)
     {
         $ids = $request->input('ids');
@@ -152,6 +165,8 @@ class PageController extends Controller
         $open = $request->input('open');
         $pages = $this->pageRepository->getAllByIds($ids);
         $parent_ids = $pages->pluck('parent_id')->toArray();
+
+        //! TYPE pobierać na podstawie pobranych stron
 
         if ($type == "subcategory") {
             $subcategories = $this->subcategoryRepository->getAllByIds($parent_ids);

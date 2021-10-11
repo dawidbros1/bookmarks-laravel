@@ -143,6 +143,12 @@ class SubcategoryController extends Controller
         return view('subcategory.manage', ['categories' => $categories]);
     }
 
+    public function manageAllFromCategory($id)
+    {
+        $category = $this->categoryRepository->getWithSubcategories($id)->first();
+        return view('subcategory.manageFromCategory', ['category' => $category]);
+    }
+
     public function updateCheckboxes(Request $request)
     {
         $ids = $request->input('ids');
@@ -163,8 +169,7 @@ class SubcategoryController extends Controller
         Manage::updateColumn($hidden['zero'], $hidden['one'], 'hidden', $this->subcategoryRepository);
         Manage::updateColumn($public['zero'], $public['one'], 'public', $this->subcategoryRepository);
 
-        return redirect()
-            ->route('manage.subcategories')
+        return redirect(url()->previous())
             ->with('success', 'Dane zostały zaktualizowane:');
     }
 

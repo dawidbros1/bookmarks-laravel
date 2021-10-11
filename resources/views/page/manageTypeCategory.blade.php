@@ -11,7 +11,7 @@
             <x-form-section action="{{ route('update.pages.checkboxes', ['type' => 'category']) }}">
                 <table class="w-full">
                     <thead>
-                        <th class="text-left w-9/12 md:w-9/12 lg:w-10/12">Nazwa</th>
+                        <th class="text-left w-9/12 md:w-9/12 lg:w-10/12">Nazwa kategorii</th>
                         <th>
                             <img class="block m-auto" src="{{ URL::asset('/images/block.png') }}" alt="profile Pic"
                                 height="25" width="25" title="Czy element ma być widoczny" )>

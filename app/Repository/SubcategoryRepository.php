@@ -69,4 +69,14 @@ class SubcategoryRepository
     {
         DB::table('subcategories')->whereIn('id', $ids)->update(array($column => $value));
     }
+
+    // Pobieranie z relacjami
+    public function getWithPages(int $id)
+    {
+        return $this->model
+            ->orderBy('order')
+            ->where('id', $id)
+            ->with('pages')
+            ->get();
+    }
 }

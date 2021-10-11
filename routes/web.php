@@ -103,8 +103,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         function () {
             Route::get('/categories', [CategoryController::class, 'manage'])->name('categories');
             Route::get('/subcategories', [SubcategoryController::class, 'manage'])->name('subcategories');
-            Route::get('/category/pages', [PageController::class, 'manage'])->name('category.pages');
-            Route::get('/subcategory/pages', [PageController::class, 'manage'])->name('subcategory.pages');
+            Route::get('/categories/pages', [PageController::class, 'manage'])->name('categories.pages');
+            Route::get('/subcategories/pages', [PageController::class, 'manage'])->name('subcategories.pages');
+
+            // Dla pojedynczych elementów
+            Route::get('/category/{id}/pages', [PageController::class, 'managePagesFromCategory'])->name('category.pages');
+            Route::get('/category/{id}/subcategories', [SubcategoryController::class, 'manageAllFromCategory'])->name('category.subcategories');
+            Route::get('/subcategory/{id}/pages', [PageController::class, 'manageAllFromSubcategory'])->name('subcategory.pages');
         }
     );
 
@@ -116,7 +121,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         ],
         function () {
             Route::post('/categories/checkboxes', [CategoryController::class, 'updateCheckboxes'])->name('categories.checkboxes');
-            Route::post('/subcategory/checkboxes', [SubcategoryController::class, 'updateCheckboxes'])->name('subcategories.checkboxes');
+            Route::post('/subcategories/checkboxes', [SubcategoryController::class, 'updateCheckboxes'])->name('subcategories.checkboxes');
             Route::post('/{type}/pages/checkboxes', [PageController::class, 'updateCheckboxes'])->name('pages.checkboxes');
         }
     );
