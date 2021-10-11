@@ -3,8 +3,6 @@
 namespace App\Repository;
 
 use App\Models\SubCategory;
-// use App\Repository\PageRepository;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SubcategoryRepository

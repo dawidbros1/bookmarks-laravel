@@ -159,7 +159,11 @@ class PageController extends Controller
         }
 
         $categories = $this->categoryRepository->getAllByIds($parent_ids);
-        //! Czy jestem autorem
+
+        foreach ($categories as $category) {
+            $this->authorize('categoryAuthor', [new Page, $category]);
+        }
+
 
         $hidden = Manage::filter($ids, $hidden);
         $public = Manage::filter($ids, $public);
