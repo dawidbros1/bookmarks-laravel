@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use App\Repository\CategoryRepository;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Repository\PageRepository;
+use App\Repository\SubcategoryRepository;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -60,10 +61,23 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-    public function deleteContent()
+    public static function deleteContent()
     {
-        // Pobierz kategorie
-        // $categoryRepository = new CategoryRepository();
-        // $categories = $categoryRepository->getAllByParameters();
+        // Pobranie kategorii użytkownika
+        $categories = CategoryRepository::getAllByParameters();
+        $category_ids = $categories->pluck('id')->toArray();
+        // Pobranie podkategorii użytkownika
+        $subcategories = SubcategoryRepository::getAllByCategoryIds($category_ids);
+        $subcategory_ids = $subcategories->pluck('id')->toArray();
+        // Pobranie stron użytkownika dla kategorii oraz podkategori
+        $category_pages = PageRepository::getAllByParameters($category_ids, 'category');
+        $subcategory_pages = PageRepository::getAllByParameters($subcategory_ids, 'subcategory');
+        // Pobranie stron użytkownika dla podkategorii
+
+        //! KASOWANIE
+        Category::destroy($category_ids);
+        Subcategory::destroy($subcategory_ids);
+        Page::destroy($category_pages->pluck('id')->toArray());
+        Page::destroy($subcategory_pages->pluck('id')->toArray());
     }
 }
