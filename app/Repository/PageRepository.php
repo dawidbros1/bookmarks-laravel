@@ -28,22 +28,24 @@ class PageRepository
     }
 
     // parent ID can be INT OR ARRAY OF INT
-    public function getAllByParameters($parent_id, string $type, int $hidden = -1)
+    public static function getAllByParameters($parent_ids, string $type, int $hidden = -1)
     {
-        if (gettype($parent_id) != "array") {
-            $parent_id = [$parent_id];
+        $model = new Page;
+
+        if (gettype($parent_ids) != "array") {
+            $parent_ids = [$parent_ids];
         }
 
         if ($hidden == -1) {
-            return $this->model
+            return $model
                 ->orderBy('order')
                 ->where('type', $type)
-                ->whereIN('parent_id', $parent_id)
+                ->whereIN('parent_id', $parent_ids)
                 ->get();
         } else {
-            return $this->model
+            return $model
                 ->orderBy('order')
-                ->where(['parent_id' => $parent_id, 'type' => $type, 'hidden' => $hidden])
+                ->where(['parent_id' => $parent_ids, 'type' => $type, 'hidden' => $hidden])
                 ->get();
         }
     }

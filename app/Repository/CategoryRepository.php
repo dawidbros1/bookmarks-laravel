@@ -36,15 +36,18 @@ class CategoryRepository
             ->get();
     }
 
-    public function getAllByParameters(int $hidden = -1)
+    public static function getAllByParameters(int $hidden = -1)
     {
+
+        $model = new Category;
+
         if ($hidden == -1) {
-            return $this->model
+            return $model
                 ->orderBy('order')
                 ->where(['user_id' => Auth::id()])
                 ->get();
         } else {
-            return $this->model
+            return $model
                 ->orderBy('order')
                 ->where(['user_id' => Auth::id(), 'hidden' => $hidden])
                 ->get();
@@ -74,8 +77,6 @@ class CategoryRepository
             ->with('pages')
             ->get();
     }
-
-
 
     public function getAllWithSubcategoriesWithPages()
     {

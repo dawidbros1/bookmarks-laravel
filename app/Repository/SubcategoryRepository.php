@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Models\SubCategory;
+use App\Models\Subcategory;
 use Illuminate\Support\Facades\DB;
 
 class SubcategoryRepository
@@ -29,14 +29,15 @@ class SubcategoryRepository
     public function getAllByIds(array $ids)
     {
         return $this->model
-            // ->orderBy('order')
             ->whereIN('id', $ids)
             ->get();
     }
 
-    public function getAllByCategoryIds(array $ids)
+    public static function getAllByCategoryIds(array $ids)
     {
-        return $this->model
+        $model = new Subcategory();
+
+        return $model
             ->orderBy('order')
             ->whereIN('category_id', $ids)
             ->get();
