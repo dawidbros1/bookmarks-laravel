@@ -40,7 +40,7 @@
     <main>
         <div class="max-w-full mx-auto relative" {{-- up div => max-w-7xl mx-auto sm:px-6 lg:px-8 relative --}}>
             @include('shared.messages')
-            {{ $content }}
+            {{ $slot }}
         </div>
     </main>
 

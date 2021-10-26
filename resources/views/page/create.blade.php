@@ -5,63 +5,61 @@
         </h2>
     </x-slot>
 
-    <x-slot name="content">
-        <x-jet-validation-errors> </x-jet-validation-errors>
+    <x-jet-validation-errors> </x-jet-validation-errors>
 
-        <x-form-section action="{{ route('page.store') }}">
-                {{-- Tutył --}}
-                <x-jet-label for="name" class="pl-2"> Nazwa: </x-jet-label>
-                <x-jet-input name="name" value="{{ old('name') }}" type="text" class="border px-2 min-w-full mb-3">
-                </x-jet-input>
+    <x-form-section action="{{ route('page.store') }}">
+        {{-- Tutył --}}
+        <x-jet-label for="name" class="pl-2"> Nazwa: </x-jet-label>
+        <x-jet-input name="name" value="{{ old('name') }}" type="text" class="border px-2 min-w-full mb-3">
+        </x-jet-input>
 
-                @error('name')
-                    <div class="simple-error">{{ $message }}</div>
-                @enderror
+        @error('name')
+            <div class="simple-error">{{ $message }}</div>
+        @enderror
 
-                {{-- Obrazek --}}
-                <div class="relative">
-                    <x-jet-label for="image_url" class="pl-2"> Obrazek: </x-jet-label>
-                    <x-jet-input name="image_url" value="{{ old('image_url') }}" type="text"
-                        class="border px-2 min-w-full mb-3" id="image_url">
-                    </x-jet-input>
+        {{-- Obrazek --}}
+        <div class="relative">
+            <x-jet-label for="image_url" class="pl-2"> Obrazek: </x-jet-label>
+            <x-jet-input name="image_url" value="{{ old('image_url') }}" type="text"
+                class="border px-2 min-w-full mb-3" id="image_url">
+            </x-jet-input>
 
-                    <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20"
-                        class="bg-gray-100 absolute right-1 bottom-1 hover:cursor-pointer"
-                        title="Wklej obrazek podkategorii" onclick="pasteImg('{{ $parent->image_url }}');">
-                </div>
+            <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20"
+                class="bg-gray-100 absolute right-1 bottom-1 hover:cursor-pointer" title="Wklej obrazek podkategorii"
+                onclick="pasteImg('{{ $parent->image_url }}');">
+        </div>
 
-                @error('image_url')
-                    <div class=" simple-error">{{ $message }}
-                    </div>
-                @enderror
+        @error('image_url')
+            <div class=" simple-error">{{ $message }}
+            </div>
+        @enderror
 
-                {{-- Obrazek --}}
-                <x-jet-label for="link" class="pl-2"> Link do strony: </x-jet-label>
-                <x-jet-input name="link" value="{{ old('link') }}" type="text" class="border px-2 min-w-full mb-3">
-                </x-jet-input>
+        {{-- Obrazek --}}
+        <x-jet-label for="link" class="pl-2"> Link do strony: </x-jet-label>
+        <x-jet-input name="link" value="{{ old('link') }}" type="text" class="border px-2 min-w-full mb-3">
+        </x-jet-input>
 
-                @error('link')
-                    <div class="simple-error">{{ $message }}</div>
-                @enderror
+        @error('link')
+            <div class="simple-error">{{ $message }}</div>
+        @enderror
 
-                <div class="mb-2">
-                    Czy strona ma być publiczna?
-                    <input type="checkbox" name="public" checked>
-                </div>
+        <div class="mb-2">
+            Czy strona ma być publiczna?
+            <input type="checkbox" name="public" checked>
+        </div>
 
-                <div class="mb-2">
-                    Czy strona ma otwierać się w nowym oknie?
-                    <input type="checkbox" name="public" checked>
-                </div>
+        <div class="mb-2">
+            Czy strona ma otwierać się w nowym oknie?
+            <input type="checkbox" name="public" checked>
+        </div>
 
-                <input type="hidden" name="type" value="{{ $type }}">
-                <input type="hidden" name="parent_id" value="{{ $parent->id }}">
+        <input type="hidden" name="type" value="{{ $type }}">
+        <input type="hidden" name="parent_id" value="{{ $parent->id }}">
 
-                <x-jet-button type="submit" class="ml-2">Zapisz</x-jet-button>
-        </x-form-section>
+        <x-jet-button type="submit" class="ml-2">Zapisz</x-jet-button>
+    </x-form-section>
 
 
-        <x-back-button action="{{ route($type . '.show', ['id' => $parent->id, 'view' => $view]) }}">
-        </x-back-button>
-    </x-slot>
+    <x-back-button action="{{ route($type . '.show', ['id' => $parent->id, 'view' => $view]) }}">
+    </x-back-button>
 </x-main-layout>

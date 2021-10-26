@@ -72,61 +72,60 @@
         </style>
     </x-slot>
 
-    <x-slot name="content">
-        <div class="px-6 py-1 container">
-            <h1 class="text-center font-bold text-2xl mb-4">Serderznie witamy na naszej stronie</h1>
 
-            <p class="mb-4">
-                Serwis, na którym właśnie się znajdujesz, służy do tworzenia linków do zewnętrznych stron. Korzystając z
-                naszego serwisu, możesz udostępnić zgromadzone przez siebie grupy odnośników znajomym za pomocą
-                pojedynczego linka. Swoje elementy możesz umieszczać w podkatalogach, a także możesz je dowolnie
-                rozmieszczać.
-            </p>
+    <div class="px-6 py-1 container">
+        <h1 class="text-center font-bold text-2xl mb-4">Serderznie witamy na naszej stronie</h1>
 
-            <p class="mb-2">Dlaczego powinieneś korzystać z naszych usług?</p>
+        <p class="mb-4">
+            Serwis, na którym właśnie się znajdujesz, służy do tworzenia linków do zewnętrznych stron. Korzystając z
+            naszego serwisu, możesz udostępnić zgromadzone przez siebie grupy odnośników znajomym za pomocą
+            pojedynczego linka. Swoje elementy możesz umieszczać w podkatalogach, a także możesz je dowolnie
+            rozmieszczać.
+        </p>
 
-            <div class="justify-center flex flex-wrap">
-                <div class="box-item">
-                    <div class="title">Szybki dostęp do ulubionych stron</div>
-                    <img src="{{ URL::asset('/images/fast.jpg') }}" />
+        <p class="mb-2">Dlaczego powinieneś korzystać z naszych usług?</p>
 
-                </div>
-
-                <div class="box-item">
-                    <div class="title">Dostęp z każdego urządzenia</div>
-                    <img src="{{ URL::asset('/images/responsive.png') }}" />
-                </div>
-
-                <div class="box-item">
-                    <div class="title">Graficzny interfejs</div>
-                    <img src="{{ URL::asset('/images/interface.jpg') }}" />
-                </div>
-
-                <div class="box-item">
-                    <div class="title">Udostępniaj zawartości znajomym</div>
-                    <img src="{{ URL::asset('/images/sharing.jpg') }}" />
-                </div>
-
-                <div class="box-item">
-                    <div class="title">Umieszczaj elementy w podfolderach</div>
-                    <img src="{{ URL::asset('/images/subfolders.jpg') }}" />
-                </div>
-
-                <div class="box-item">
-                    <div class="title">Dowolnie rozmieszczaj elementy</div>
-                    <img src="{{ URL::asset('/images/sort.jpg') }}" />
-                </div>
+        <div class="justify-center flex flex-wrap">
+            <div class="box-item">
+                <div class="title">Szybki dostęp do ulubionych stron</div>
+                <img src="{{ URL::asset('/images/fast.jpg') }}" />
 
             </div>
-        </div>
 
-        <div class="px-6 py-1 mt-4 register pb-4">
-            <div class="text-center"> Nie masz jeszcze konta? </div>
-            <a href="{{ route('register') }}">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Zarejestruj się
-                </button>
-            </a>
+            <div class="box-item">
+                <div class="title">Dostęp z każdego urządzenia</div>
+                <img src="{{ URL::asset('/images/responsive.png') }}" />
+            </div>
+
+            <div class="box-item">
+                <div class="title">Graficzny interfejs</div>
+                <img src="{{ URL::asset('/images/interface.jpg') }}" />
+            </div>
+
+            <div class="box-item">
+                <div class="title">Udostępniaj zawartości znajomym</div>
+                <img src="{{ URL::asset('/images/sharing.jpg') }}" />
+            </div>
+
+            <div class="box-item">
+                <div class="title">Umieszczaj elementy w podfolderach</div>
+                <img src="{{ URL::asset('/images/subfolders.jpg') }}" />
+            </div>
+
+            <div class="box-item">
+                <div class="title">Dowolnie rozmieszczaj elementy</div>
+                <img src="{{ URL::asset('/images/sort.jpg') }}" />
+            </div>
+
         </div>
-    </x-slot>
+    </div>
+
+    <div class="px-6 py-1 mt-4 register pb-4">
+        <div class="text-center"> Nie masz jeszcze konta? </div>
+        <a href="{{ route('register') }}">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Zarejestruj się
+            </button>
+        </a>
+    </div>
 </x-main-layout>
