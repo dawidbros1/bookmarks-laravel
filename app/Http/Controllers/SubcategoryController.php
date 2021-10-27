@@ -7,6 +7,7 @@ use App\Http\Requests\Subcategory\Store;
 use App\Models\Subcategory;
 use App\Repository\CategoryRepository;
 use App\Repository\PageRepository;
+use App\Repository\SettingsRepository;
 use App\Repository\SubcategoryRepository;
 use Illuminate\Http\Request;
 
@@ -65,11 +66,13 @@ class SubcategoryController extends Controller
     {
         $category = $this->categoryRepository->getModel()->find($category_id);
         $this->authorize('categoryAuthor', [new Subcategory(), $category]);
+        $settings = SettingsRepository::get();
 
         return view('subcategory.create', [
             'category_id' => $category_id,
             'view' => $request->input('view'),
             'category_image' => $category->image_url,
+            'settings' => $settings
         ]);
     }
 

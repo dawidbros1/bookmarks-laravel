@@ -7,6 +7,7 @@ use App\Http\Requests\Category\Store;
 use App\Models\Category;
 use App\Repository\CategoryRepository;
 use App\Repository\PageRepository;
+use App\Repository\SettingsRepository;
 use App\Repository\SubcategoryRepository;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
@@ -84,7 +85,8 @@ class CategoryController extends Controller
     //! CREATE
     public function create()
     {
-        return view('category.create');
+        $settings = SettingsRepository::get();
+        return view('category.create', ['settings' => $settings]);
     }
 
     public function store(Store $request)

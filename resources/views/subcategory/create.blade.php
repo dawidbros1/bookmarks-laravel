@@ -34,7 +34,10 @@
 
         <div class="mb-2">
             Czy kategoria ma być publiczna?
-            <input type="checkbox" name="public" checked>
+            <input type="checkbox" name="public" @if ($settings->subcategory_public)
+            checked
+
+            @endif>
         </div>
 
         <input type="hidden" name="category_id" value="{{ $category_id }}">

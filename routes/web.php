@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Middleware\redirectLoggedInUserToNews;
 use Illuminate\Support\Facades\Route;
@@ -101,6 +102,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             'as' => 'manage.'
         ],
         function () {
+            Route::get('/settings', [SettingsController::class, 'manage'])->name('settings');
             Route::get('/categories', [CategoryController::class, 'manage'])->name('categories');
             Route::get('/subcategories', [SubcategoryController::class, 'manage'])->name('subcategories');
             Route::get('/categories/pages', [PageController::class, 'manage'])->name('categories.pages');
@@ -120,11 +122,15 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             'as' => 'update.'
         ],
         function () {
+            Route::post('/settings', [SettingsController::class, 'update'])->name('settings');
             Route::post('/categories/checkboxes', [CategoryController::class, 'updateCheckboxes'])->name('categories.checkboxes');
             Route::post('/subcategories/checkboxes', [SubcategoryController::class, 'updateCheckboxes'])->name('subcategories.checkboxes');
             Route::post('/{type}/pages/checkboxes', [PageController::class, 'updateCheckboxes'])->name('pages.checkboxes');
         }
     );
+
+    //! USTAWIENIA UPDATA
+
 });
 
 // Dane publiczne

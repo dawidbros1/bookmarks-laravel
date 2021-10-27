@@ -45,12 +45,16 @@
 
         <div class="mb-2">
             Czy strona ma być publiczna?
-            <input type="checkbox" name="public" checked>
+            <input type="checkbox" name="public" @if ($settings->page_public) checked
+
+            @endif>
         </div>
 
         <div class="mb-2">
             Czy strona ma otwierać się w nowym oknie?
-            <input type="checkbox" name="public" checked>
+            <input type="checkbox" name="public" @if ($settings->page_open_in_new_window) checked
+
+            @endif>
         </div>
 
         <input type="hidden" name="type" value="{{ $type }}">

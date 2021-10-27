@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Page;
 use App\Repository\CategoryRepository;
 use App\Repository\PageRepository;
+use App\Repository\SettingsRepository;
 use App\Repository\SubcategoryRepository;
 use Illuminate\Http\Request;
 
@@ -29,13 +30,15 @@ class PageController extends Controller
     {
         $this->authorize('checkParent', [new Page, $type, $parent_id]);
 
+        $settings = SettingsRepository::get();
+
         if ($type == "category") {
             $parent = $this->categoryRepository->getModel()->find($parent_id);
         } else if ($type == "subcategory") {
             $parent = $this->subcategoryRepository->getModel()->find($parent_id);
         }
 
-        return view('page.create', ['parent' => $parent, 'type' => $type, 'view' => $request->input('view')]);
+        return view('page.create', ['parent' => $parent, 'type' => $type, 'view' => $request->input('view'), 'settings' => $settings]);
     }
 
     public function store(Store $request)

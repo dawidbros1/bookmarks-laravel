@@ -4,6 +4,10 @@
             Wybierz
         </div>
         <nav class="flex-grow md:block px-4 pb-4 md:pb-0 md:overflow-y-auto">
+            <x-manage.link route="{{ route('manage.settings') }}" :active="request()->routeIs('manage.settings')">
+                Ustawienia
+            </x-manage.link>
+
             <x-manage.link route="{{ route('manage.categories') }}" :active="request()->routeIs('manage.categories')">
                 Kategorie
             </x-manage.link>
@@ -28,5 +32,4 @@
     <div class="w-full">
         {{ $slot }}
     </div>
-
 </div>
