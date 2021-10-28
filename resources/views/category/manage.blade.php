@@ -6,27 +6,30 @@
     </x-slot>
 
     <x-manage.main>
-        <x-form-section action="{{ route('update.categories.checkboxes') }}">
+        <x-form-section action="{{ route('update.categories') }}">
             <table class="w-full">
                 <thead>
-                    <th class="text-left w-9/12 lg:w-10/12 xl:w-11/12">Nazwa kategorii</th>
-                    <th></th>
+                    <th class="text-left w-8/12 md:w-9/12 xl:w-10/12">Nazwa kategorii</th>
                     <th></th>
                     <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/block.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Czy element ma być widoczny" )>
+                        <img class="block m-auto" src="{{ URL::asset('/images/order.png') }}" alt="profile Pic"
+                            height="25" width="25" title="Kolejność wyświetlania" )>
+                    </th>
+
+                    <th colspan="3"></th>
+                    <th>
+                        <img class="block m-auto" src="{{ URL::asset('/images/hidden.png') }}" alt="profile Pic"
+                            height="25" width="25" title="Czy element ma być ukryty" )>
                     </th>
                     <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/open_lock.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Czy element ma być publiczny" )>
+                        <img class="block m-auto" src="{{ URL::asset('/images/lock.png') }}" alt="profile Pic"
+                            height="25" width="25" title="Czy element ma być prywatny" )>
                     </th>
                 </thead>
 
                 <tbody>
                     <tr class="border-b-2 border-blue-600">
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td colspan="6"></td>
                         <td class="text-center"><input type="checkbox" id="hiddenCheckboxButton"></td>
                         <td class="text-center"><input type="checkbox" id="publicCheckboxButton"></td>
                     </tr>
@@ -35,6 +38,21 @@
                         <tr class="border-b">
                             <td>
                                 {{ $category->name }}
+                            </td>
+
+                            <td class="text-center">
+                                <div class="char minus"></div>
+                            </td>
+
+                            <td class="text-center">
+                                <div class="lh-order">
+                                    <input type="number" value="{{ $category->order }}" class="order"
+                                        name="order[]">
+                                </div>
+                            </td>
+
+                            <td class="text-center">
+                                <div class="char plus"></div>
                             </td>
 
                             <x-manage.table-column-image-link
@@ -55,7 +73,7 @@
                             <td class="text-center">
                                 <input name="public[{{ $key }}]" type="hidden" value="0">
                                 <input name="public[{{ $key }}]" type="checkbox" value="1"
-                                    class="publicCheckbox" @if ($category->public) checked @endif>
+                                    class="publicCheckbox" @if (!$category->public) checked @endif>
                             </td>
                         </tr>
                         <input type="hidden" name="ids[]" value="{{ $category->id }}">
@@ -69,9 +87,8 @@
     </x-manage.main>
 </x-main-layout>
 
-
-
 <script>
     initCheckboxButton('public');
     initCheckboxButton('hidden');
+    initOrder();
 </script>

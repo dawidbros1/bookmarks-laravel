@@ -19,6 +19,7 @@ class Category extends Model
         'image_url',
         'hidden',
         'public',
+        'order'
     ];
 
     public function store(array $data)

@@ -123,7 +123,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         ],
         function () {
             Route::post('/settings', [SettingsController::class, 'update'])->name('settings');
-            Route::post('/categories/checkboxes', [CategoryController::class, 'updateCheckboxes'])->name('categories.checkboxes');
+            Route::post('/categories', [CategoryController::class, 'multiUpdate'])->name('categories');
             Route::post('/subcategories/checkboxes', [SubcategoryController::class, 'updateCheckboxes'])->name('subcategories.checkboxes');
             Route::post('/{type}/pages/checkboxes', [PageController::class, 'updateCheckboxes'])->name('pages.checkboxes');
         }

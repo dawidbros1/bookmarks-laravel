@@ -34,3 +34,24 @@ window.initCheckboxButton = function (name) {
         }
     })
 }
+
+// MANAGE FUNCTION
+window.initOrder = function () {
+    var minuses = document.getElementsByClassName('minus');
+    var orders = document.getElementsByClassName('order');
+    var pluses = document.getElementsByClassName('plus');
+
+    for (let i = 0; i < orders.length; i++) {
+        minuses[i].addEventListener('click', () => {
+            let value = orders[i].value;
+            if (value > 0) {
+                orders[i].value = --value;
+            }
+        })
+
+        pluses[i].addEventListener('click', () => {
+            let value = orders[i].value;
+            orders[i].value = ++value;
+        })
+    }
+}

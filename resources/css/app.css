@@ -47,3 +47,56 @@
 {
     background-color: rgba(229, 231, 235, 0,2);
 }
+
+/*  */
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.char{
+    border: 1px solid black;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 13px;
+    margin: auto;
+}
+
+.plus{
+    background-color: lightgreen;
+}
+
+.minus{
+    background-color: yellow;
+}
+
+.minus::before {
+    content: "-";
+  }
+
+.plus::before {
+    content: "+";
+  }
+
+.order{
+    border: 1px solid black;
+    width: 25px;
+    height: 15px;
+    font-size: 9px;
+    text-align: center;
+    font-weight: bold;
+    padding: 0 !important;
+    margin: auto;
+    line-height: 14px;
+    margin: auto;
+}
+
+.lh-order{
+    line-height: 11px;
+}

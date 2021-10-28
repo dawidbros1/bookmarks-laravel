@@ -29,7 +29,7 @@
         @enderror
 
         <div class="mb-2">
-            Czy podkategoria ma być publiczna?
+            Czy kategoria ma być publiczna?
             <input type="checkbox" name="public" @if ($category->public) checked @endif>
         </div>
 

@@ -148,20 +148,36 @@ class CategoryController extends Controller
         return view('category.manage', ['categories' => $categories]);
     }
 
-    public function updateCheckboxes(Request $request)
+    public function multiUpdate(Request $request)
     {
         $ids = $request->input('ids');
         $hidden = $request->input('hidden');
-        $public = $request->input('public');
+        $private = $request->input('public');
+        $order = $request->input('order');
+
+        foreach ($order as $key => $value) {
+            if (!is_numeric($value)) {
+                $order[$key] = 0;
+            }
+        }
 
         $categories = $this->categoryRepository->getAllByIds($ids);
         $this->authorize('categories', [new Category, $categories]);
 
-        $hidden = Manage::filter($ids, $hidden);
-        $public = Manage::filter($ids, $public);
+        foreach ($ids as $index => $id) {
+            $category = $this->categoryRepository->getModel()->find($id);
+            $data = [
+                'hidden' => $hidden[$index],
+                'public' => !$private[$index],
+                'order' => $order[$index]
+            ];
+            $category->update($data);
+        }
 
-        Manage::updateColumn($hidden['zero'], $hidden['one'], 'hidden', $this->categoryRepository);
-        Manage::updateColumn($public['zero'], $public['one'], 'public', $this->categoryRepository);
+        // $hidden = Manage::filter($ids, $hidden);
+        // $public = Manage::filter($ids, $public);
+        // Manage::updateColumn($hidden['zero'], $hidden['one'], 'hidden', $this->categoryRepository);
+        // Manage::updateColumn($public['zero'], $public['one'], 'public', $this->categoryRepository);
 
         return redirect()
             ->route('manage.categories')

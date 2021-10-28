@@ -37,6 +37,31 @@ window.initCheckboxButton = function (name) {
       checkboxItems[i].checked = status;
     }
   });
+}; // MANAGE FUNCTION
+
+
+window.initOrder = function () {
+  var minuses = document.getElementsByClassName('minus');
+  var orders = document.getElementsByClassName('order');
+  var pluses = document.getElementsByClassName('plus');
+
+  var _loop = function _loop(i) {
+    minuses[i].addEventListener('click', function () {
+      var value = orders[i].value;
+
+      if (value > 0) {
+        orders[i].value = --value;
+      }
+    });
+    pluses[i].addEventListener('click', function () {
+      var value = orders[i].value;
+      orders[i].value = ++value;
+    });
+  };
+
+  for (var i = 0; i < orders.length; i++) {
+    _loop(i);
+  }
 };
 /******/ })()
 ;
