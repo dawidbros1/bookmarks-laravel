@@ -6,7 +6,7 @@
     </x-slot>
 
     <x-manage.main>
-        <x-form-section action="{{ route('update.pages.checkboxes', ['type' => 'subcategory']) }}">
+        <x-form-section action="{{ route('update.pages', ['type' => 'subcategory']) }}">
             <table class="w-full">
                 <thead>
                     <th class="text-left w-8/12 lg:w-10/12">{{ $subcategory->name }}</th>

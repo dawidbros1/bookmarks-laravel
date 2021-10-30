@@ -6,7 +6,7 @@
     </x-slot>
 
     <x-manage.main>
-        <x-form-section action="{{ route('update.subcategories.checkboxes') }}">
+        <x-form-section action="{{ route('update.subcategories') }}">
             <table class="w-full">
                 <thead>
                     <th class="text-left w-8/12 md:w-9/12 xl:w-10/12">{{ $category->name }}</th>
@@ -71,7 +71,7 @@
                             <td class="text-center">
                                 <input name="public[{{ $index }}]" type="hidden" value="0">
                                 <input name="public[{{ $index++ }}]" type="checkbox" value="1"
-                                    class="publicCheckbox" @if ($item->public) checked @endif>
+                                    class="publicCheckbox" @if (!$item->public) checked @endif>
                             </td>
                         </tr>
                         <input type="hidden" name="ids[]" value="{{ $item->id }}">
@@ -88,6 +88,5 @@
 <script>
     initCheckboxButton('public');
     initCheckboxButton('hidden');
-    initCheckboxButton('open');
     initOrder();
 </script>

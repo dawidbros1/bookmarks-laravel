@@ -152,7 +152,7 @@ class SubcategoryController extends Controller
         return view('subcategory.manageFromCategory', ['category' => $category]);
     }
 
-    public function updateCheckboxes(Request $request)
+    public function multiUpdate(Request $request)
     {
         $ids = $request->input('ids');
         $hidden = $request->input('hidden');

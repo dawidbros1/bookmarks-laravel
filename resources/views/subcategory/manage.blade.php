@@ -6,7 +6,7 @@
     </x-slot>
     <x-manage.main>
 
-        <x-form-section action="{{ route('update.subcategories.checkboxes') }}">
+        <x-form-section action="{{ route('update.subcategories') }}">
             <table class="w-full">
                 <thead>
                     <th class="text-left w-8/12 md:w-9/12 xl:w-10/12">Nazwa kategorii</th>
