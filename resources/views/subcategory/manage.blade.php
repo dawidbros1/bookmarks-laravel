@@ -9,22 +9,29 @@
         <x-form-section action="{{ route('update.subcategories.checkboxes') }}">
             <table class="w-full">
                 <thead>
-                    <th class="text-left w-10/12 lg:w-11/12">Nazwa kategorii</th>
+                    <th class="text-left w-8/12 md:w-9/12 xl:w-10/12">Nazwa kategorii</th>
                     <th></th>
+
                     <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/block.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Czy element ma być widoczny" )>
+                        <img class="block m-auto" src="{{ URL::asset('/images/order.png') }}" alt="profile Pic"
+                            height="25" width="25" title="Kolejność wyświetlania" )>
+                    </th>
+
+                    <th colspan="2"></th>
+
+                    <th>
+                        <img class="block m-auto" src="{{ URL::asset('/images/hidden.png') }}" alt="profile Pic"
+                            height="25" width="25" title="Czy element ma być ukryty" )>
                     </th>
                     <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/open_lock.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Czy element ma być publiczny" )>
+                        <img class="block m-auto" src="{{ URL::asset('/images/lock.png') }}" alt="profile Pic"
+                            height="25" width="25" title="Czy element ma być prywatny" )>
                     </th>
                 </thead>
 
                 <tbody>
                     <tr>
-                        <td></td>
-                        <td></td>
+                        <td colspan="5"></td>
                         <td class="text-center"><input type="checkbox" id="hiddenCheckboxButton"></td>
                         <td class="text-center"><input type="checkbox" id="publicCheckboxButton"></td>
                     </tr>
@@ -34,8 +41,6 @@
                     @endphp
 
                     @foreach ($categories as $category)
-
-
                         @if (count($category->subcategories) != 0)
 
                             @php
@@ -45,10 +50,26 @@
                             <tr class="border-t-2 border-blue-600 font-bold">
                                 <td colspan="4">{{ $category->name }}</td>
                             </tr>
+
                             @foreach ($category->subcategories as $item)
                                 <tr class="border-b">
 
                                     <td class="pl-4">{{ $item->name }}</td>
+
+                                    <td class="text-center">
+                                        <div class="char minus"></div>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div class="lh-order">
+                                            <input type="number" value="{{ $item->order }}" class="order"
+                                                name="order[]">
+                                        </div>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div class="char plus"></div>
+                                    </td>
 
                                     <x-manage.table-column-image-link
                                         link="{{ route('manage.subcategory.pages', ['id' => $item->id]) }}"
@@ -63,7 +84,7 @@
                                     <td class="text-center">
                                         <input name="public[{{ $index }}]" type="hidden" value="0">
                                         <input name="public[{{ $index++ }}]" type="checkbox" value="1"
-                                            class="publicCheckbox" @if ($item->public) checked @endif>
+                                            class="publicCheckbox" @if (!$item->public) checked @endif>
                                     </td>
                                 </tr>
                                 <input type="hidden" name="ids[]" value="{{ $item->id }}">
@@ -84,4 +105,5 @@
 <script>
     initCheckboxButton('public');
     initCheckboxButton('hidden');
+    initOrder();
 </script>

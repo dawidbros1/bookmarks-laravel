@@ -156,21 +156,21 @@ class SubcategoryController extends Controller
     {
         $ids = $request->input('ids');
         $hidden = $request->input('hidden');
-        $public = $request->input('public');
+        $private = $request->input('public');
+        $order = $request->input('order');
 
         $subcategories = $this->subcategoryRepository->getAllByIds($ids);
-        $category_ids = array_unique($subcategories->pluck('category_id')->toArray());
-        $categories = $this->categoryRepository->getAllByIds($category_ids);
+        $this->authorize('subcategories', [new Subcategory, $subcategories]);
 
-        foreach ($categories as $category) {
-            $this->authorize('categoryAuthor', [new Subcategory, $category]);
+        foreach ($ids as $index => $id) {
+            $subcategory = $this->subcategoryRepository->getModel()->find($id);
+            $data = [
+                'hidden' => $hidden[$index],
+                'public' => !$private[$index],
+                'order' => $order[$index]
+            ];
+            $subcategory->update($data);
         }
-
-        $hidden = Manage::filter($ids, $hidden);
-        $public = Manage::filter($ids, $public);
-
-        Manage::updateColumn($hidden['zero'], $hidden['one'], 'hidden', $this->subcategoryRepository);
-        Manage::updateColumn($public['zero'], $public['one'], 'public', $this->subcategoryRepository);
 
         return redirect(url()->previous())
             ->with('success', 'Dane zostały zaktualizowane:');
