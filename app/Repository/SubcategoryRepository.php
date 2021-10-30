@@ -66,11 +66,6 @@ class SubcategoryRepository
             ->get();
     }
 
-    // public function updateColumn(array $ids, string $column, int $value)
-    // {
-    //     DB::table('subcategories')->whereIn('id', $ids)->update(array($column => $value));
-    // }
-
     // Pobieranie z relacjami
     public function getWithPages(int $id)
     {

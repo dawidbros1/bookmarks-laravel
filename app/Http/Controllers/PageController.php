@@ -149,14 +149,14 @@ class PageController extends Controller
     public function managePagesFromCategory($id)
     {
         $category = $this->categoryRepository->getWithPages($id)->first();
-        //! AUTH
+        $this->authorize('categoryAuthor', [new Page, $category]);
         return view('page.manageFromCategory', ['category' => $category]);
     }
 
     public function manageAllFromSubcategory($id)
     {
         $subcategory = $this->subcategoryRepository->getWithPages($id)->first();
-        //! AUTH
+        $this->authorize('checkParent', [new Page, 'subcategory', $subcategory->id]);
         return view('page.manageFromSubcategory', ['subcategory' => $subcategory]);
     }
 

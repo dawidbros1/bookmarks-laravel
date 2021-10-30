@@ -155,14 +155,14 @@ class CategoryController extends Controller
         $private = $request->input('public');
         $order = $request->input('order');
 
+        $categories = $this->categoryRepository->getAllByIds($ids);
+        $this->authorize('categories', [new Category, $categories]);
+
         foreach ($order as $key => $value) {
             if (!is_numeric($value)) {
                 $order[$key] = 0;
             }
         }
-
-        $categories = $this->categoryRepository->getAllByIds($ids);
-        $this->authorize('categories', [new Category, $categories]);
 
         foreach ($ids as $index => $id) {
             $category = $this->categoryRepository->getModel()->find($id);
@@ -173,11 +173,6 @@ class CategoryController extends Controller
             ];
             $category->update($data);
         }
-
-        // $hidden = Manage::filter($ids, $hidden);
-        // $public = Manage::filter($ids, $public);
-        // Manage::updateColumn($hidden['zero'], $hidden['one'], 'hidden', $this->categoryRepository);
-        // Manage::updateColumn($public['zero'], $public['one'], 'public', $this->categoryRepository);
 
         return redirect()
             ->route('manage.categories')
