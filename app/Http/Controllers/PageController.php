@@ -164,35 +164,27 @@ class PageController extends Controller
     {
         $ids = $request->input('ids');
         $hidden = $request->input('hidden');
-        $public = $request->input('public');
+        $private = $request->input('public');
+        $order = $request->input('order');
         $open = $request->input('open');
         $pages = $this->pageRepository->getAllByIds($ids);
         $parent_ids = $pages->pluck('parent_id')->toArray();
 
-        //! TYPE pobierać na podstawie pobranych stron
+        $this->authorize('categories', [new Page, $type, $parent_ids]);
 
-        if ($type == "subcategory") {
-            $subcategories = $this->subcategoryRepository->getAllByIds($parent_ids);
-            $parent_ids = $subcategories->pluck('category_id')->toArray();
+        foreach ($ids as $index => $id) {
+            $page = $this->pageRepository->getModel()->find($id);
+            $data = [
+                'hidden' => $hidden[$index],
+                'public' => !$private[$index],
+                'order' => $order[$index],
+                'open_in_new_window' => $open[$index]
+            ];
+            $page->update($data);
         }
-
-        $categories = $this->categoryRepository->getAllByIds($parent_ids);
-
-        foreach ($categories as $category) {
-            $this->authorize('categoryAuthor', [new Page, $category]);
-        }
-
-
-        $hidden = Manage::filter($ids, $hidden);
-        $public = Manage::filter($ids, $public);
-        $open = Manage::filter($ids, $open);
-
-        Manage::updateColumn($hidden['zero'], $hidden['one'], 'hidden', $this->pageRepository);
-        Manage::updateColumn($public['zero'], $public['one'], 'public', $this->pageRepository);
-        Manage::updateColumn($open['zero'], $open['one'], 'open_in_new_window', $this->pageRepository);
 
         return redirect(url()->previous())
-            ->with('success', 'Dane zostały zaktualizowane:');
+            ->with('success', 'Dane zostały zaktualizowane');
     }
 
     //! DELETE

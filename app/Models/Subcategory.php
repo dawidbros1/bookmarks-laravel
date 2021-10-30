@@ -43,6 +43,6 @@ class Subcategory extends Model
     // [ 1 do n ] [ Jedna podkategoria posiada wiele stron ]
     public function pages()
     {
-        return $this->hasMany(Page::class, 'parent_id')->orderBy('order')->where('type', 'subcategory')->order('order');
+        return $this->hasMany(Page::class, 'parent_id')->orderBy('order')->where('type', 'subcategory');
     }
 }

@@ -6,6 +6,8 @@ use App\Models\Category;
 use App\Models\Page;
 use App\Models\Subcategory;
 use App\Models\User;
+use App\Repository\CategoryRepository;
+use App\Repository\SubcategoryRepository;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 
@@ -13,13 +15,14 @@ class PagePolicy
 {
     use HandlesAuthorization;
 
-    private Subcategory $subcategory;
-    private Category $category;
+    private CategoryRepository $categoryRepository;
 
-    public function __construct(Subcategory $subcategory, Category $category)
+    public function __construct(CategoryRepository $categoryRepository)
     {
-        $this->subcategory = $subcategory;
-        $this->category = $category;
+        $this->categoryRepository = $categoryRepository;
+        $this->category = $this->categoryRepository->getModel();
+        $this->subcategoryRepository = $this->categoryRepository->getSubcategoryRepository();
+        $this->subcategory = $this->subcategoryRepository->getModel();
     }
 
     // Tutaj strona już istnieje
@@ -47,6 +50,23 @@ class PagePolicy
     {
         if ($category == null) return Response::deny('Zasób nie istnieje');
         if ($category->user_id != $user->id) return Response::deny('Brak uprawnień do tego zasobu');
+        return Response::allow();
+    }
+
+    public function categories($user, Page $page, $type, $parent_ids)
+    {
+        if ($type == "subcategory") {
+            $subcategories = $this->subcategoryRepository->getAllByIds($parent_ids);
+            $parent_ids = $subcategories->pluck('category_id')->toArray();
+        }
+
+        $categories = $this->categoryRepository->getAllByIds($parent_ids);
+
+        foreach ($categories as $category) {
+            if ($category == null) return Response::deny('Zasób nie istnieje');
+            if ($category->user_id != $user->id) return Response::deny('Brak uprawnień do tego zasobu');
+        }
+
         return Response::allow();
     }
 

@@ -9,14 +9,20 @@
         <x-form-section action="{{ route('update.pages.checkboxes', ['type' => 'subcategory']) }}">
             <table class="w-full">
                 <thead>
-                    <th class="text-left w-9/12 md:w-9/12 lg:w-10/12">{{ $subcategory->name }}</th>
+                    <th class="text-left w-8/12 lg:w-10/12">{{ $subcategory->name }}</th>
+                    <th></th>
                     <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/block.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Czy element ma być widoczny" )>
+                        <img class="block m-auto" src="{{ URL::asset('/images/order.png') }}" alt="profile Pic"
+                            height="25" width="25" title="Kolejność wyświetlania" )>
+                    </th>
+                    <th></th>
+                    <th>
+                        <img class="block m-auto" src="{{ URL::asset('/images/hidden.png') }}" alt="profile Pic"
+                            height="25" width="25" title="Czy element ma być ukryty" )>
                     </th>
                     <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/open_lock.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Czy element ma być publiczny" )>
+                        <img class="block m-auto" src="{{ URL::asset('/images/lock.png') }}" alt="profile Pic"
+                            height="25" width="25" title="Czy element ma być prywatny" )>
                     </th>
                     <th>
                         <img class="block m-auto" src="{{ URL::asset('/images/open_in_new_window.png') }}"
@@ -26,7 +32,7 @@
 
                 <tbody>
                     <tr class="border-b-2 border-blue-600">
-                        <td></td>
+                        <td colspan="4"></td>
                         <td class="text-center"><input type="checkbox" id="hiddenCheckboxButton"></td>
                         <td class="text-center"><input type="checkbox" id="publicCheckboxButton"></td>
                         <td class="text-center"><input type="checkbox" id="openCheckboxButton"></td>
@@ -39,6 +45,23 @@
                     @foreach ($subcategory->pages as $item)
                         <tr class="border-b">
                             <td class="pl-4">{{ $item->name }}</td>
+
+                            <td class="text-center">
+                                <div class="char minus"></div>
+                            </td>
+
+                            <td class="text-center">
+                                <div class="lh-order">
+                                    <input type="number" value="{{ $item->order }}" class="order"
+                                        name="order[]">
+                                </div>
+                            </td>
+
+                            <td class="text-center">
+                                <div class="char plus"></div>
+                            </td>
+
+
                             <td class="text-center">
                                 <input name="hidden[{{ $index }}]" type="hidden" value="0">
                                 <input name="hidden[{{ $index }}]" type="checkbox" value="1"
@@ -48,7 +71,7 @@
                             <td class="text-center">
                                 <input name="public[{{ $index }}]" type="hidden" value="0">
                                 <input name="public[{{ $index }}]" type="checkbox" value="1"
-                                    class="publicCheckbox" @if ($item->public) checked @endif>
+                                    class="publicCheckbox" @if (!$item->public) checked @endif>
                             </td>
 
                             <td class="text-center">
@@ -71,4 +94,5 @@
     initCheckboxButton('public');
     initCheckboxButton('hidden');
     initCheckboxButton('open');
+    initOrder();
 </script>
