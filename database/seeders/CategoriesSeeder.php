@@ -18,9 +18,12 @@ class CategoriesSeeder extends Seeder
 
         DB::table('categories')->insert(
             [
-                ['id' => 1, 'user_id' => 1, 'name' => 'Coś tam', 'image_url' => 'https://f4.bcbits.com/img/0017296575_10.jpg', 'public' => 0, 'hidden' => 0, 'order' => 1],
-                ['id' => 2, 'user_id' => 1, 'name' => 'O co chodzi', 'image_url' => 'https://wiecejnizkarma.pl/wp-content/uploads/2017/03/kot.jpg', 'public' => 0, 'hidden' => 0, 'order' => 1],
-                ['id' => 3, 'user_id' => 1, 'name' => 'Gdzie ja jestem', 'image_url' => 'https://artnapi.pl/pol_pl_Kot-w-Miami-Malowanie-po-numerach-1242_1.jpg', 'public' => 1, 'hidden' => 1, 'order' => 1],
+                // Dla użytkownika ID=1
+                ['id' => 1, 'user_id' => 1, 'name' => 'USER 1 PRI', 'image_url' => 'https://pbs.twimg.com/profile_images/1251882227916582912/QxERzILG_400x400.jpg', 'public' => 0, 'hidden' => 0, 'order' => 0],
+                ['id' => 2, 'user_id' => 1, 'name' => 'USER 1 PUB', 'image_url' => 'https://pbs.twimg.com/profile_images/1251882227916582912/QxERzILG_400x400.jpg', 'public' => 1, 'hidden' => 0, 'order' => 1],
+                // Dla użytkownika ID=2
+                ['id' => 3, 'user_id' => 2, 'name' => 'USER 2 PRI', 'image_url' => 'https://play-lh.googleusercontent.com/ksYeJ3BhQ1pg_cCwtFR_pT2Lh0Clc9iVFYiOhuiK4B3FwlUDCN7qya1EGIBrP4H078Q', 'public' => 0, 'hidden' => 0, 'order' => 1],
+                ['id' => 4, 'user_id' => 2, 'name' => 'USER 2 PUB', 'image_url' => 'https://a.allegroimg.com/original/11b7a0/67463ccc4447a0ada526cdd3b5bc/PHASMOPHOBIA-STEAM-NOWA-GRA-PELNA-WERSJA-PC-PL', 'public' => 1, 'hidden' => 0, 'order' => 0],
             ],
         );
     }

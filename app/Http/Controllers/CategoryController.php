@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\Manage;
 use App\Http\Requests\Category\Store;
 use App\Models\Category;
 use App\Repository\CategoryRepository;
 use App\Repository\PageRepository;
 use App\Repository\SettingsRepository;
 use App\Repository\SubcategoryRepository;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -166,12 +164,15 @@ class CategoryController extends Controller
 
         foreach ($ids as $index => $id) {
             $category = $this->categoryRepository->getModel()->find($id);
-            $data = [
-                'hidden' => $hidden[$index],
-                'public' => !$private[$index],
-                'order' => $order[$index]
-            ];
-            $category->update($data);
+
+            if ($category != null) {
+                $data = [
+                    'hidden' => $hidden[$index],
+                    'public' => !$private[$index],
+                    'order' => $order[$index]
+                ];
+                $category->update($data);
+            }
         }
 
         return redirect()
