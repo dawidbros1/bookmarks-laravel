@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Checkbox;
+use App\Helpers\Message;
+use App\Http\Requests\category\MultiUpdate;
 use App\Http\Requests\Category\Store;
 use App\Models\Category;
 use App\Repository\CategoryRepository;
@@ -41,6 +44,7 @@ class CategoryController extends Controller
     public function show($view, int $id)
     {
         $category = $this->categoryRepository->getModel()->find($id);
+        if ($this->empty($category)) return $this->error();
         $this->authorize('author', $category);
 
         if ($view == "visible") {
@@ -65,6 +69,7 @@ class CategoryController extends Controller
     public function showPublic($id)
     {
         $category = $this->categoryRepository->getModel()->find($id);
+        if ($this->empty($category)) return $this->error();
 
         if ($category->public == 0) {
             return abort(403, 'Zasób nie jest publiczny');
@@ -90,19 +95,18 @@ class CategoryController extends Controller
     public function store(Store $request)
     {
         $data = $request->validated();
-
-        if ($request->input('public') != NULL) $data['public'] = true;
-        else $data['public'] = false;
+        $data['public'] = Checkbox::get($request->input('public'));
         $this->categoryRepository->getModel()->store($data);
 
         return redirect(url()->previous())
-            ->with('success', 'Kategoria została dodana');
+            ->with('success', Message::get(3));
     }
 
     //! EDIT
     public function edit(Request $request, $id)
     {
         $category = $this->categoryRepository->getModel()->find($id);
+        if ($this->empty($category)) return $this->error();
         $this->authorize('author', $category);
 
         return view(
@@ -117,21 +121,20 @@ class CategoryController extends Controller
     public function update(Store $request, $id)
     {
         $category = $this->categoryRepository->getModel()->find($id);
+        if ($this->empty($category)) return $this->error();
         $this->authorize('author', $category);
         $data = $request->validated();
-
-        if ($request->input('public') != NULL) $data['public'] = true;
-        else $data['public'] = false;
-
+        $data['public'] = Checkbox::get($request->input('public'));
         $category->update($data);
 
         return redirect(url()->previous())
-            ->with('success', 'Kategoria została edytowana');
+            ->with('success', Message::get(1));
     }
 
     public function changeVisibility($id)
     {
         $category = $this->categoryRepository->getModel()->find($id);
+        if ($this->empty($category)) return $this->error();
         $this->authorize('author', $category);
         $category->update(['hidden' => !$category->hidden]);
 
@@ -146,12 +149,14 @@ class CategoryController extends Controller
         return view('category.manage', ['categories' => $categories]);
     }
 
-    public function multiUpdate(Request $request)
+    public function multiUpdate(MultiUpdate $request)
     {
-        $ids = $request->input('ids');
-        $hidden = $request->input('hidden');
-        $private = $request->input('public');
-        $order = $request->input('order');
+        $data = $request->validated();
+
+        $ids = $data['ids'];
+        $hidden = $data['hidden'];
+        $private = $data['public'];
+        $order = $data['order'];
 
         $categories = $this->categoryRepository->getAllByIds($ids);
         $this->authorize('categories', [new Category, $categories]);
@@ -177,18 +182,35 @@ class CategoryController extends Controller
 
         return redirect()
             ->route('manage.categories')
-            ->with('success', 'Dane zostały zaktualizowane');
+            ->with('success', Message::get(1));
     }
 
     //! DELETE
     public function delete(Request $request, $id)
     {
         $category = $this->categoryRepository->getModel()->find($id);
+        if ($this->empty($category)) return $this->error();
         $this->authorize('author', $category);
         $category->deleteWithContent($this->subcategoryRepository);
 
         return redirect()
             ->route('category.list', ['view' => $request->input('view')])
             ->with('success', 'Kategoria została usunięta');
+    }
+
+    // Funkcje prywatne
+
+    private function empty($category)
+    {
+        if ($category == null) return true;
+        else return false;
+    }
+
+    private function error()
+    {
+        return redirect()
+            ->route('category.list', ['view' => 'visible'])
+            ->with('error', Message::get(0));
+        exit();
     }
 }

@@ -19,7 +19,7 @@
         @enderror
 
         {{-- Obrazek --}}
-        <x-jet-label for="image_url" class="pl-2"> Obrazek: </x-jet-label>
+        <x-jet-label for="image_url" class="pl-2"> Adres obrazeka: </x-jet-label>
         <x-jet-input name="image_url" value="{{ old('image_url') }}" type="text" class="border px-2 min-w-full mb-3">
         </x-jet-input>
 

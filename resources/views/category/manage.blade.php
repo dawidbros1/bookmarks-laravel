@@ -5,6 +5,8 @@
         </h2>
     </x-slot>
 
+    <x-jet-validation-errors> </x-jet-validation-errors>
+
     <x-manage.main>
         <x-form-section action="{{ route('update.categories') }}">
             <table class="w-full">
@@ -81,7 +83,11 @@
                 </tbody>
             </table>
 
-            <x-jet-button type="submit" class="mt-2">Zapisz</x-jet-button>
+            @if (count($categories) > 0)
+                <x-jet-button type="submit" class="mt-2">Zapisz</x-jet-button>
+            @else
+                <x-jet-button type="submit" class="mt-2" disabled>Zapisz</x-jet-button>
+            @endif
 
         </x-form-section>
     </x-manage.main>
