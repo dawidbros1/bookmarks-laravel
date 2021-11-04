@@ -198,7 +198,7 @@ class CategoryController extends Controller
             ->with('success', 'Kategoria została usunięta');
     }
 
-    // Funkcje prywatne
+    // Metody prywatne
 
     private function empty($category)
     {

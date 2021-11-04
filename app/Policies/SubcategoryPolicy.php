@@ -16,12 +16,10 @@ class SubcategoryPolicy
     {
         $this->categoryRepository = $categoryRepository;
         $this->category = $this->categoryRepository->getModel();
-        // $this->category = $category;
     }
 
     public function author(User $user, $subcategory)
     {
-        if ($subcategory == null) return Response::deny('Zasób nie istnieje');
         $category = $this->category->find($subcategory->category_id);
         if ($user->id != $category->user_id) return Response::deny('Brak uprawnień do tego zasobu');
         return Response::allow();
@@ -41,7 +39,6 @@ class SubcategoryPolicy
 
     public function categoryAuthor(User $user, $subcategory, Category $category)
     {
-        if ($category == null) return Response::deny('Zasób nie istnieje');
         if ($user->id != $category->user_id) return Response::deny('Brak uprawnień do tego zasobu');
         return Response::allow();
     }

@@ -5,8 +5,6 @@
         </h2>
     </x-slot>
 
-    <x-jet-validation-errors> </x-jet-validation-errors>
-
     <x-manage.main>
         <x-form-section action="{{ route('update.categories') }}">
             <table class="w-full">

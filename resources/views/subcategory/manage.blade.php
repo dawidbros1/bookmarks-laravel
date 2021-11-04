@@ -94,7 +94,11 @@
                 </tbody>
             </table>
 
-            <x-jet-button type="submit" class="mt-2">Zapisz</x-jet-button>
+            @if ($index > 0)
+                <x-jet-button type="submit" class="mt-2">Zapisz</x-jet-button>
+            @else
+                <x-jet-button type="submit" class="mt-2" disabled>Zapisz</x-jet-button>
+            @endif
         </x-form-section>
 
     </x-manage.main>

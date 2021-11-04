@@ -118,19 +118,16 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     //! MANAGE UPDATA
     Route::group(
         [
-            'prefix' => "updata",
+            'prefix' => "update",
             'as' => 'update.'
         ],
         function () {
             Route::post('/settings', [SettingsController::class, 'update'])->name('settings');
             Route::post('/categories', [CategoryController::class, 'multiUpdate'])->name('categories');
-            Route::post('/subcategories/checkboxes', [SubcategoryController::class, 'multiUpdate'])->name('subcategories');
-            Route::post('/{type}/pages/checkboxes', [PageController::class, 'multiUpdate'])->name('pages');
+            Route::post('/subcategories', [SubcategoryController::class, 'multiUpdate'])->name('subcategories');
+            Route::post('/{type}/pages', [PageController::class, 'multiUpdate'])->name('pages');
         }
     );
-
-    //! USTAWIENIA UPDATA
-
 });
 
 // Dane publiczne

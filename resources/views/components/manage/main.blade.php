@@ -1,3 +1,4 @@
+<x-jet-validation-errors> </x-jet-validation-errors>
 <div class="md:flex flex-col md:flex-row">
     <div class="flex flex-col md:w-64 text-gray-700">
         <div class="px-8 py-4 text-lg font-semibold tracking-widest uppercase">

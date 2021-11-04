@@ -24,9 +24,25 @@ class Store extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['min:1, max:255'],
-            'category_id' => ['integer'],
-            'image_url' => ["min:1, max:255"],
+            'name' => ['required', 'min:1', 'max:255'],
+            'image_url' => ['required', "min:1", 'max:255'],
+            'category_id' => ['required', 'integer'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'name.required' => 'Pole nazwa kategorii jest wymagane.',
+            'name.min' => 'Nazwa kategorii nie może być krótsza niż :min znak.',
+            'name.max' => 'Nazwa kategorii nie może być dłuższa niż :max. znaków.',
+
+            'image_url.required' => 'Pole adres obrazka jest wymagane.',
+            'image_url.min' => 'Adres obrazka nie może być krótszy niż :min znak.',
+            'image_url.max' => 'Adres obrazka nie może być dłuższy niż :max znaków.',
+
+            'category_id.required' => 'Pole category_id jest wymagane.',    
+            'category_id.integer' => 'Pole category_id musi być liczbą.',
         ];
     }
 }

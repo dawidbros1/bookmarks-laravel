@@ -11,6 +11,7 @@ class Message
         $messages[1] = "Dane zostały zaktualizowane";
         $messages[2] = "Brak uprawnień do tego zasobu";
         $messages[3] = "Element został dodany";
+        $messages[4] = "Widoczność elementu została zmieniona";
 
         return $messages[$id];
     }
