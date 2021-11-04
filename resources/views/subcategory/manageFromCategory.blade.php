@@ -8,24 +8,7 @@
     <x-manage.main>
         <x-form-section action="{{ route('update.subcategories') }}">
             <table class="w-full">
-                <thead>
-                    <th class="text-left w-8/12 md:w-9/12 xl:w-10/12">{{ $category->name }}</th>
-                    <th></th>
-
-                    <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/order.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Kolejność wyświetlania" )>
-                    </th>
-                    <th colspan="2"></th>
-                    <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/hidden.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Czy element ma być ukryty" )>
-                    </th>
-                    <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/lock.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Czy element ma być prywatny" )>
-                    </th>
-                </thead>
+                <x-manage.table-head.subcategory name="{{ $category->name }}"></x-manage.table-head.subcategory>
 
                 <tbody>
                     <tr class="border-b-2 border-blue-600">

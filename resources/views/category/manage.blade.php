@@ -8,24 +8,7 @@
     <x-manage.main>
         <x-form-section action="{{ route('update.categories') }}">
             <table class="w-full">
-                <thead>
-                    <th class="text-left w-8/12 md:w-9/12 xl:w-10/12">Nazwa kategorii</th>
-                    <th></th>
-                    <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/order.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Kolejność wyświetlania" )>
-                    </th>
-
-                    <th colspan="3"></th>
-                    <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/hidden.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Czy element ma być ukryty" )>
-                    </th>
-                    <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/lock.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Czy element ma być prywatny" )>
-                    </th>
-                </thead>
+                <x-manage.table-head.category></x-manage.table-head.category>
 
                 <tbody>
                     <tr class="border-b-2 border-blue-600">
@@ -70,6 +53,7 @@
                                 <input name="hidden[{{ $key }}]" type="checkbox" value="1"
                                     class="hiddenCheckbox" @if ($category->hidden) checked @endif>
                             </td>
+
                             <td class="text-center">
                                 <input name="public[{{ $key }}]" type="hidden" value="0">
                                 <input name="public[{{ $key }}]" type="checkbox" value="1"

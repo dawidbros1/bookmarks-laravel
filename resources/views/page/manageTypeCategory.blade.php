@@ -7,28 +7,7 @@
     <x-manage.main>
         <x-form-section action="{{ route('update.pages', ['type' => 'category']) }}">
             <table class="w-full">
-                <thead>
-                    <th class="text-left w-8/12 md:w-9/12 xl:w-10/12">Nazwa kategorii</th>
-                    <th></th>
-                    <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/order.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Kolejność wyświetlania" )>
-                    </th>
-                    <th></th>
-                    <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/hidden.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Czy element ma być ukryty" )>
-                    </th>
-                    <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/lock.png') }}" alt="profile Pic"
-                            height="25" width="25" title="Czy element ma być prywatny" )>
-                    </th>
-                    <th>
-                        <img class="block m-auto" src="{{ URL::asset('/images/open_in_new_window.png') }}"
-                            alt="profile Pic" height="25" width="25" title="Czy strona ma otworzyć się w nowym oknie" )>
-                    </th>
-                </thead>
-
+                <x-manage.table-head.page name="Nazwa kategorii"></x-manage.table-head.page>
                 <tbody>
                     <tr>
                         <td colspan="4"></td>
