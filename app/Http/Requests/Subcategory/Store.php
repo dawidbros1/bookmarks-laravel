@@ -41,7 +41,7 @@ class Store extends FormRequest
             'image_url.min' => 'Adres obrazka nie może być krótszy niż :min znak.',
             'image_url.max' => 'Adres obrazka nie może być dłuższy niż :max znaków.',
 
-            'category_id.required' => 'Pole category_id jest wymagane.',    
+            'category_id.required' => 'Pole category_id jest wymagane.',
             'category_id.integer' => 'Pole category_id musi być liczbą.',
         ];
     }

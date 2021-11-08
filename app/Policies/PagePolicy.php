@@ -25,30 +25,15 @@ class PagePolicy
         $this->subcategory = $this->subcategoryRepository->getModel();
     }
 
-    // Tutaj strona już istnieje
-    public function author(User $user, $page)
+    public function subcategoryAuthor($user, Page $page,  Subcategory $subcategory)
     {
-        if ($page == null) return Response::deny('Zasób nie istnieje');
-        return  $this->checkParent($user, new Page(), $page->type, $page->parent_id);
-    }
-
-    // Tutaj strona jeszcze nie musi istnieje, ale może
-    public function checkParent(User $user, Page $page, $type = null, $parent_id = null)
-    {
-        if ($type == 'subcategory') {
-            $subcategory = $this->subcategory->find($parent_id);
-            return $this->checkSubcategory($user, $subcategory);
-        } elseif ($type == 'category') {
-            $category = $this->category->find($parent_id);
-            return $this->checkCategory($user, $category);
-        } else {
-            return Response::deny('Nieprawidłowy typ strony');
-        }
+        $category = $this->categoryRepository->getModel()->find($subcategory->category_id);
+        if ($category->user_id != $user->id) return Response::deny('Brak uprawnień do tego zasobu');
+        return Response::allow();
     }
 
     public function categoryAuthor($user, Page $page,  Category $category)
     {
-        if ($category == null) return Response::deny('Zasób nie istnieje');
         if ($category->user_id != $user->id) return Response::deny('Brak uprawnień do tego zasobu');
         return Response::allow();
     }
@@ -63,25 +48,9 @@ class PagePolicy
         $categories = $this->categoryRepository->getAllByIds($parent_ids);
 
         foreach ($categories as $category) {
-            if ($category == null) return Response::deny('Zasób nie istnieje');
             if ($category->user_id != $user->id) return Response::deny('Brak uprawnień do tego zasobu');
         }
 
-        return Response::allow();
-    }
-
-    // Funkcje pomocnicze
-    private function checkSubcategory($user, Subcategory $subcategory)
-    {
-        if ($subcategory == null) return Response::deny('Zasób nie istnieje');
-        $category = $this->category->find($subcategory->category_id);
-        return $this->checkCategory($user, $category);
-    }
-
-    private function checkCategory($user, Category $category)
-    {
-        if ($category == null) return Response::deny('Zasób nie istnieje');
-        if ($category->user_id != $user->id) return Response::deny('Brak uprawnień do tego zasobu');
         return Response::allow();
     }
 }

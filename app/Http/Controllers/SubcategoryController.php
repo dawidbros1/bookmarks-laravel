@@ -164,6 +164,12 @@ class SubcategoryController extends Controller
         $private = $data['public'];
         $order = $data['order'];
 
+        if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($order)) {
+            // Być może jakiś inny błąd tutaj
+            return $this->error();
+        }
+
+
         $subcategories = $this->subcategoryRepository->getAllByIds($ids);
         if (!$this->checkArray($subcategories)) return $this->error();
 

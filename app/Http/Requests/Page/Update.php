@@ -4,7 +4,7 @@ namespace App\Http\Requests\Page;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Store extends FormRequest
+class Update extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,9 +26,10 @@ class Store extends FormRequest
         return [
             'name' => ['required', 'min:1', 'max:255'],
             'image_url' => ['required', 'min:1', 'max:255'],
-            'type' => ['required', 'in:category,subcategory'],
             'link' => ['required', 'min:1', 'max:255'],
-            'parent_id' => ['required', 'integer'],
+            'subcategory_id' => ['required', 'integer'],
+            'category_id' => ['required', 'integer'],
+
         ];
     }
 
@@ -43,15 +44,15 @@ class Store extends FormRequest
             'image_url.min' => 'Adres obrazka nie może być krótszy niż :min znak.',
             'image_url.max' => 'Adres obrazka nie może być dłuższy niż :max znaków.',
 
-            'type.required' => 'Pole type jest wymagane.',
-            'type.in' => 'Pole type musi posiadać wartość category lub subcategory',
-
             'link.required' => 'Pole link do strony jest wymagane.',
             'link.min' => 'Link do strony nie może być krótszy niż :min znak.',
             'link.max' => 'Link do strony nie może być dłuższy niż :max znaków.',
 
-            'parent_id.required' => 'Pole parent_id jest wymagane.',
-            'parent_id.integer' => 'Pole parent_id musi być liczbą.',
+            'subcategory_id.required' => 'Pole subcategory_id jest wymagane.',
+            'subcategory_id.integer' => 'Pole subcategory_id musi być liczbą.',
+
+            'category_id.required' => 'Pole category_id jest wymagane.',
+            'category_id.integer' => 'Pole category_id musi być liczbą.',
         ];
     }
 }

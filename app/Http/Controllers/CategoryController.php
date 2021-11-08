@@ -158,6 +158,11 @@ class CategoryController extends Controller
         $private = $data['public'];
         $order = $data['order'];
 
+        if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($order)) {
+            // Być może jakiś inny błąd tutaj
+            return $this->error();
+        }
+
         $categories = $this->categoryRepository->getAllByIds($ids);
         $this->authorize('categories', [new Category, $categories]);
 
