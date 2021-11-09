@@ -92,7 +92,7 @@ class SubcategoryController extends Controller
         $this->subcategoryRepository->getModel()->store($data);
 
         return redirect(url()->previous())
-            ->with('success', Message::get(3));
+            ->with('success', $this->message(0));
     }
 
     //! EDIT
@@ -140,19 +140,29 @@ class SubcategoryController extends Controller
         $subcategory->update(['hidden' => !$subcategory->hidden]);
 
         return redirect(url()->previous())
-            ->with('success', Message::get(4));
+            ->with('success', $this->message(2));
     }
 
     //! MANAGE
     public function manage()
     {
+        $empty = true;
         $categories = $this->categoryRepository->getAllWithSubcategories(); // BY USER ID
-        return view('subcategory.manage', ['categories' => $categories]);
+
+        foreach ($categories as $category) {
+            if (count($category->subcategories) != 0) {
+                $empty = false;
+            }
+        }
+
+        return view('subcategory.manage', ['categories' => $categories, 'empty' => $empty]);
     }
 
     public function manageAllFromCategory($id)
     {
         $category = $this->categoryRepository->getWithSubcategories($id)->first();
+        if ($this->empty($category)) return $this->error();
+        $this->authorize('categoryAuthor', [new Subcategory, $category]);
         return view('subcategory.manageFromCategory', ['category' => $category]);
     }
 
@@ -205,10 +215,16 @@ class SubcategoryController extends Controller
 
         return redirect()
             ->route('category.show', ['id' => $subcategory->category_id, 'view' => $request->input('view')])
-            ->with('success', 'Podkategoria została usunięta');
+            ->with('success', $this->message(1));
     }
 
     // Metody prywatne
+
+    private function message($id)
+    {
+        return Message::get($id, $this->type);
+    }
+
     private function checkArray($subcategories)
     {
         $category_ids = array_unique($subcategories->pluck('category_id')->toArray());

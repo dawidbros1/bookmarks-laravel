@@ -6,81 +6,82 @@
     </x-slot>
     <x-manage.main>
 
-        <x-form-section action="{{ route('update.subcategories') }}">
-            <table class="w-full">
-                <x-manage.table-head.subcategory name="Nazwa kategorii"></x-manage.table-head.subcategory>
+        @if (!$empty)
 
-                <tbody>
-                    <tr>
-                        <td colspan="5"></td>
-                        <td class="text-center"><input type="checkbox" id="hiddenCheckboxButton"></td>
-                        <td class="text-center"><input type="checkbox" id="publicCheckboxButton"></td>
-                    </tr>
 
-                    @php
-                        $index = 0;
-                    @endphp
 
-                    @foreach ($categories as $category)
-                        @if (count($category->subcategories) != 0)
+            <x-form-section action="{{ route('update.subcategories') }}">
+                <table class="w-full">
+                    <x-manage.table-head.subcategory name="Nazwa kategorii"></x-manage.table-head.subcategory>
 
-                            @php
-                                $key = key($category);
-                            @endphp
+                    <tbody>
+                        <tr>
+                            <td colspan="5"></td>
+                            <td class="text-center"><input type="checkbox" id="hiddenCheckboxButton"></td>
+                            <td class="text-center"><input type="checkbox" id="publicCheckboxButton"></td>
+                        </tr>
 
-                            <tr class="border-t-2 border-blue-600 font-bold">
-                                <td colspan="4">{{ $category->name }}</td>
-                            </tr>
+                        @php
+                            $index = 0;
+                        @endphp
 
-                            @foreach ($category->subcategories as $item)
-                                <tr class="border-b">
+                        @foreach ($categories as $category)
+                            @if (count($category->subcategories) != 0)
 
-                                    <td class="pl-4">{{ $item->name }}</td>
+                                @php
+                                    $key = key($category);
+                                @endphp
 
-                                    <td class="text-center">
-                                        <div class="char minus"></div>
-                                    </td>
-
-                                    <td class="text-center">
-                                        <div class="lh-order">
-                                            <input type="number" value="{{ $item->order }}" class="order"
-                                                name="order[]">
-                                        </div>
-                                    </td>
-
-                                    <td class="text-center">
-                                        <div class="char plus"></div>
-                                    </td>
-
-                                    <x-manage.table-column-image-link
-                                        link="{{ route('manage.subcategory.pages', ['id' => $item->id]) }}"
-                                        image_name="page.png">
-                                    </x-manage.table-column-image-link>
-
-                                    <td class="text-center">
-                                        <input name="hidden[{{ $index }}]" type="hidden" value="0">
-                                        <input name="hidden[{{ $index }}]" type="checkbox" value="1"
-                                            class="hiddenCheckbox" @if ($item->hidden) checked @endif>
-                                    </td>
-                                    <td class="text-center">
-                                        <input name="public[{{ $index }}]" type="hidden" value="0">
-                                        <input name="public[{{ $index++ }}]" type="checkbox" value="1"
-                                            class="publicCheckbox" @if (!$item->public) checked @endif>
-                                    </td>
+                                <tr class="border-t-2 border-blue-600 font-bold">
+                                    <td colspan="4">{{ $category->name }}</td>
                                 </tr>
-                                <input type="hidden" name="ids[]" value="{{ $item->id }}">
-                            @endforeach
-                        @endif
-                    @endforeach
-                </tbody>
-            </table>
 
-            @if ($index > 0)
+                                @foreach ($category->subcategories as $item)
+                                    <tr class="border-b">
+
+                                        <td class="pl-4">{{ $item->name }}</td>
+
+                                        <td class="text-center">
+                                            <div class="char minus"></div>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <div class="lh-order">
+                                                <input type="number" value="{{ $item->order }}" class="order"
+                                                    name="order[]">
+                                            </div>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <div class="char plus"></div>
+                                        </td>
+
+                                        <x-manage.table-column-image-link
+                                            link="{{ route('manage.subcategory.pages', ['id' => $item->id]) }}"
+                                            image_name="page.png">
+                                        </x-manage.table-column-image-link>
+
+                                        <td class="text-center">
+                                            <input name="hidden[{{ $index }}]" type="hidden" value="0">
+                                            <input name="hidden[{{ $index }}]" type="checkbox" value="1"
+                                                class="hiddenCheckbox" @if ($item->hidden) checked @endif>
+                                        </td>
+                                        <td class="text-center">
+                                            <input name="public[{{ $index }}]" type="hidden" value="0">
+                                            <input name="public[{{ $index++ }}]" type="checkbox" value="1"
+                                                class="publicCheckbox" @if (!$item->public) checked @endif>
+                                        </td>
+                                    </tr>
+                                    <input type="hidden" name="ids[]" value="{{ $item->id }}">
+                                @endforeach
+                            @endif
+                        @endforeach
+                    </tbody>
+                </table>
+
                 <x-jet-button type="submit" class="mt-2">Zapisz</x-jet-button>
-            @else
-                <x-jet-button type="submit" class="mt-2" disabled>Zapisz</x-jet-button>
-            @endif
-        </x-form-section>
+            </x-form-section>
+        @endif
 
     </x-manage.main>
 </x-main-layout>

@@ -25,6 +25,7 @@ class PageController extends Controller
         $this->categoryRepository = $categoryRepository;
         $this->subcategoryRepository = $this->categoryRepository->getSubcategoryRepository();
         $this->pageRepository = $this->subcategoryRepository->getPageRepository();
+        $this->type = "page";
     }
 
     //! CREATE
@@ -80,7 +81,7 @@ class PageController extends Controller
         $this->pageRepository->getModel()->store($data);
 
         return redirect(url()->previous())
-            ->with('success', Message::get(3));
+            ->with('success', $this->message(0));
     }
 
     //! EDIT
@@ -185,19 +186,40 @@ class PageController extends Controller
         $page->update(['hidden' => !$page->hidden]);
 
         return redirect(url()->previous())
-            ->with('success', 'Widoczność strony została zmieniona');
+            ->with('success', $this->message(2));
     }
 
     //! MANAGE
     public function manage(Request $request)
     {
         $type = $request->input('type');
+        $empty = true;
+
         if ($type == "category") {
             $categories = $this->categoryRepository->getAllWithPages();
-            return view('page.manageTypeCategory', ['categories' => $categories]);
+
+            foreach ($categories as $category) {
+                if (count($category->pages) > 0) {
+                    $empty = false;
+                    break;
+                }
+            }
+
+
+            return view('page.manageTypeCategory', ['categories' => $categories, 'empty' => $empty]);
         } else {
             $categories = $this->categoryRepository->getAllWithSubcategoriesWithPages();
-            return view('page.manageTypeSubcategory', ['categories' => $categories]);
+
+            foreach ($categories as $category) {
+                foreach ($category->subcategories as $subcategory) {
+                    if (count($subcategory->pages) > 0) {
+                        $empty = false;
+                        break;
+                    }
+                }
+            }
+
+            return view('page.manageTypeSubcategory', ['categories' => $categories, 'empty' => $empty]);
         }
     }
 
@@ -250,7 +272,7 @@ class PageController extends Controller
         }
 
         return redirect(url()->previous())
-            ->with('success', 'Dane zostały zaktualizowane');
+            ->with('success', Message::get(1));
     }
 
     //! DELETE
@@ -273,11 +295,14 @@ class PageController extends Controller
 
         return redirect()
             ->route($page->type . '.show', ['id' => $page->parent_id, 'view' => $request->input('view')])
-            ->with('success', 'Strona została usunięta');
+            ->with('success', $this->message(1));
     }
 
     // Metody prywatne
-
+    private function message($id)
+    {
+        return Message::get($id, $this->type);
+    }
 
     private function empty($item)
     {

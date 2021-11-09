@@ -99,7 +99,7 @@ class CategoryController extends Controller
         $this->categoryRepository->getModel()->store($data);
 
         return redirect(url()->previous())
-            ->with('success', Message::get(3));
+            ->with('success', $this->message(0));
     }
 
     //! EDIT
@@ -139,7 +139,7 @@ class CategoryController extends Controller
         $category->update(['hidden' => !$category->hidden]);
 
         return redirect(url()->previous())
-            ->with('success', 'Widoczność kategorii została zmieniona');
+            ->with('success', $this->message(2));
     }
 
     //! MANAGE
@@ -200,10 +200,15 @@ class CategoryController extends Controller
 
         return redirect()
             ->route('category.list', ['view' => $request->input('view')])
-            ->with('success', 'Kategoria została usunięta');
+            ->with('success', $this->message(1));
     }
 
     // Metody prywatne
+
+    private function message($id)
+    {
+        return Message::get($id, $this->type);
+    }
 
     private function empty($category)
     {
