@@ -4,5 +4,5 @@
     <x-manage.table-th type="order"></x-manage.table-th>
     <th colspan="3"></th>
     <x-manage.table-th type="hidden"></x-manage.table-th>
-    <x-manage.table-th name="public"></x-manage.table-th>
+    <x-manage.table-th type="public"></x-manage.table-th>
 </thead>
