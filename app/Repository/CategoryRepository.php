@@ -3,102 +3,99 @@
 namespace App\Repository;
 
 use App\Models\Category;
-use App\Repository\SubcategoryRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class CategoryRepository
 {
     private Category $model;
-    private SubcategoryRepository $subcategoryRepository;
 
-    public function __construct(Category $model, SubcategoryRepository $subcategoryRepository)
+    public function __construct(Category $model)
     {
         $this->model = $model;
-        $this->subcategoryRepository = $subcategoryRepository;
     }
 
-    public function getModel()
+    // public function getModel()
+    // {
+    //     return $this->model;
+    // }
+
+    // public function getSubcategoryRepository()
+    // {
+    //     return $this->subcategoryRepository;
+    // }
+
+    // public function getAllByIds($ids)
+    // {
+    //     return $this->model
+    //         ->orderBy('order')
+    //         ->whereIN('id', $ids)
+    //         ->get();
+    // }
+
+    public function getByParams(array $args)
     {
-        return $this->model;
+        $args = $args;
+        $args['user_id'] = Auth::id();
+
+        return $this->model->orderBy('order')->where($args)->get();
     }
 
-    public function getSubcategoryRepository()
-    {
-        return $this->subcategoryRepository;
-    }
 
-    public function getAllByIds($ids)
+    public function getWithRelations(int $id)
     {
         return $this->model
             ->orderBy('order')
-            ->whereIN('id', $ids)
-            ->get();
-    }
-
-    public static function getAllByParameters(int $hidden = -1)
-    {
-
-        $model = new Category;
-
-        if ($hidden == -1) {
-            return $model
-                ->orderBy('order')
-                ->where(['user_id' => Auth::id()])
-                ->get();
-        } else {
-            return $model
-                ->orderBy('order')
-                ->where(['user_id' => Auth::id(), 'hidden' => $hidden])
-                ->get();
-        }
+            ->where(['user_id'=> Auth::id(), 'id' => $id])
+            ->with('subcategories')
+            ->with('pages')
+            ->get()->first();
     }
 
     // Pobieranie danych z relacjami
-    public function getAllWithSubcategories()
-    {
-        return $this->model
-            ->orderBy('order')
-            ->where('user_id', Auth::id())
-            ->with('subcategories')
-            ->get();
-    }
+    // public function getAllWithSubcategories()
+    // {
+    //     return $this->model
+    //         ->orderBy('order')
+    //         ->where('user_id', Auth::id())
+    //         ->with('subcategories')
+    //         ->get();
+    // }
 
-    public function getAllWithPages()
-    {
-        return $this->model
-            ->orderBy('order')
-            ->where('user_id', Auth::id())
-            ->with('pages')
-            ->get();
-    }
+    // public function getAllWithPages()
+    // {
+    //     return $this->model
+    //         ->orderBy('order')
+    //         ->where('user_id', Auth::id())
+    //         ->with('pages')
+    //         ->get();
+    // }
 
-    public function getAllWithSubcategoriesWithPages()
-    {
-        return $this->model
-            ->orderBy('order')
-            ->where('user_id', Auth::id())
-            ->with('subcategories.pages')
-            ->get();
-    }
+    // public function getAllWithSubcategoriesWithPages()
+    // {
+    //     return $this->model
+    //         ->orderBy('order')
+    //         ->where('user_id', Auth::id())
+    //         ->with('subcategories.pages')
+    //         ->get();
+    // }
 
     // Pojedyncze po ID z relacjami
+    // public function getWithPages($id)
+    // {
+    //     return $this->model
+    //         ->orderBy('order')
+    //         ->where(['user_id' => Auth::id(), 'id' => $id])
+    //         ->with('pages')
+    //         ->get();
+    // }
 
-    public function getWithPages($id)
-    {
-        return $this->model
-            ->orderBy('order')
-            ->where(['user_id' => Auth::id(), 'id' => $id])
-            ->with('pages')
-            ->get();
-    }
-
-    public function getWithSubcategories($id)
-    {
-        return $this->model
-            ->orderBy('order')
-            ->where(['user_id' => Auth::id(), 'id' => $id])
-            ->with('subcategories')
-            ->get();
-    }
+    // public function getWithSubcategories($id)
+    // {
+    //     return $this->model
+    //         ->orderBy('order')
+    //         ->where(['user_id' => Auth::id(), 'id' => $id])
+    //         ->with('subcategories')
+    //         ->get();
+    // }
 }

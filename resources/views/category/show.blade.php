@@ -4,36 +4,36 @@
             {{ $category->name }}
         </h2>
 
-        <x-back-button-upper action="{{ route('category.list', ['view' => 'visible']) }}">
+        <x-back-button-upper action="{{ route('category.list', ['visibility' => 'visible']) }}">
         </x-back-button-upper>
     </x-slot>
 
-
     <div class="flex flex-wrap text-center py-2">
-        <a href="{{ route('subcategory.create', ['category_id' => $category->id, 'view' => $view]) }}"
+        <a href="{{ route('subcategory.create', ['category_id' => $category->id, 'visibility' => $visibility]) }}"
             class="w-2/4 border-r-2">
             Dodaj podkategorię
         </a>
-        <a href="{{ route('page.create', ['type' => 'category', 'parent_id' => $category->id, 'view' => $view]) }}"
+        <a href="{{ route('page.create', ['type' => 'category', 'parent_id' => $category->id, 'visibility' => $visibility]) }}"
             class="w-2/4">
             Dodaj stronę
         </a>
     </div>
     {{-- Podkategorie --}}
     <div>
-        <x-items-header basic="{{ route('category.show', ['id' => $category->id, 'view' => 'visible']) }}"
-            hidden="{{ route('category.show', ['id' => $category->id, 'view' => 'hidden']) }}"
-            all="{{ route('category.show', ['id' => $category->id, 'view' => 'all']) }}">
+        <x-items-header basic="{{ route('category.show', ['id' => $category->id, 'visibility' => '0']) }}"
+            hidden="{{ route('category.show', ['id' => $category->id, 'visibility' => '1']) }}">
 
             <x-slot name="header"> Podkategorie </x-slot>
         </x-items-header>
 
         <div class="flex flex-wrap px-1">
-            @foreach ($subcategories as $subcategory)
+            @foreach ($category->subcategories ?? [] as $subcategory)
+                <?php if ($subcategory->hidden != $visibility) continue ?>
+
                 <x-item hidden="{{ $subcategory->hidden }}">
                     <x-slot name="title">{{ $subcategory->name }}</x-slot>
                     <x-slot name="content">
-                        <a href="{{ route('subcategory.show', ['id' => $subcategory->id, 'view' => 'visible']) }}">
+                        <a href="{{ route('subcategory.show', ['id' => $subcategory->id, 'visibility' => 'visible']) }}">
                             <img src="{{ $subcategory->image_url }}" alt="Obrazek" class="full">
                         </a>
 
@@ -52,7 +52,7 @@
                     </x-slot>
 
                     <x-slot name="settings">
-                        {{ route('subcategory.edit', ['id' => $subcategory->id, 'view' => $view]) }}
+                        {{ route('subcategory.edit', ['id' => $subcategory->id, 'visibility' => $visibility]) }}
                     </x-slot>
                 </x-item>
             @endforeach
@@ -60,23 +60,20 @@
     </div>
     {{-- Strony --}}
     <div class="pb-10">
-        <x-items-header basic="{{ route('category.show', ['id' => $category->id, 'view' => 'visible']) }}"
-            hidden="{{ route('category.show', ['id' => $category->id, 'view' => 'hidden']) }}"
-            all="{{ route('category.show', ['id' => $category->id, 'view' => 'all']) }}">
+        <x-items-header basic="{{ route('category.show', ['id' => $category->id, 'visibility' => '0']) }}"
+            hidden="{{ route('category.show', ['id' => $category->id, 'visibility' => '1']) }}">
 
             <x-slot name="header"> Strony </x-slot>
         </x-items-header>
 
         <div class="flex flex-wrap px-1">
-            @foreach ($pages as $page)
+            @foreach ($category->pages ?? [] as $page)
+                <?php if ($page->hidden != $visibility) continue ?>
+
                 <x-item hidden="{{ $page->hidden }}">
                     <x-slot name="title">{{ $page->name }}</x-slot>
                     <x-slot name="content">
-                        <a href="{{ $page->link }}" @php
-                            if ($page->open_in_new_window) {
-                                echo `target="_blank"`;
-                            }
-                        @endphp>
+                        <a href="{{ $page->link }}" target="_blank">
                             <img src="{{ $page->image_url }}" alt="Obrazek" class="full">
                         </a>
                     </x-slot>
@@ -86,7 +83,7 @@
                     </x-slot>
 
                     <x-slot name="settings">
-                        {{ route('page.edit', ['id' => $page->id, 'type' => 'category', 'view' => $view]) }}
+                        {{ route('page.edit', ['id' => $page->id, 'type' => 'category', 'visibility' => $visibility]) }}
                     </x-slot>
                 </x-item>
             @endforeach

@@ -50,7 +50,7 @@ class RouteServiceProvider extends ServiceProvider
 
 
         Route::pattern('id', '[0-9]+');
-        Route::pattern('view', 'all|visible|hidden');
+        // Route::pattern('view', 'visible|hidden');
     }
 
     /**

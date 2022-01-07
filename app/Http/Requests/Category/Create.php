@@ -4,7 +4,7 @@ namespace App\Http\Requests\Category;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Store extends FormRequest
+class Create extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,14 @@ class Store extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => ['required', 'min:1', 'max:255'],
-            'image_url' => ['required', 'min:1', 'max:255'],
-        ];
+        if ($this->method() == "POST"){
+            return [
+                'name' => ['required', 'min:1', 'max:255'],
+                'image_url' => ['required', 'min:1', 'max:255'],
+            ];
+        }
+
+        return [];
     }
 
     public function messages()

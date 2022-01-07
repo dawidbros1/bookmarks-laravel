@@ -22,7 +22,7 @@ class Category extends Model
         'order'
     ];
 
-    public function store(array $data)
+    public function create(array $data)
     {
         $this->user_id = Auth::id();
         $this->name = $data['name'];

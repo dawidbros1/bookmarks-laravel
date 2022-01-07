@@ -5,9 +5,8 @@
         </h2>
     </x-slot>
     <div>
-        <x-items-header basic="{{ route('category.list', ['view' => 'visible']) }}"
-            hidden="{{ route('category.list', ['view' => 'hidden']) }}"
-            all="{{ route('category.list', ['view' => 'all']) }}">
+        <x-items-header basic="{{ route('category.list', ['visibility' => '0']) }}"
+            hidden="{{ route('category.list', ['visibility' => '1']) }}">
 
             <x-slot name="header"> Moje kategorie </x-slot>
         </x-items-header>
@@ -17,7 +16,7 @@
                 <x-item hidden="{{ $category->hidden }}">
                     <x-slot name="title">{{ $category->name }}</x-slot>
                     <x-slot name="content">
-                        <a href="{{ route('category.show', ['id' => $category->id, 'view' => 'visible']) }}">
+                        <a href="{{ route('category.show', ['id' => $category->id]) }}">
                             <img src="{{ $category->image_url }}" alt="Obrazek" class="full">
                         </a>
 
@@ -36,7 +35,7 @@
                     </x-slot>
 
                     <x-slot name="settings">
-                        {{ route('category.edit', ['id' => $category->id, 'view' => $view]) }}
+                        {{ route('category.edit', ['id' => $category->id, 'visibility' => $visibility]) }}
                     </x-slot>
                 </x-item>
             @endforeach

@@ -5,14 +5,15 @@
         </h2>
     </x-slot>
 
-
     <div>
         <x-items-header>
             <x-slot name="header"> Podkategorie </x-slot>
         </x-items-header>
 
         <div class="flex flex-wrap px-1">
-            @foreach ($subcategories as $subcategory)
+            @foreach ($category->subcategories as $subcategory)
+                <?php if ($subcategory->public == 0) continue ?>
+
                 <x-item hidden="{{ $subcategory->hidden }}">
                     <x-slot name="title">{{ $subcategory->name }}</x-slot>
                     <x-slot name="content">
@@ -34,7 +35,9 @@
         </x-items-header>
 
         <div class="flex flex-wrap px-1">
-            @foreach ($pages as $page)
+            @foreach ($category->pages as $page)
+                <?php if ($page->public == 0) continue ?>
+
                 <x-item hidden="{{ $page->hidden }}">
                     <x-slot name="title">{{ $page->name }}</x-slot>
                     <x-slot name="content">

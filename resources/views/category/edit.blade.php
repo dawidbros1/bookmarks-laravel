@@ -7,7 +7,7 @@
 
     <x-jet-validation-errors> </x-jet-validation-errors>
 
-    <x-form-section action="{{ route('category.update', ['id' => $category->id]) }}">
+    <x-form-section action="{{ route('category.edit', ['id' => $category->id]) }}">
         {{-- Tutył --}}
         <x-jet-label for="name" class="pl-2"> Nazwa: </x-jet-label>
         <x-jet-input name="name" value="{{ old('name', $category->name) }}" type="text"
@@ -36,8 +36,8 @@
         <x-jet-button type="submit">Zapisz</x-jet-button>
     </x-form-section>
 
-    <x-delete-item-button action="{{ route('category.delete', ['id' => $category->id, 'view' => $view]) }}">
+    <x-delete-item-button action="{{ route('category.delete', ['id' => $category->id, 'visibility' => $visibility]) }}">
     </x-delete-item-button>
-    <x-back-button action="{{ route('category.list', ['view' => $view]) }}"></x-back-button>
+    <x-back-button action="{{ route('category.list', ['visibility' => $visibility]) }}"></x-back-button>
 
 </x-main-layout>
