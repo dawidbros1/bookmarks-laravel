@@ -2,29 +2,34 @@
 
 namespace App\Repository;
 
+use Illuminate\Support\Facades\Auth;
+use App\Models\Category;
 use App\Models\Subcategory;
 use Illuminate\Support\Facades\DB;
 
 class SubcategoryRepository
 {
     private Subcategory $model;
-    // private PageRepository $pageRepository;
 
     public function __construct(Subcategory $model)
     {
         $this->model = $model;
-        // $this->pageRepository = $pageRepository;
     }
 
-    // public function getModel()
-    // {
-    //     return $this->model;
-    // }
+    public function getCategory($id){
+        $args['user_id'] = Auth::id();
+        $args['id'] = $id;
 
-    // public function getPageRepository()
-    // {
-    //     return $this->pageRepository;
-    // }
+        return (new Category())->where($args)->get()->first();
+    }
+
+    public function get($id){
+        return $this->model->where(['id' => $id])->with('category')->get()->first();
+    }
+
+    public function getCategories(){
+        return (new Category())->orderBy('order')->where('user_id', Auth::id())->get();
+    }
 
     // public function getAllByIds(array $ids)
     // {

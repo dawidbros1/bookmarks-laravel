@@ -45,4 +45,10 @@ class Subcategory extends Model
     {
         return $this->hasMany(Page::class, 'parent_id')->orderBy('order')->where('type', 'subcategory');
     }
+
+    // [1 do 1 ] [ Jedna podkategoria posiada jednego rodzica ]
+    public function category()
+    {
+        return $this->hasOne(Category::class, 'id', 'category_id')->where('user_id', Auth::id());
+    }
 }

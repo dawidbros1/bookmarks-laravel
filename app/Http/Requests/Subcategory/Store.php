@@ -23,11 +23,14 @@ class Store extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => ['required', 'min:1', 'max:255'],
-            'image_url' => ['required', "min:1", 'max:255'],
-            'category_id' => ['required', 'integer'],
-        ];
+        if ($this->method() == "POST"){
+            return [
+                'name' => ['required', 'min:1', 'max:255'],
+                'image_url' => ['required', "min:1", 'max:255'],
+            ];
+        }
+
+        return [];
     }
 
     public function messages()

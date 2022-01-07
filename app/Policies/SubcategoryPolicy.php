@@ -12,15 +12,15 @@ class SubcategoryPolicy
 {
     use HandlesAuthorization;
 
-    public function __construct(CategoryRepository $categoryRepository)
+    public function __construct()
     {
-        $this->categoryRepository = $categoryRepository;
-        $this->category = $this->categoryRepository->getModel();
+        // $this->categoryRepository = $categoryRepository;
+        // $this->category = $this->categoryRepository->getModel();
     }
 
     public function author(User $user, $subcategory)
     {
-        $category = $this->category->find($subcategory->category_id);
+        $category = $subcategory->category ?? null;
         if ($user->id != $category->user_id) return Response::deny('Brak uprawnień do tego zasobu');
         return Response::allow();
     }

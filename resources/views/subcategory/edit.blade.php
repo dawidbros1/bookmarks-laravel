@@ -7,7 +7,7 @@
 
     <x-jet-validation-errors> </x-jet-validation-errors>
 
-    <x-form-section action="{{ route('subcategory.update', ['id' => $subcategory->id]) }}">
+    <x-form-section action="{{ route('subcategory.edit', ['id' => $subcategory->id]) }}">
         {{-- Tutył --}}
         <x-jet-label for="name" class="pl-2"> Nazwa: </x-jet-label>
         <x-jet-input name="name" value="{{ old('name', $subcategory->name) }}" type="text"
@@ -26,7 +26,7 @@
 
             <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20"
                 class="bg-gray-100 absolute right-1 bottom-1 hover:cursor-pointer" title="Wklej obrazek kategorii"
-                onclick="pasteImg('{{ $category_image }}');">
+                onclick="pasteImg('{{ $subcategory->category->image_url }}');">
         </div>
 
         @error('image_url')
@@ -53,9 +53,9 @@
         <x-jet-button type="submit">Zapisz</x-jet-button>
     </x-form-section>
 
-    <x-delete-item-button action="{{ route('subcategory.delete', ['id' => $subcategory->id, 'view' => $view]) }}">
+    <x-delete-item-button action="{{ route('subcategory.delete', ['id' => $subcategory->id, 'visibility' => $visibility]) }}">
     </x-delete-item-button>
 
-    <x-back-button action="{{ route('category.show', ['id' => $subcategory->category_id, 'view' => $view]) }}">
+    <x-back-button action="{{ route('category.show', ['id' => $subcategory->category_id, 'visibility' => $visibility]) }}">
     </x-back-button>
 </x-main-layout>

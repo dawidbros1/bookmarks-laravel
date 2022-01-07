@@ -7,7 +7,7 @@
 
     <x-jet-validation-errors> </x-jet-validation-errors>
 
-    <x-form-section action="{{ route('subcategory.store') }}">
+    <x-form-section action="{{ route('subcategory.create', ['category_id' => $category->id]) }}">
         {{-- Tutył --}}
         <x-jet-label for="name" class="pl-2"> Nazwa: </x-jet-label>
         <x-jet-input name="name" value="{{ old('name') }}" type="text" class="border px-2 min-w-full mb-3">
@@ -25,7 +25,7 @@
             {{-- onclick="pasteImg('{{ $image_url_paste }}');" --}}
             <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20"
                 class="bg-gray-100 absolute right-1 bottom-1 hover:cursor-pointer" title="Wklej obrazek kategorii"
-                onclick="pasteImg('{{ $category_image }}');">
+                onclick="pasteImg('{{ $category->image_url }}');">
         </div>
 
         @error('image_url')
@@ -40,11 +40,9 @@
             @endif>
         </div>
 
-        <input type="hidden" name="category_id" value="{{ $category_id }}">
-
         <x-jet-button type="submit">Zapisz</x-jet-button>
     </x-form-section>
 
-    <x-back-button action="{{ route('category.show', ['id' => $category_id, 'view' => $view]) }}">
+    <x-back-button action="{{ route('category.show', ['id' => $category->id, 'visibility' => $visibility]) }}">
     </x-back-button>
 </x-main-layout>

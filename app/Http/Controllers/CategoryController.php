@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Checkbox;
 use App\Helpers\Message;
 use App\Http\Requests\category\MultiUpdate;
-use App\Http\Requests\Category\Create;
+use App\Http\Requests\Category\Store;
 use App\Models\Category;
 use App\Repository\CategoryRepository;
 use App\Repository\SettingsRepository;
@@ -54,7 +54,7 @@ class CategoryController extends Controller
         return view('category.public', ['category' => $category]);
     }
 
-    public function create(Create $request) // OK
+    public function create(Store $request) // OK
     {
         if ($request->isMethod('GET')) {
             $settings = SettingsRepository::get();
@@ -69,7 +69,7 @@ class CategoryController extends Controller
         }
     }
 
-    public function edit(Create $request, $id) // OK
+    public function edit(Store $request, $id) // OK
     {
         if ($request->isMethod('GET')) {
             $category = $this->category($id);
@@ -101,61 +101,61 @@ class CategoryController extends Controller
 
     public function manage()
     {
-        $categories = $this->categoryRepository->getAllByParameters();
-        return view('category.manage', ['categories' => $categories]);
+        // $categories = $this->categoryRepository->getAllByParameters();
+        // return view('category.manage', ['categories' => $categories]);
     }
 
     public function multiUpdate(MultiUpdate $request)
     {
-        $data = $request->validated();
+        // $data = $request->validated();
 
-        $ids = $data['ids'];
-        $hidden = $data['hidden'];
-        $private = $data['public'];
-        $order = $data['order'];
+        // $ids = $data['ids'];
+        // $hidden = $data['hidden'];
+        // $private = $data['public'];
+        // $order = $data['order'];
 
-        if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($order)) {
-            // Być może jakiś inny błąd tutaj
-            return $this->error();
-        }
+        // if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($order)) {
+        //     // Być może jakiś inny błąd tutaj
+        //     return $this->error();
+        // }
 
-        $categories = $this->categoryRepository->getAllByIds($ids);
-        $this->authorize('categories', [new Category, $categories]);
+        // $categories = $this->categoryRepository->getAllByIds($ids);
+        // $this->authorize('categories', [new Category, $categories]);
 
-        foreach ($order as $key => $value) {
-            if (!is_numeric($value)) {
-                $order[$key] = 0;
-            }
-        }
+        // foreach ($order as $key => $value) {
+        //     if (!is_numeric($value)) {
+        //         $order[$key] = 0;
+        //     }
+        // }
 
-        foreach ($ids as $index => $id) {
-            $category = $this->categoryRepository->getModel()->find($id);
+        // foreach ($ids as $index => $id) {
+        //     $category = $this->categoryRepository->getModel()->find($id);
 
-            if ($category != null) {
-                $data = [
-                    'hidden' => $hidden[$index],
-                    'public' => !$private[$index],
-                    'order' => $order[$index]
-                ];
-                $category->update($data);
-            }
-        }
+        //     if ($category != null) {
+        //         $data = [
+        //             'hidden' => $hidden[$index],
+        //             'public' => !$private[$index],
+        //             'order' => $order[$index]
+        //         ];
+        //         $category->update($data);
+        //     }
+        // }
 
-        return redirect()
-            ->route('manage.categories')
-            ->with('success', Message::get(1));
+        // return redirect()
+        //     ->route('manage.categories')
+        //     ->with('success', Message::get(1));
     }
 
     public function delete(Request $request, $id)
     {
-        $category = $this->categoryRepository->getModel()->find($id);
-        if ($this->empty($category)) return $this->error();
-        $this->authorize('author', $category);
-        $category->deleteWithContent($this->subcategoryRepository);
+        // $category = $this->categoryRepository->getModel()->find($id);
+        // if ($this->empty($category)) return $this->error();
+        // $this->authorize('author', $category);
+        // $category->deleteWithContent($this->subcategoryRepository);
 
-        return redirect()
-            ->route('category.list', ['view' => $request->input('view')])
-            ->with('success', $this->message(1));
+        // return redirect()
+        //     ->route('category.list', ['view' => $request->input('view')])
+        //     ->with('success', $this->message(1));
     }
 
     // Metody prywatne
