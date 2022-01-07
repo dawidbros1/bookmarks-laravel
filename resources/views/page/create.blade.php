@@ -50,19 +50,11 @@
             @endif>
         </div>
 
-        <div class="mb-2">
-            Czy strona ma otwierać się w nowym oknie?
-            <input type="checkbox" name="public" @if ($settings->page_open_in_new_window) checked
-
-            @endif>
-        </div>
-
         <input type="hidden" name="type" value="{{ $type }}">
         <input type="hidden" name="parent_id" value="{{ $parent->id }}">
 
         <x-jet-button type="submit" class="ml-2">Zapisz</x-jet-button>
     </x-form-section>
-
 
     <x-back-button action="{{ route($type . '.show', ['id' => $parent->id, 'view' => $view]) }}">
     </x-back-button>

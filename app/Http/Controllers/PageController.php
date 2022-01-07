@@ -77,7 +77,6 @@ class PageController extends Controller
         }
 
         $data['public'] = Checkbox::get($request->input('public'));
-        $data['open_in_new_window'] = Checkbox::get($request->input('open_in_new_window'));
         $this->pageRepository->getModel()->store($data);
 
         return redirect(url()->previous())
@@ -134,7 +133,6 @@ class PageController extends Controller
         }
 
         $data['public'] = Checkbox::get($request->input('public'));
-        $data['open_in_new_window'] = Checkbox::get($request->input('open_in_new_window'));
 
         $subcategory_id = $data['subcategory_id'];
 
@@ -264,8 +262,7 @@ class PageController extends Controller
                 $package = [
                     'hidden' => $hidden[$index],
                     'public' => !$private[$index],
-                    'order' => $order[$index],
-                    'open_in_new_window' => $open[$index]
+                    'order' => $order[$index]
                 ];
                 $page->update($package);
             }
