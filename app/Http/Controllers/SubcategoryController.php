@@ -7,38 +7,33 @@ use App\Helpers\Message;
 use App\Http\Requests\Subcategory\MultiUpdate;
 use App\Http\Requests\Subcategory\Store;
 use App\Models\Subcategory;
-use App\Repository\CategoryRepository;
-use App\Repository\PageRepository;
 use App\Repository\SettingsRepository;
 use App\Repository\SubcategoryRepository;
 use Illuminate\Http\Request;
 
 class SubcategoryController extends Controller
 {
-    public function __construct(SubcategoryRepository $subcategoryRepository, Subcategory $subcategory)
-    {
+    public function __construct(
+        SubcategoryRepository $subcategoryRepository,
+        Subcategory $model
+    ) {
         $this->subcategoryRepository = $subcategoryRepository;
-        $this->subcategory = $subcategory;
-        $this->type = "subcategory";
+        $this->model = $model;
+        $this->type = 'subcategory';
     }
 
-    public function show($view, $id)
+    public function show(Request $request, $id)
     {
-        // $subcategory = $this->subcategoryRepository->getModel()->find($id);
-        // if ($this->empty($subcategory)) return $this->error();
-        // $category = $this->categoryRepository->getModel()->find($subcategory->category_id);
-        // if ($this->empty($category)) return $this->error();
-        // $this->authorize('categoryAuthor', [new Subcategory, $category]);
+        if (($subcategory = $this->subcategoryRepository->getWithPages($id)) == null) {
+            return $this->error();
+        }
 
-        // if ($view == 'visible') $pages = $this->pageRepository->getAllByParameters($id, $this->type, 0);
-        // else if ($view == "hidden") $pages = $this->pageRepository->getAllByParameters($id, $this->type, 1);
-        // else if ($view == "all") $pages = $this->pageRepository->getAllByParameters($id, $this->type);
+        $this->authorize('author', $subcategory);
 
-        // return view('subcategory.show', [
-        //     'subcategory' => $subcategory,
-        //     'pages' => $pages,
-        //     'view' => $view
-        // ]);
+        return view('subcategory.show', [
+            'subcategory' => $subcategory,
+            'visibility' => $request->input('visibility') ?? 0
+        ]);
     }
 
     public function showPublic($id)
@@ -59,10 +54,12 @@ class SubcategoryController extends Controller
         // ]);
     }
 
-    public function create(Store $request, $category_id) // OK
+    public function create(Store $request, $category_id)
     {
         $category = $this->subcategoryRepository->getCategory($category_id);
-        if ($this->empty($category)) return $this->error();
+        if ($this->empty($category)) {
+            return $this->error();
+        }
 
         if ($request->isMethod('GET')) {
             $settings = SettingsRepository::get();
@@ -70,7 +67,7 @@ class SubcategoryController extends Controller
             return view('subcategory.create', [
                 'category' => $category,
                 'visibility' => $request->input('visibility'),
-                'settings' => $settings
+                'settings' => $settings,
             ]);
         }
 
@@ -79,24 +76,28 @@ class SubcategoryController extends Controller
             $data['public'] = Checkbox::get($request->input('public'));
             $data['category_id'] = $category_id;
 
-            $this->subcategory->store($data);
-            return redirect(url()->previous())->with('success', $this->message(0));
+            $this->model->create($data);
+            return redirect(url()->previous())->with(
+                'success',
+                $this->message(0)
+            );
         }
     }
 
     public function edit(Store $request, $id)
     {
-        $subcategory = $this->subcategoryRepository->get($id);
-        if ($subcategory == null) return $this->error();
+        if (($subcategory = $this->subcategoryRepository->get($id)) == null) {
+            return $this->error();
+        }
+
         $this->authorize('author', $subcategory);
 
         if ($request->isMethod('GET')) {
-            return view('subcategory.edit',
-                [
-                    'subcategory' => $subcategory,
-                    'visibility' => $request->input('visibility'),
-                    'categories' => $this->subcategoryRepository->getCategories()
-                ]);
+            return view('subcategory.edit', [
+                'subcategory' => $subcategory,
+                'visibility' => $request->input('visibility'),
+                'categories' => $this->subcategoryRepository->getCategories(),
+            ]);
         }
 
         if ($request->isMethod('POST')) {
@@ -105,44 +106,66 @@ class SubcategoryController extends Controller
             $data['category_id'] = $request->input('category_id');
 
             if ($data['category_id'] != $subcategory->category_id) {
-                $category = $this->subcategoryRepository->getCategory($data['category_id']);
-                if ($this->empty($category)) return $this->error();
+                $category = $this->subcategoryRepository->getCategory(
+                    $data['category_id']
+                );
+                if ($this->empty($category)) {
+                    return $this->error();
+                }
             }
 
             $subcategory->update($data);
 
-            return redirect(url()->previous())
-                ->with('success', Message::get(1));
+            return redirect(url()->previous())->with(
+                'success',
+                Message::get(1)
+            );
         }
-    }
-
-    public function update(Store $request, $id)
-    {
-
     }
 
     public function changeVisibility($id)
     {
-        $subcategory = $this->subcategory->find($id);
-        // if (!$this->check($subcategory)) return $this->error();
-        $subcategory->update(['hidden' => !$subcategory->hidden]);
+        if (($subcategory = $this->subcategoryRepository->get($id)) == null) {
+            return $this->error();
+        }
 
-        return redirect(url()->previous())
-            ->with('success', $this->message(2));
+        $this->authorize('author', $subcategory);
+
+        $subcategory->update(['hidden' => !$subcategory->hidden]);
+        return redirect(url()->previous())->with('success', $this->message(2));
+    }
+
+    public function delete(Request $request, $id)
+    {
+        if (($subcategory = $this->subcategoryRepository->getWithPages($id)) == null) {
+            return $this->error();
+        }
+
+        $this->authorize('author', $subcategory);
+
+        $this->subcategoryRepository->deletePages($subcategory->pages);
+        $this->model->destroy($id);
+
+        return redirect()
+            ->route('category.show', ['id' => $subcategory->category_id, 'visibility' => $request->input('visibility')])
+            ->with('success', $this->message(1));
     }
 
     public function manage()
     {
-        $empty = true;
-        $categories = $this->categoryRepository->getAllWithSubcategories(); // BY USER ID
+        // $empty = true;
+        // $categories = $this->categoryRepository->getAllWithSubcategories(); // BY USER ID
 
-        foreach ($categories as $category) {
-            if (count($category->subcategories) != 0) {
-                $empty = false;
-            }
-        }
+        // foreach ($categories as $category) {
+        //     if (count($category->subcategories) != 0) {
+        //         $empty = false;
+        //     }
+        // }
 
-        return view('subcategory.manage', ['categories' => $categories, 'empty' => $empty]);
+        // return view('subcategory.manage', [
+        //     'categories' => $categories,
+        //     'empty' => $empty,
+        // ]);
     }
 
     public function manageAllFromCategory($id)
@@ -165,7 +188,6 @@ class SubcategoryController extends Controller
         //     // Być może jakiś inny błąd tutaj
         //     return $this->error();
         // }
-
 
         // $subcategories = $this->subcategoryRepository->getAllByIds($ids);
         // if (!$this->checkArray($subcategories)) return $this->error();
@@ -193,28 +215,12 @@ class SubcategoryController extends Controller
         //     ->with('success', Message::get(1));
     }
 
-    public function delete(Request $request, $id)
-    {
-        // $subcategory = $this->subcategoryRepository->getModel()->find($id);
-        // if (!$this->check($subcategory)) return $this->error();
-        // $subcategory->deleteWithContent($this->pageRepository);
-
-        // return redirect()
-        //     ->route('category.show', ['id' => $subcategory->category_id, 'view' => $request->input('view')])
-        //     ->with('success', $this->message(1));
-    }
-
     // Metody prywatne
 
     private function subcategory($id)
     {
-        $this->check($subcategory = $this->subcategory->find($id));
+        $this->check($subcategory = $this->model->find($id));
         // return $category;
-    }
-
-    private function message($id)
-    {
-        return Message::get($id, $this->type);
     }
 
     private function checkArray($subcategories)
@@ -237,19 +243,5 @@ class SubcategoryController extends Controller
         // if ($this->empty($category)) return false;
         // $this->authorize('categoryAuthor', [new Subcategory, $category]);
         // return true;
-    }
-
-    private function empty($item)
-    {
-        // if ($item == null) return true;
-        // else return false;
-    }
-
-    private function error()
-    {
-        // return redirect()
-        //     ->route('category.list', ['view' => 'visible'])
-        //     ->with('error', Message::get(0));
-        // exit();
     }
 }

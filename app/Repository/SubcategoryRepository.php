@@ -5,7 +5,9 @@ namespace App\Repository;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
 use App\Models\Subcategory;
+use App\Models\Page;
 use Illuminate\Support\Facades\DB;
+
 
 class SubcategoryRepository
 {
@@ -16,20 +18,33 @@ class SubcategoryRepository
         $this->model = $model;
     }
 
-    public function getCategory($id){
+    public function getCategory($id)
+    {
         $args['user_id'] = Auth::id();
         $args['id'] = $id;
 
         return (new Category())->where($args)->get()->first();
     }
 
-    public function get($id){
+    public function get($id)
+    {
         return $this->model->where(['id' => $id])->with('category')->get()->first();
     }
 
-    public function getCategories(){
+    public function getWithPages($id)
+    {
+        return $this->model->where(['id' => $id])->with('pages')->get()->first();
+    }
+
+    public function getCategories()
+    {
         return (new Category())->orderBy('order')->where('user_id', Auth::id())->get();
     }
+
+    // public function deletePages($pages)
+    // {
+    //     (new Page)->destroy($pages->pluck('id')->toArray());
+    // }
 
     // public function getAllByIds(array $ids)
     // {

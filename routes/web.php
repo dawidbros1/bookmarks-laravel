@@ -51,6 +51,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
             Route::match(array('GET', 'POST'), '/create', [CategoryController::class, 'create'])->name('create');
             Route::match(array('GET', 'POST'), '/edit/{id}', [CategoryController::class, 'edit'])->name('edit');
+            Route::match(array('GET', 'POST'), '/manage', [CategoryController::class, 'manage'])->name('manage');
+            Route::get('/managePages', [CategoryController::class, 'managePages'])->name('manage.pages');
 
             Route::get('/changeVisibility/{id}', [CategoryController::class, 'changeVisibility'])->name('changeVisibility');
             Route::delete('/delete/{id}', [CategoryController::class, 'delete'])->name('delete');
@@ -68,11 +70,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             Route::match(array('GET', 'POST'), '/create/{category_id}', [SubcategoryController::class, 'create'])->name('create');
             Route::match(array('GET', 'POST'), '/edit/{id}', [SubcategoryController::class, 'edit'])->name('edit');
 
-            // Route::get('/create/{category_id}', [SubcategoryController::class, 'create'])->name('create');
-            // Route::post('/store', [SubcategoryController::class, 'store'])->name('store');
             Route::get('/show/{id}', [SubcategoryController::class, 'show'])->name('show');
-            // Route::get('/edit/{id}', [SubcategoryController::class, 'edit'])->name('edit');
-            // Route::post('/update/{id}', [SubcategoryController::class, 'update'])->name('update');
             Route::get('/changeVisibility/{id}', [SubcategoryController::class, 'changeVisibility'])->name('changeVisibility');
             Route::delete('/delete/{id}', [SubcategoryController::class, 'delete'])->name('delete');
         }
@@ -85,12 +83,22 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             'as' => 'page.'
         ],
         function () {
-            Route::get('/create/{type}/{parent_id}', [PageController::class, 'create'])->name('create');
-            Route::post('/store', [PageController::class, 'store'])->name('store');
-            Route::get('/edit/{id}', [PageController::class, 'edit'])->name('edit');
-            Route::post('/update/{id}', [PageController::class, 'update'])->name('update');
+            Route::match(array('GET', 'POST'), '/{parent}/{id}/create', [PageController::class, 'create'])->name('create');
+            Route::match(array('GET', 'POST'), '/edit/{id}', [PageController::class, 'edit'])->name('edit');
+            Route::post('/manage/{type}', [PageController::class, 'manage'])->name('manage');
+
             Route::get('/changeVisibility/{id}', [PageController::class, 'changeVisibility'])->name('changeVisibility');
             Route::delete('/delete/{id}', [PageController::class, 'delete'])->name('delete');
+        }
+    );
+
+    Route::group(
+        [
+            'prefix' => "settings",
+            'as' => 'settings.'
+        ],
+        function () {
+            Route::match(array('GET', 'POST'), '/manage', [SettingsController::class, 'manage'])->name('manage');
         }
     );
 
@@ -102,10 +110,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
             'as' => 'manage.'
         ],
         function () {
-            Route::get('/settings', [SettingsController::class, 'manage'])->name('settings');
-            Route::get('/categories', [CategoryController::class, 'manage'])->name('categories');
+            // Route::get('/settings', [SettingsController::class, 'manage'])->name('settings');
+
             Route::get('/subcategories', [SubcategoryController::class, 'manage'])->name('subcategories');
-            Route::get('/categories/pages', [PageController::class, 'manage'])->name('categories.pages');
+
             Route::get('/subcategories/pages', [PageController::class, 'manage'])->name('subcategories.pages');
 
             // Dla pojedynczych elementów

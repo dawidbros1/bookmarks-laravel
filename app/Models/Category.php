@@ -33,34 +33,34 @@ class Category extends Model
 
     public function deleteWithContent(SubcategoryRepository $subcategoryRepository)
     {
-        // DANE
-        $pageRepository = $subcategoryRepository->getPageRepository();
-        $subcategories = $subcategoryRepository->getAllByParameters($this->id);
+        // // DANE
+        // $pageRepository = $subcategoryRepository->getPageRepository();
+        // $subcategories = $subcategoryRepository->getAllByParameters($this->id);
 
-        // Kasowanie podkategorii
-        $this->deleteSubcategoriesWithContent($subcategoryRepository, $subcategories);
+        // // Kasowanie podkategorii
+        // $this->deleteSubcategoriesWithContent($subcategoryRepository, $subcategories);
 
-        // Kasowanie stron w kategorii
-        $pages = $pageRepository->getAllByParameters($this->id, 'category');
-        $page_ids = $pages->pluck('id')->toArray();
-        $pageRepository->getModel()->destroy($page_ids);
+        // // Kasowanie stron w kategorii
+        // $pages = $pageRepository->getAllByParameters($this->id, 'category');
+        // $page_ids = $pages->pluck('id')->toArray();
+        // $pageRepository->getModel()->destroy($page_ids);
 
-        // Kasowanie kategorii
-        $this->destroy($this->id);
+        // // Kasowanie kategorii
+        // $this->destroy($this->id);
     }
 
     private function deleteSubcategoriesWithContent(SubcategoryRepository $subcategoryRepository, $subcategories)
     {
-        // DANE
-        $pageRepository = $subcategoryRepository->getPageRepository();
-        $subcategory_ids = $subcategories->pluck('id')->toArray();
-        // Usuwanie stron z podkategorii
-        $pages = $pageRepository->getAllByParameters($subcategory_ids, 'subcategory');
-        $page_ids = $pages->pluck('id')->toArray();
-        $pageRepository->getModel()->destroy($page_ids);
+        // // DANE
+        // $pageRepository = $subcategoryRepository->getPageRepository();
+        // $subcategory_ids = $subcategories->pluck('id')->toArray();
+        // // Usuwanie stron z podkategorii
+        // $pages = $pageRepository->getAllByParameters($subcategory_ids, 'subcategory');
+        // $page_ids = $pages->pluck('id')->toArray();
+        // $pageRepository->getModel()->destroy($page_ids);
 
-        // Usuwanie podkategorii
-        $subcategoryRepository->getModel()->destroy($subcategory_ids);
+        // // Usuwanie podkategorii
+        // $subcategoryRepository->getModel()->destroy($subcategory_ids);
     }
 
     // Relacje

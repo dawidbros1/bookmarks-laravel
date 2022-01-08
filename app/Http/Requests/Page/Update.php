@@ -23,14 +23,18 @@ class Update extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => ['required', 'min:1', 'max:255'],
-            'image_url' => ['required', 'min:1', 'max:255'],
-            'link' => ['required', 'min:1', 'max:255'],
-            'subcategory_id' => ['required', 'integer'],
-            'category_id' => ['required', 'integer'],
+        if ($this->method() == "POST") {
+            return [
+                'name' => ['required', 'min:1', 'max:255'],
+                'image_url' => ['required', 'min:1', 'max:255'],
+                'link' => ['required', 'min:1', 'max:255'],
+                'subcategory_id' => ['required', 'integer'],
+                'category_id' => ['required', 'integer'],
 
-        ];
+            ];
+        }
+
+        return [];
     }
 
     public function messages()

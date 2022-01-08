@@ -11,7 +11,7 @@ class Settings extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['user_id', 'category_public', 'subcategory_public', 'page_public', 'page_open_in_new_window'];
+    protected $fillable = ['user_id', 'category_public', 'subcategory_public', 'page_public'];
 
     public function saveDefault($user_id)
     {

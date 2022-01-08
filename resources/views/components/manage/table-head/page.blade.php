@@ -5,5 +5,4 @@
     <th></th>
     <x-manage.table-th type="hidden"></x-manage.table-th>
     <x-manage.table-th type="public"></x-manage.table-th>
-    <x-manage.table-th type="open"></x-manage.table-th>
 </thead>

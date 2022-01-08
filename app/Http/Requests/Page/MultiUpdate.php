@@ -28,7 +28,6 @@ class MultiUpdate extends FormRequest
             'hidden' => ['required', 'array'],
             'public' => ['required', 'array'],
             'order' => ['required', 'array'],
-            'open' => ['required', 'array'],
             'type' => ['required', 'in:category,subcategory'],
         ];
     }

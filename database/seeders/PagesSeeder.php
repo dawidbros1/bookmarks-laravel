@@ -20,7 +20,7 @@ class PagesSeeder extends Seeder
         $pages = [];
         $types = ['category', 'subcategory'];
 
-        for ($i = 1; $i < 20; $i++) {
+        for ($i = 1; $i < 200; $i++) {
             array_push($pages, ['type' => $types[$i % 2], 'parent_id' => random_int(1, 5), 'name' => "Strona " . $i, 'image_url' => $img, 'link' => "#"]);
         }
 

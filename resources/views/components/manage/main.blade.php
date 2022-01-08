@@ -5,26 +5,23 @@
             Wybierz
         </div>
         <nav class="flex-grow md:block px-4 pb-4 md:pb-0 md:overflow-y-auto">
-            <x-manage.link route="{{ route('manage.settings') }}" :active="request()->routeIs('manage.settings')">
+            <x-manage.link route="{{ route('settings.manage') }}" :active="request()->routeIs('settings.manage')">
                 Ustawienia
             </x-manage.link>
 
-            <x-manage.link route="{{ route('manage.categories') }}" :active="request()->routeIs('manage.categories')">
+            <x-manage.link route="{{ route('category.manage') }}" :active="request()->routeIs('category.manage')">
                 Kategorie
             </x-manage.link>
 
-            <x-manage.link route="{{ route('manage.categories.pages', ['type' => 'category']) }}"
-                :active="request()->routeIs('manage.categories.pages')">
+            <x-manage.link route="{{ route('category.manage.pages', ['type' => 'category']) }}" :active="request()->routeIs('category.manage.pages')">
                 <span class="ml-2">Strony</span>
             </x-manage.link>
 
-            <x-manage.link route="{{ route('manage.subcategories') }}"
-                :active="request()->routeIs('manage.subcategories')">
+            <x-manage.link route="{{ route('manage.subcategories') }}" :active="request()->routeIs('manage.subcategories')">
                 Podkategorie
             </x-manage.link>
 
-            <x-manage.link route="{{ route('manage.subcategories.pages', ['type' => 'subcategory']) }}"
-                :active="request()->routeIs('manage.subcategories.pages')">
+            <x-manage.link route="{{ route('manage.subcategories.pages', ['type' => 'subcategory']) }}" :active="request()->routeIs('manage.subcategories.pages')">
                 <span class="ml-2">Strony</span>
             </x-manage.link>
         </nav>

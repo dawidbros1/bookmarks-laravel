@@ -13,7 +13,7 @@ class Page extends Model
 
     protected $fillable = ['parent_id', 'name', 'image_url', 'hidden', 'link', 'public', 'type', 'order'];
 
-    public function store(array $data)
+    public function create(array $data)
     {
         $this->parent_id = $data['parent_id'];
         $this->type = $data['type'];

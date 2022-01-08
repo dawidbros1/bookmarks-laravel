@@ -8,178 +8,129 @@ use App\Http\Requests\Page\MultiUpdate;
 use App\Http\Requests\Page\Store;
 use App\Http\Requests\Page\Update;
 use App\Models\Page;
-use App\Repository\CategoryRepository;
 use App\Repository\PageRepository;
 use App\Repository\SettingsRepository;
-use App\Repository\SubcategoryRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
-    private CategoryRepository $categoryRepository;
-    private SubcategoryRepository $subcategoryRepository;
-    private PageRepository $pageRepository;
-
-    public function __construct(CategoryRepository $categoryRepository)
+    public function __construct(PageRepository $pageRepository, Page $model)
     {
-        $this->categoryRepository = $categoryRepository;
-        $this->subcategoryRepository = $this->categoryRepository->getSubcategoryRepository();
-        $this->pageRepository = $this->subcategoryRepository->getPageRepository();
+        $this->pageRepository = $pageRepository;
+        $this->model = $model;
         $this->type = "page";
     }
 
-    //! CREATE
-    public function create(Request $request, $type, $parent_id)
+    private function author($parent, $id)
     {
-        $category_id = $parent_id;
+        $author = false;
 
-        if ($type == "subcategory") {
-            $subcategory = $this->subcategoryRepository->getModel()->find($parent_id);
-            if ($this->empty($subcategory)) return $this->error();
-            $category_id = $subcategory->category_id;
+        if ($parent == "subcategory") {
+            if (($subcategory = $this->pageRepository->getSubcategory($id)) != null) {
+                $category = $subcategory->category ?? null;
+            }
+        } else if ($parent == "category") {
+            $category = $this->pageRepository->getCategory($id);
         }
 
-        $category = $this->categoryRepository->getModel()->find($category_id);
-        if ($this->empty($category)) return $this->error();
+        if ($category->user_id == Auth::id()) $author = true;
 
-        if ($type == "subcategory") {
-            $parent = $subcategory;
-            $this->authorize('subcategoryAuthor', [new Page, $parent]);
-        } else if ($type = "category") {
-            $parent = $category;
-            $this->authorize('categoryAuthor', [new Page, $parent]);
-        }
-
-        $settings = SettingsRepository::get();
-
-        return view('page.create', ['parent' => $parent, 'type' => $type, 'view' => $request->input('view'), 'settings' => $settings]);
+        return $author;
     }
 
-    public function store(Store $request)
+    public function create(Store $request, $parent, $id)
     {
-        $data = $request->validated();
-        $type = $data['type'];
-        $category_id = $data['parent_id'];
+        if ($this->author($parent, $id) == false) return $this->error();
 
-        if ($type == "subcategory") {
-            $subcategory = $this->subcategoryRepository->getModel()->find($data['parent_id']);
-            if ($this->empty($subcategory)) return $this->error();
-            $category_id = $subcategory->category_id;
-        }
+        if ($request->isMethod('GET')) {
+            $settings = SettingsRepository::get();
 
-        $category = $this->categoryRepository->getModel()->find($category_id);
-        if ($this->empty($category)) return $this->error();
-
-        if ($type == "subcategory") {
-            $this->authorize('subcategoryAuthor', [new Page, $subcategory]);
-        } else if ($type = "category") {
-            $this->authorize('categoryAuthor', [new Page, $category]);
-        }
-
-        $data['public'] = Checkbox::get($request->input('public'));
-        $this->pageRepository->getModel()->store($data);
-
-        return redirect(url()->previous())
-            ->with('success', $this->message(0));
-    }
-
-    //! EDIT
-    public function edit(Request $request, $id)
-    {
-        $page = $this->pageRepository->getModel()->find($id);
-        if ($this->empty($page)) return $this->error();
-
-        if ($page->type == "category") {
-            $parent = $this->categoryRepository->getModel()->find($page->parent_id);
-            $this->authorize('categoryAuthor', [new Page, $parent]);
-            $category_id = $parent->id;
-        } else if ($page->type == "subcategory") {
-            $parent = $this->subcategoryRepository->getModel()->find($page->parent_id);
-            $this->authorize('subcategoryAuthor', [new Page, $parent]);
-            $category_id = $parent->category_id;
-        }
-
-        $categories = $this->categoryRepository->getAllByParameters();
-        $category_ids = $categories->pluck('id')->toArray();
-        $subcategories = $this->subcategoryRepository->getAllByCategoryIds($category_ids);
-
-        return view(
-            'page.edit',
-            [
-                'page' => $page,
-                'view' => $request->input('view'),
+            return view('page.create', [
                 'parent' => $parent,
-                'categories' => $categories,
-                'subcategories' => $subcategories,
-                'category_id' => $category_id
-            ]
-        );
+                'id' => $id,
+                'visibility' => $request->input('visibility'),
+                'settings' => $settings
+            ]);
+        }
+
+        if ($request->isMethod('POST')) {
+            $data = $request->validated();
+            $data['public'] = Checkbox::get($request->input('public'));
+            $this->model->create($data);
+            return redirect(url()->previous())->with('success', $this->message(0));
+        }
     }
 
-    public function update(Update $request, $id)
+    public function edit(Update $request, $id)
     {
-        $page = $this->pageRepository->getModel()->find($id);
-        if ($this->empty($page)) return $this->error();
+        if (($page = $this->model->find($id)) == null) return $this->error();
+        if ($this->author($page->type, $page->parent_id) == false) return $this->error();
 
-        $data = $request->validated();
-        $type = $page->type;
+        if ($request->isMethod('GET')) {
+            $categories = $this->pageRepository->getCategories();
+            $category_ids = $categories->pluck('id')->toArray();
+            $subcategories = $this->pageRepository->getSubcategoriesByCategoryIds($category_ids);
 
-        if ($type == "subcategory") {
-            $parent = $this->subcategoryRepository->getModel()->find($page->parent_id);
-            $this->authorize('subcategoryAuthor', [new Page, $parent]);
-        } else if ($type = "category") {
-            $parent = $this->categoryRepository->getModel()->find($page->parent_id);
-            $this->authorize('categoryAuthor', [new Page, $parent]);
+            if ($page->type == "subcategory") {
+                $parent = $this->pageRepository->getSubcategory($page->parent_id);
+                $category_id = $parent->category_id;
+            } else if ($page->type = "category") {
+                $parent = $this->pageRepository->getCategory($page->parent_id);
+                $category_id = $parent->id;
+            }
+
+            return view(
+                'page.edit',
+                [
+                    'page' => $page,
+                    'visibility' => $request->input('visibility'),
+                    'parent' => $parent,
+                    'categories' => $categories,
+                    'subcategories' => $subcategories,
+                    'category_id' => $category_id
+                ]
+            );
         }
 
-        $data['public'] = Checkbox::get($request->input('public'));
+        if ($request->isMethod('POST')) {
+            $data = $request->validated();
+            $data['public'] = Checkbox::get($request->input('public'));
 
-        $subcategory_id = $data['subcategory_id'];
+            $subcategory_id = $data['subcategory_id'];
 
-        if ($subcategory_id == 0) {
-            $category_id = $data['category_id'];
+            if ($subcategory_id == 0) {
+                // Umieszczenie w głównej kategorii
+                $category_id = $data['category_id'];
+                // Czy kategoria się zmieniła
+                if ($category_id != $page->parent_id) {
+                    $category = $this->pageRepository->getCategory($category_id);
+                    if ($this->empty($category)) return $this->error();
 
-            if ($category_id != $page->parent_id) {
-                $category = $this->categoryRepository->getModel()->find($category_id);
-                if ($this->empty($category)) return $this->error();
-                $this->authorize('categoryAuthor', [new Page, $category]);
-                $data['parent_id'] = $category_id;
-                $data['type'] = 'category';
+                    $data['parent_id'] = $category_id;
+                    $data['type'] = 'category';
+                }
+            } else {
+                if ($subcategory_id != $page->parent_id) {
+                    if (($subcategory = $this->pageRepository->getSubcategory($subcategory_id)) == null) return $this->error();
+                    if ($subcategory->category->user_id != Auth::id()) return $this->error();
+
+                    $data['parent_id'] = $subcategory_id;
+                    $data['type'] = 'subcategory';
+                }
             }
-        } else {
-            $subcategory = $this->subcategoryRepository->getModel()->find($subcategory_id);
 
-            if ($subcategory->id != $page->parent_id) {
-                if ($this->empty($subcategory)) return $this->error();
-                $category = $this->categoryRepository->getModel()->find($subcategory->category_id);
-                if ($this->empty($category)) return $this->error();
-                $this->authorize('categoryAuthor', [new Page, $category]);
-                $data['parent_id'] = $subcategory_id;
-                $data['type'] = 'subcategory';
-            }
+            $page->update($data);
+
+            return redirect(url()->previous())
+                ->with('success', 'Strona została edytowana');
         }
-
-        $page->update($data);
-
-        return redirect(url()->previous())
-            ->with('success', 'Strona została edytowana');
     }
-
 
     public function changeVisibility($id)
     {
-        $page = $this->pageRepository->getModel()->find($id);
-        if ($this->empty($page)) return $this->error();
-
-        $type = $page->type;
-
-        if ($type == "subcategory") {
-            $parent = $this->subcategoryRepository->getModel()->find($page->parent_id);
-            $this->authorize('subcategoryAuthor', [new Page, $parent]);
-        } else if ($type = "category") {
-            $parent = $this->categoryRepository->getModel()->find($page->parent_id);
-            $this->authorize('categoryAuthor', [new Page, $parent]);
-        }
+        if (($page = $this->model->find($id)) == null) return $this->error();
+        if ($this->author($page->type, $page->parent_id) == false) return $this->error();
 
         $page->update(['hidden' => !$page->hidden]);
 
@@ -187,74 +138,35 @@ class PageController extends Controller
             ->with('success', $this->message(2));
     }
 
-    //! MANAGE
-    public function manage(Request $request)
+    public function delete(Request $request, $id)
     {
-        $type = $request->input('type');
-        $empty = true;
+        if (($page = $this->model->find($id)) == null) return $this->error();
+        if ($this->author($page->type, $page->parent_id) == false) return $this->error();
 
-        if ($type == "category") {
-            $categories = $this->categoryRepository->getAllWithPages();
+        $this->model->destroy($id);
 
-            foreach ($categories as $category) {
-                if (count($category->pages) > 0) {
-                    $empty = false;
-                    break;
-                }
-            }
-
-
-            return view('page.manageTypeCategory', ['categories' => $categories, 'empty' => $empty]);
-        } else {
-            $categories = $this->categoryRepository->getAllWithSubcategoriesWithPages();
-
-            foreach ($categories as $category) {
-                foreach ($category->subcategories as $subcategory) {
-                    if (count($subcategory->pages) > 0) {
-                        $empty = false;
-                        break;
-                    }
-                }
-            }
-
-            return view('page.manageTypeSubcategory', ['categories' => $categories, 'empty' => $empty]);
-        }
+        return redirect()
+            ->route($page->type . '.show', ['id' => $page->parent_id, 'visibility' => $request->input('visibility')])
+            ->with('success', $this->message(1));
     }
 
-    public function managePagesFromCategory($id)
-    {
-        $category = $this->categoryRepository->getWithPages($id)->first();
-        if ($this->empty($category)) return $this->error();
-        $this->authorize('categoryAuthor', [new Page, $category]);
-        return view('page.manageFromCategory', ['category' => $category]);
-    }
-
-    public function manageAllFromSubcategory($id)
-    {
-        $subcategory = $this->subcategoryRepository->getWithPages($id)->first();
-        if ($this->empty($subcategory)) return $this->error();
-        $this->authorize('subcategoryAuthor', [new Page, $subcategory]);
-        return view('page.manageFromSubcategory', ['subcategory' => $subcategory]);
-    }
-
-    public function multiUpdate(MultiUpdate $request, $type)
+    public function manage(MultiUpdate $request, $type)
     {
         $data = $request->validated();
         $ids = $data['ids'];
         $hidden = $data['hidden'];
         $private = $data['public'];
         $order = $data['order'];
-        $open = $data['open'];
 
-        if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($order)  || count($order) != count($open)) {
+        if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($order)) {
             // Być może jakiś inny błąd tutaj
             return $this->error();
         }
 
         $pages = $this->pageRepository->getAllByIds($ids);
         if (count($pages) == 0) return $this->error();
-        $parent_ids = $pages->pluck('parent_id')->toArray();
-        $this->authorize('categories', [new Page, $type, $parent_ids]);
+        // $parent_ids = $pages->pluck('parent_id')->toArray();
+        // $this->authorize('categories', [new Page, $type, $parent_ids]);
 
         foreach ($ids as $index => $id) {
             $page = $this->pageRepository->getModel()->find($id);
@@ -272,46 +184,19 @@ class PageController extends Controller
             ->with('success', Message::get(1));
     }
 
-    //! DELETE
-    public function delete(Request $request, $id)
+    public function managePagesFromCategory($id)
     {
-        $page = $this->pageRepository->getModel()->find($id);
-        if ($this->empty($page)) return $this->error();
-
-        $type = $page->type;
-
-        if ($type == "subcategory") {
-            $parent = $this->subcategoryRepository->getModel()->find($page->parent_id);
-            $this->authorize('subcategoryAuthor', [new Page, $parent]);
-        } else if ($type = "category") {
-            $parent = $this->categoryRepository->getModel()->find($page->parent_id);
-            $this->authorize('categoryAuthor', [new Page, $parent]);
-        }
-
-        $page->destroy($id);
-
-        return redirect()
-            ->route($page->type . '.show', ['id' => $page->parent_id, 'view' => $request->input('view')])
-            ->with('success', $this->message(1));
+        // $category = $this->categoryRepository->getWithPages($id)->first();
+        // if ($this->empty($category)) return $this->error();
+        // $this->authorize('categoryAuthor', [new Page, $category]);
+        // return view('page.manageFromCategory', ['category' => $category]);
     }
 
-    // Metody prywatne
-    private function message($id)
+    public function manageAllFromSubcategory($id)
     {
-        return Message::get($id, $this->type);
-    }
-
-    private function empty($item)
-    {
-        if ($item == null) return true;
-        else return false;
-    }
-
-    private function error()
-    {
-        return redirect()
-            ->route('category.list', ['view' => 'visible'])
-            ->with('error', Message::get(0));
-        exit();
+        // $subcategory = $this->subcategoryRepository->getWithPages($id)->first();
+        // if ($this->empty($subcategory)) return $this->error();
+        // $this->authorize('subcategoryAuthor', [new Page, $subcategory]);
+        // return view('page.manageFromSubcategory', ['subcategory' => $subcategory]);
     }
 }
