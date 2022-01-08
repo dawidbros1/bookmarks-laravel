@@ -5,9 +5,6 @@ namespace App\Repository;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
 use App\Models\Subcategory;
-use App\Models\Page;
-use Illuminate\Support\Facades\DB;
-
 
 class SubcategoryRepository
 {
@@ -46,12 +43,12 @@ class SubcategoryRepository
     //     (new Page)->destroy($pages->pluck('id')->toArray());
     // }
 
-    // public function getAllByIds(array $ids)
-    // {
-    //     return $this->model
-    //         ->whereIN('id', $ids)
-    //         ->get();
-    // }
+    public function getAllByIds(array $ids)
+    {
+        return $this->model
+            ->whereIN('id', $ids)
+            ->get();
+    }
 
     // public static function getAllByCategoryIds(array $ids)
     // {

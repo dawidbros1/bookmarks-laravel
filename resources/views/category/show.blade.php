@@ -18,8 +18,7 @@
     </div>
     {{-- Podkategorie --}}
     <div>
-        <x-items-header basic="{{ route('category.show', ['id' => $category->id, 'visibility' => '0']) }}" hidden="{{ route('category.show', ['id' => $category->id, 'visibility' => '1']) }}">
-
+        <x-items-header basic="{{ route('category.show', ['id' => $category->id, 'visibility' => '0']) }}" hidden="{{ route('category.show', ['id' => $category->id, 'visibility' => '1']) }}" manage="{{ route('category.manage.subcategories', ['id' => $category->id]) }}">
             <x-slot name="header"> Podkategorie </x-slot>
         </x-items-header>
 
@@ -55,7 +54,7 @@
     </div>
     {{-- Strony --}}
     <div class="pb-10">
-        <x-items-header basic="{{ route('category.show', ['id' => $category->id, 'visibility' => '0']) }}" hidden="{{ route('category.show', ['id' => $category->id, 'visibility' => '1']) }}">
+        <x-items-header basic="{{ route('category.show', ['id' => $category->id, 'visibility' => '0']) }}" hidden="{{ route('category.show', ['id' => $category->id, 'visibility' => '1']) }}" manage="{{ route('category.manage.pages', ['id' => $category->id]) }}">
 
             <x-slot name="header"> Strony </x-slot>
         </x-items-header>

@@ -153,13 +153,16 @@ class CategoryController extends Controller
         }
     }
 
-    public function managePages(Request $request)
+    public function manageSubcategories(Request $request, $id)
     {
-        $categories = $this->allWithPages();
+        $category = $this->withRelation($id, 'subcategories');
+        return view('subcategory.manage', ['category' => $category]);
+    }
 
-        // return $categories;
-
-        return view('category.managePages', ['categories' => $categories]);;
+    public function managePages($id)
+    {
+        $category = $this->withRelations($id, 'pages');
+        return view('page.manage', ['parent' => $category, 'type' => "category"]);
     }
 
     public function delete(Request $request, $id)
@@ -181,15 +184,10 @@ class CategoryController extends Controller
         return $category;
     }
 
-    private function allWithPages()
+    private function withRelation($id, $relation)
     {
-        $categories = $this->categoryRepository->getAllWithPages();
-
-        foreach ($categories as $category) {
-            $this->check($category);
-        }
-
-        return $categories;
+        $this->check($category = $this->categoryRepository->getWithRelation($id, $relation));
+        return $category;
     }
 
     private function withRelations($id)

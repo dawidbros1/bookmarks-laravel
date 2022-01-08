@@ -14,7 +14,7 @@
     </div>
 
     <div class="pb-10">
-        <x-items-header basic="{{ route('subcategory.show', ['id' => $subcategory->id, 'visibility' => '0']) }}" hidden="{{ route('subcategory.show', ['id' => $subcategory->id, 'visibility' => '1']) }}">
+        <x-items-header basic="{{ route('subcategory.show', ['id' => $subcategory->id, 'visibility' => '0']) }}" hidden="{{ route('subcategory.show', ['id' => $subcategory->id, 'visibility' => '1']) }}" manage="{{ route('subcategory.manage.pages', ['id' => $subcategory->id]) }}">
 
             <x-slot name="header"> Strony </x-slot>
         </x-items-header>

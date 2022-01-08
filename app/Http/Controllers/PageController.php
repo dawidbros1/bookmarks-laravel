@@ -150,26 +150,34 @@ class PageController extends Controller
             ->with('success', $this->message(1));
     }
 
-    public function manage(MultiUpdate $request, $type)
+    public function manage(MultiUpdate $request)
     {
         $data = $request->validated();
         $ids = $data['ids'];
         $hidden = $data['hidden'];
         $private = $data['public'];
         $order = $data['order'];
+        $type = $data['type'];
 
         if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($order)) {
-            // Być może jakiś inny błąd tutaj
             return $this->error();
         }
 
         $pages = $this->pageRepository->getAllByIds($ids);
         if (count($pages) == 0) return $this->error();
-        // $parent_ids = $pages->pluck('parent_id')->toArray();
-        // $this->authorize('categories', [new Page, $type, $parent_ids]);
+
+        $id  = array_unique($pages->pluck('parent_id')->toArray());
+        if (count($id) != 1) return $this->error();
+
+        if ($type == "category") {
+            if ($this->pageRepository->getCategory($id) == null) return $this->error();
+        } else if ($type == "subcategory") {
+            if (($subcategory = $this->pageRepository->getSubcategory($id)) == null) return $this->error();
+            if ($subcategory->category == null) return $this->error();
+        }
 
         foreach ($ids as $index => $id) {
-            $page = $this->pageRepository->getModel()->find($id);
+            $page = $this->model->find($id);
             if ($page != null) {
                 $package = [
                     'hidden' => $hidden[$index],
@@ -182,21 +190,5 @@ class PageController extends Controller
 
         return redirect(url()->previous())
             ->with('success', Message::get(1));
-    }
-
-    public function managePagesFromCategory($id)
-    {
-        // $category = $this->categoryRepository->getWithPages($id)->first();
-        // if ($this->empty($category)) return $this->error();
-        // $this->authorize('categoryAuthor', [new Page, $category]);
-        // return view('page.manageFromCategory', ['category' => $category]);
-    }
-
-    public function manageAllFromSubcategory($id)
-    {
-        // $subcategory = $this->subcategoryRepository->getWithPages($id)->first();
-        // if ($this->empty($subcategory)) return $this->error();
-        // $this->authorize('subcategoryAuthor', [new Page, $subcategory]);
-        // return view('page.manageFromSubcategory', ['subcategory' => $subcategory]);
     }
 }

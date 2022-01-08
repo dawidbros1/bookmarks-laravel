@@ -23,13 +23,17 @@ class MultiUpdate extends FormRequest
      */
     public function rules()
     {
-        return [
-            'ids' => ['required', 'array'],
-            'hidden' => ['required', 'array'],
-            'public' => ['required', 'array'],
-            'order' => ['required', 'array'],
-            'type' => ['required', 'in:category,subcategory'],
-        ];
+        if ($this->method() == "POST") {
+            return [
+                'ids' => ['required', 'array'],
+                'hidden' => ['required', 'array'],
+                'public' => ['required', 'array'],
+                'order' => ['required', 'array'],
+                'type' => ['required', 'in:category,subcategory'],
+            ];
+        }
+
+        return [];
     }
 
     public function messages()

@@ -19,10 +19,10 @@ class PageRepository
 
     public function getAllByIds($ids)
     {
-        //     return $this->model
-        //         ->orderBy('order')
-        //         ->whereIN('id', $ids)
-        //         ->get();
+        return $this->model
+            ->orderBy('order')
+            ->whereIN('id', $ids)
+            ->get();
     }
 
     // parent ID can be INT OR ARRAY OF INT
@@ -74,7 +74,7 @@ class PageRepository
 
     public function getCategory($id)
     {
-        return (new Category)->where('id', $id)->get()->first();
+        return (new Category)->where(['id' => $id, 'user_id' => Auth::id()])->get()->first();
     }
 
     public function get($id)

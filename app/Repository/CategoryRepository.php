@@ -39,13 +39,14 @@ class CategoryRepository extends Repository
             ->get()->first();
     }
 
-    public function getAllWithPages()
+    public function getWithRelation(int $id, string $relation)
     {
         return $this->model
             ->orderBy('order')
-            ->where(['user_id' => Auth::id()])
-            ->with('pages')
-            ->get();
+            ->where(['user_id' => Auth::id(), 'id' => $id])
+            ->with($relation)
+            ->get()
+            ->first();
     }
 
     public function delete($category)

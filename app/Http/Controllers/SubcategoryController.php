@@ -151,68 +151,57 @@ class SubcategoryController extends Controller
             ->with('success', $this->message(1));
     }
 
-    public function manage()
+    public function manage(MultiUpdate $request)
     {
-        // $empty = true;
-        // $categories = $this->categoryRepository->getAllWithSubcategories(); // BY USER ID
+        return 'adsa';
 
-        // foreach ($categories as $category) {
-        //     if (count($category->subcategories) != 0) {
-        //         $empty = false;
-        //     }
-        // }
+        $data = $request->validated();
+        $ids = $data['ids'];
+        $hidden = $data['hidden'];
+        $private = $data['public'];
+        $order = $data['order'];
 
-        // return view('subcategory.manage', [
-        //     'categories' => $categories,
-        //     'empty' => $empty,
-        // ]);
+        if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($order)) {
+            return $this->error();
+        }
+
+        $subcategories = $this->subcategoryRepository->getAllByIds($ids);
+        $id  = array_unique($subcategories->pluck('category_id')->toArray());
+        if (count($id) != 1) return $this->error();
+
+        $this->authorize('author', $subcategories[0]);
+
+        foreach ($order as $key => $value) {
+            if (!is_numeric($value)) {
+                $order[$key] = 0;
+            }
+        }
+
+        foreach ($ids as $index => $id) {
+            $subcategory = $this->model->find($id);
+
+            if ($subcategory != null) {
+                $data = [
+                    'hidden' => $hidden[$index],
+                    'public' => !$private[$index],
+                    'order' => $order[$index]
+                ];
+                $subcategory->update($data);
+            }
+        }
+
+        return redirect(url()->previous())
+            ->with('success', Message::get(1));
     }
 
-    public function manageAllFromCategory($id)
+    public function managePages($id)
     {
-        // $category = $this->categoryRepository->getWithSubcategories($id)->first();
-        // if ($this->empty($category)) return $this->error();
-        // $this->authorize('categoryAuthor', [new Subcategory, $category]);
-        // return view('subcategory.manageFromCategory', ['category' => $category]);
-    }
+        $subcategory = $this->subcategoryRepository->getWithPages($id);
+        if ($this->subcategoryRepository->getCategory($subcategory->category_id) == null) {
+            return $this->error();
+        }
 
-    public function multiUpdate(MultiUpdate $request)
-    {
-        // $data = $request->validated();
-        // $ids = $data['ids'];
-        // $hidden = $data['hidden'];
-        // $private = $data['public'];
-        // $order = $data['order'];
-
-        // if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($order)) {
-        //     // Być może jakiś inny błąd tutaj
-        //     return $this->error();
-        // }
-
-        // $subcategories = $this->subcategoryRepository->getAllByIds($ids);
-        // if (!$this->checkArray($subcategories)) return $this->error();
-
-        // foreach ($order as $key => $value) {
-        //     if (!is_numeric($value)) {
-        //         $order[$key] = 0;
-        //     }
-        // }
-
-        // foreach ($ids as $index => $id) {
-        //     $subcategory = $this->subcategoryRepository->getModel()->find($id);
-
-        //     if ($subcategory != null) {
-        //         $data = [
-        //             'hidden' => $hidden[$index],
-        //             'public' => !$private[$index],
-        //             'order' => $order[$index]
-        //         ];
-        //         $subcategory->update($data);
-        //     }
-        // }
-
-        // return redirect(url()->previous())
-        //     ->with('success', Message::get(1));
+        return view('page.manage', ['parent' => $subcategory, 'type' => "subcategory"]);
     }
 
     // Metody prywatne
@@ -221,27 +210,5 @@ class SubcategoryController extends Controller
     {
         $this->check($subcategory = $this->model->find($id));
         // return $category;
-    }
-
-    private function checkArray($subcategories)
-    {
-        // $category_ids = array_unique($subcategories->pluck('category_id')->toArray());
-        // $categories = $this->categoryRepository->getAllByIds($category_ids);
-
-        // foreach ($categories as $category) {
-        //     if ($this->empty($category)) return false;
-        //     $this->authorize('categoryAuthor', [new Subcategory, $category]);
-        // }
-
-        // return true;
-    }
-
-    private function check($subcategory)
-    {
-        // if ($this->empty($subcategory)) return false;
-        // $category = $this->categoryRepository->getModel()->find($subcategory->category_id);
-        // if ($this->empty($category)) return false;
-        // $this->authorize('categoryAuthor', [new Subcategory, $category]);
-        // return true;
     }
 }
