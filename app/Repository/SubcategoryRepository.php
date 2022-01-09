@@ -35,7 +35,7 @@ class SubcategoryRepository  extends Repository
 
     public function getCategories()
     {
-        return (new Category())->orderBy('order')->where('user_id', Auth::id())->get();
+        return (new Category())->orderBy('position')->where('user_id', Auth::id())->get();
     }
 
     public function getAllByIds(array $ids)

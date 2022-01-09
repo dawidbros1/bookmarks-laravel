@@ -20,19 +20,19 @@ class PageRepository extends Repository
     public function getAllByIds($ids)
     {
         return $this->model
-            ->orderBy('order')
+            ->orderBy('position')
             ->whereIN('id', $ids)
             ->get();
     }
 
     public function getCategories()
     {
-        return (new Category())->orderBy('order')->where(['user_id' => Auth::id()])->get();
+        return (new Category())->orderBy('position')->where(['user_id' => Auth::id()])->get();
     }
 
     public static function getSubcategoriesByCategoryIds(array $ids)
     {
-        return (new Subcategory())->orderBy('order')
+        return (new Subcategory())->orderBy('position')
             ->whereIN('category_id', $ids)->get();
     }
 
@@ -48,7 +48,7 @@ class PageRepository extends Repository
 
     public function get($id)
     {
-        return $this->model->orderBy('order')
+        return $this->model->orderBy('position')
             ->where(['id' => $id])->get()->first();
     }
 }

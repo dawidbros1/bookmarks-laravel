@@ -13,30 +13,15 @@ class Subcategory extends Model
 
     public $timestamps = false;
 
-    protected $fillable = [
-        'category_id',
-        'name',
-        'image_url',
-        'hidden',
-        'public',
-        'order',
-    ];
+    protected $fillable = ['category_id', 'name', 'image_url', 'hidden', 'private', 'position',];
 
     public function create(array $data)
     {
         $this->category_id = $data['category_id'];
         $this->name = $data['name'];
         $this->image_url = $data['image_url'];
-        $this->public = $data['public'];
+        $this->private = $data['private'];
         $this->save();
-    }
-
-    public function deleteWithContent(PageRepository $pageRepository)
-    {
-        // $pages = $pageRepository->getAllByParameters($this->id, 'subcategory');
-        // $page_ids = $pages->pluck('id')->toArray();
-        // $pageRepository->getModel()->destroy($page_ids);
-        // $this->destroy($this->id);
     }
 
     // Relacje
@@ -44,7 +29,7 @@ class Subcategory extends Model
     public function pages()
     {
         return $this->hasMany(Page::class, 'parent_id')
-            ->orderBy('order')
+            ->orderBy('position')
             ->where('type', 'subcategory');
     }
 

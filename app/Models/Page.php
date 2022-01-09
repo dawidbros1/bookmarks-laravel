@@ -11,7 +11,7 @@ class Page extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['parent_id', 'name', 'image_url', 'hidden', 'link', 'public', 'type', 'order'];
+    protected $fillable = ['parent_id', 'name', 'image_url', 'hidden', 'link', 'private', 'type', 'position'];
 
     public function create(array $data)
     {
@@ -20,7 +20,7 @@ class Page extends Model
         $this->name = $data['name'];
         $this->image_url = $data['image_url'];
         $this->link = $data['link'];
-        $this->public = $data['public'];
+        $this->private = $data['private'];
         $this->save();
     }
 }

@@ -10,27 +10,25 @@
     <x-form-section action="{{ route('category.edit', ['id' => $category->id]) }}">
         {{-- Tutył --}}
         <x-jet-label for="name" class="pl-2"> Nazwa: </x-jet-label>
-        <x-jet-input name="name" value="{{ old('name', $category->name) }}" type="text"
-            class="border px-2 min-w-full mb-3">
+        <x-jet-input name="name" value="{{ old('name', $category->name) }}" type="text" class="border px-2 min-w-full mb-3">
         </x-jet-input>
 
         @error('name')
-            <div class="simple-error">{{ $message }}</div>
+        <div class="simple-error">{{ $message }}</div>
         @enderror
 
         {{-- Obrazek --}}
         <x-jet-label for="image_url" class="pl-2"> Obrazek: </x-jet-label>
-        <x-jet-input name="image_url" value="{{ old('image_url', $category->image_url) }}" type="text"
-            class="border px-2 min-w-full mb-3">
+        <x-jet-input name="image_url" value="{{ old('image_url', $category->image_url) }}" type="text" class="border px-2 min-w-full mb-3">
         </x-jet-input>
 
         @error('image_url')
-            <div class="simple-error">{{ $message }}</div>
+        <div class="simple-error">{{ $message }}</div>
         @enderror
 
         <div class="mb-2">
-            Czy kategoria ma być publiczna?
-            <input type="checkbox" name="public" @if ($category->public) checked @endif>
+            Czy kategoria ma być prywatna?
+            <input type="checkbox" name="private" @if ($category->private) checked @endif>
         </div>
 
         <x-jet-button type="submit">Zapisz</x-jet-button>

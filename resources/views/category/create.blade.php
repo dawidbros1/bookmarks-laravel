@@ -5,7 +5,6 @@
         </h2>
     </x-slot>
 
-
     <x-jet-validation-errors> </x-jet-validation-errors>
 
     <x-form-section action="{{ route('category.create') }}">
@@ -27,10 +26,7 @@
         <div class="simple-error">{{ $message }}</div>
         @enderror
 
-        <div class="mb-2">
-            Czy kategoria ma być prywatna?
-            <input type="checkbox" name="private">
-        </div>
+        <x-form.checkbox name="private"> Czy kategoria ma być prywatna? </x-form.checkbox>
 
         <x-jet-button type="submit" class="">Zapisz</x-jet-button>
     </x-form-section>

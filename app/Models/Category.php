@@ -23,34 +23,16 @@ class Category extends Model
         $this->save();
     }
 
-    public function isPrivate()
-    {
-        if ($this->private == 1) return true;
-        else return false;
-    }
-
-    public function isPublic()
-    {
-        if ($this->private == 0) return true;
-        else return false;
-    }
-
-    public function isHidden()
-    {
-        if ($this->hidden == 1) return true;
-        else return false;
-    }
-
     // Relacje
     // [ 1 do n ] [ Jedna kategoria posiada wiele podkategorii ]
     public function subcategories()
     {
-        return $this->hasMany(Subcategory::class)->orderBy('order');
+        return $this->hasMany(Subcategory::class)->orderBy('position');
     }
 
     // [ 1 do n ] [ Jedna kategoria posiada wiele stron ]
     public function pages()
     {
-        return $this->hasMany(Page::class, 'parent_id')->orderBy('order')->where('type', 'category');
+        return $this->hasMany(Page::class, 'parent_id')->orderBy('position')->where('type', 'category');
     }
 }

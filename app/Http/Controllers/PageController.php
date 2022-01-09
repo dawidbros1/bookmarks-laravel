@@ -22,23 +22,6 @@ class PageController extends Controller
         $this->type = "page";
     }
 
-    private function author($parent, $id)
-    {
-        $author = false;
-
-        if ($parent == "subcategory") {
-            if (($subcategory = $this->pageRepository->getSubcategory($id)) != null) {
-                $category = $subcategory->category ?? null;
-            }
-        } else if ($parent == "category") {
-            $category = $this->pageRepository->getCategory($id);
-        }
-
-        if ($category->user_id == Auth::id()) $author = true;
-
-        return $author;
-    }
-
     public function create(Store $request, $parent, $id)
     {
         if ($this->author($parent, $id) == false) return $this->error();
@@ -155,11 +138,11 @@ class PageController extends Controller
         $data = $request->validated();
         $ids = $data['ids'];
         $hidden = $data['hidden'];
-        $private = $data['public'];
-        $order = $data['order'];
+        $private = $data['private'];
+        $position = $data['position'];
         $type = $data['type'];
 
-        if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($order)) {
+        if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($position)) {
             return $this->error();
         }
 
@@ -181,8 +164,8 @@ class PageController extends Controller
             if ($page != null) {
                 $package = [
                     'hidden' => $hidden[$index],
-                    'public' => !$private[$index],
-                    'order' => $order[$index]
+                    'private' => $private[$index],
+                    'position' => $position[$index]
                 ];
                 $page->update($package);
             }
@@ -190,5 +173,23 @@ class PageController extends Controller
 
         return redirect(url()->previous())
             ->with('success', Message::get(1));
+    }
+
+
+    private function author($parent, $id)
+    {
+        $author = false;
+
+        if ($parent == "subcategory") {
+            if (($subcategory = $this->pageRepository->getSubcategory($id)) != null) {
+                $category = $subcategory->category ?? null;
+            }
+        } else if ($parent == "category") {
+            $category = $this->pageRepository->getCategory($id);
+        }
+
+        if ($category->user_id == Auth::id()) $author = true;
+
+        return $author;
     }
 }

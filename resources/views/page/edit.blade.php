@@ -72,7 +72,7 @@
 
         <div class="mb-2">
             Czy strona ma być publiczna?
-            <input type="checkbox" name="public" @if ($page->public) checked @endif>
+            <input type="checkbox" name="public" @if ($page->private == 0) checked @endif>
         </div>
 
         <x-jet-button type="submit" class="ml-2">Zapisz</x-jet-button>

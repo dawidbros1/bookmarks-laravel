@@ -43,10 +43,8 @@
         @enderror
 
         <div class="mb-2">
-            Czy strona ma być publiczna?
-            <input type="checkbox" name="public" @if ($settings->page_public) checked
-
-            @endif>
+            Czy strona ma być prywatna?
+            <input type="checkbox" name="private">
         </div>
 
         <input type="hidden" name="type" value="{{ $parent }}">

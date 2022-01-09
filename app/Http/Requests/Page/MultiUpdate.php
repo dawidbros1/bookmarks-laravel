@@ -27,8 +27,8 @@ class MultiUpdate extends FormRequest
             return [
                 'ids' => ['required', 'array'],
                 'hidden' => ['required', 'array'],
-                'public' => ['required', 'array'],
-                'order' => ['required', 'array'],
+                'private' => ['required', 'array'],
+                'position' => ['required', 'array'],
                 'type' => ['required', 'in:category,subcategory'],
             ];
         }
@@ -41,9 +41,8 @@ class MultiUpdate extends FormRequest
         return [
             'ids.required'  => 'Pole ids[] jest wymagane',
             'hidden.required'  => 'Pole hidden[] jest wymagane',
-            'public.required' => 'Pole public[] jest wymagane',
-            'order.required' => 'Pole order[] jest wymagane',
-            'open.required' => 'Pole open[] jest wymagane',
+            'private.required' => 'Pole private[] jest wymagane',
+            'position.required' => 'Pole order[] jest wymagane',
 
             'type.required' => 'Pole type jest wymagane.',
             'type.in' => 'Pole type musi posiadać wartość category lub subcategory',
