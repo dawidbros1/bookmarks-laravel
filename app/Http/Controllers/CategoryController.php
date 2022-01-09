@@ -71,6 +71,8 @@ class CategoryController extends Controller
             return $this->error();
         }
 
+        // return $category;
+
         if ($request->isMethod('GET')) {
             return view(
                 'category.edit',

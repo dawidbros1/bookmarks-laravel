@@ -8,34 +8,14 @@
     <x-jet-validation-errors> </x-jet-validation-errors>
 
     <x-form-section action="{{ route('category.edit', ['id' => $category->id]) }}">
-        {{-- Tutył --}}
-        <x-jet-label for="name" class="pl-2"> Nazwa: </x-jet-label>
-        <x-jet-input name="name" value="{{ old('name', $category->name) }}" type="text" class="border px-2 min-w-full mb-3">
-        </x-jet-input>
+        <x-form.input name="name" value="{{ $category->name }}">Nazwa: </x-form.input>
+        <x-form.input name="image_url" value="{{  $category->image_url  }}">Adres obrazka: </x-form.input>
 
-        @error('name')
-        <div class="simple-error">{{ $message }}</div>
-        @enderror
-
-        {{-- Obrazek --}}
-        <x-jet-label for="image_url" class="pl-2"> Obrazek: </x-jet-label>
-        <x-jet-input name="image_url" value="{{ old('image_url', $category->image_url) }}" type="text" class="border px-2 min-w-full mb-3">
-        </x-jet-input>
-
-        @error('image_url')
-        <div class="simple-error">{{ $message }}</div>
-        @enderror
-
-        <div class="mb-2">
-            Czy kategoria ma być prywatna?
-            <input type="checkbox" name="private" @if ($category->private) checked @endif>
-        </div>
+        <x-form.checkbox name="private" checked="{{ $category->private }}"> Czy kategoria ma być prywatna? </x-form.checkbox>
 
         <x-jet-button type="submit">Zapisz</x-jet-button>
     </x-form-section>
 
-    <x-delete-item-button action="{{ route('category.delete', ['id' => $category->id, 'visibility' => $visibility]) }}">
-    </x-delete-item-button>
+    <x-delete-item-button action="{{ route('category.delete', ['id' => $category->id, 'visibility' => $visibility]) }}"></x-delete-item-button>
     <x-back-button action="{{ route('category.list', ['visibility' => $visibility]) }}"></x-back-button>
-
 </x-main-layout>

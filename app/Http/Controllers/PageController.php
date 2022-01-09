@@ -27,19 +27,17 @@ class PageController extends Controller
         if ($this->author($parent, $id) == false) return $this->error();
 
         if ($request->isMethod('GET')) {
-            $settings = SettingsRepository::get();
 
             return view('page.create', [
                 'parent' => $parent,
                 'id' => $id,
-                'visibility' => $request->input('visibility'),
-                'settings' => $settings
+                'visibility' => $request->input('visibility') ?? 0
             ]);
         }
 
         if ($request->isMethod('POST')) {
             $data = $request->validated();
-            $data['public'] = Checkbox::get($request->input('public'));
+            $data['private'] = Checkbox::get($request->input('private'));
             $this->model->create($data);
             return redirect(url()->previous())->with('success', $this->message(0));
         }

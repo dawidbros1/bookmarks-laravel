@@ -8,26 +8,8 @@
     <x-jet-validation-errors> </x-jet-validation-errors>
 
     <x-form-section action="{{ route('subcategory.edit', ['id' => $subcategory->id]) }}">
-        {{-- Tutył --}}
-        <x-jet-label for="name" class="pl-2"> Nazwa: </x-jet-label>
-        <x-jet-input name="name" value="{{ old('name', $subcategory->name) }}" type="text" class="border px-2 min-w-full mb-3">
-        </x-jet-input>
-
-        @error('name')
-        <div class="simple-error">{{ $message }}</div>
-        @enderror
-
-        <div class="relative">
-            <x-jet-label for="image_url" class="pl-2"> Obrazek: </x-jet-label>
-            <x-jet-input name="image_url" value="{{ old('image_url', $subcategory->image_url) }}" type="text" class="border px-2 min-w-full mb-3" id="image_url">
-            </x-jet-input>
-
-            <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20" class="bg-gray-100 absolute right-1 bottom-1 hover:cursor-pointer" title="Wklej obrazek kategorii" onclick="pasteImg('{{ $subcategory->category->image_url }}');">
-        </div>
-
-        @error('image_url')
-        <div class="simple-error">{{ $message }}</div>
-        @enderror
+        <x-form.input name="name" value="{{ $subcategory->name }}">Nazwa: </x-form.input>
+        <x-form.input name="image_url" value="{{  $subcategory->image_url  }}">Adres obrazka: </x-form.input>
 
         <div class="mb-2">
             Kategoria głowna
@@ -40,17 +22,11 @@
             </select>
         </div>
 
-        <div class="mb-2">
-            Czy podkategoria ma być prywatna?
-            <input type="checkbox" name="private" @if ($subcategory->private) checked @endif>
-        </div>
+        <x-form.checkbox name="private" checked="{{ $subcategory->private }}"> Czy kategoria ma być prywatna? </x-form.checkbox>
 
         <x-jet-button type="submit">Zapisz</x-jet-button>
     </x-form-section>
 
-    <x-delete-item-button action="{{ route('subcategory.delete', ['id' => $subcategory->id, 'visibility' => $visibility]) }}">
-    </x-delete-item-button>
-
-    <x-back-button action="{{ route('category.show', ['id' => $subcategory->category_id, 'visibility' => $visibility]) }}">
-    </x-back-button>
+    <x-delete-item-button action="{{ route('subcategory.delete', ['id' => $subcategory->id, 'visibility' => $visibility]) }}"></x-delete-item-button>
+    <x-back-button action="{{ route('category.show', ['id' => $subcategory->category_id, 'visibility' => $visibility]) }}"></x-back-button>
 </x-main-layout>
