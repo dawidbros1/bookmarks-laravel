@@ -22,6 +22,8 @@
             <x-slot name="header"> Podkategorie </x-slot>
         </x-items-header>
 
+        <?php $index = 0; ?>
+
         <div class="flex flex-wrap px-1">
             @foreach ($category->subcategories ?? [] as $subcategory)
             <?php if ($subcategory->hidden != $visibility) continue ?>
@@ -35,7 +37,10 @@
 
                     {{-- Pobranie linku do udostępnienia --}}
                     <div class="bg-gray-100 hover:cursor-pointer absolute right-1 bottom-8">
-                        <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20" title="Skopiuj link do udostępnienia" onclick="copyToClipBoard({{ $loop->index }})">
+
+                        @if ($subcategory->public)
+                        <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20" title="Skopiuj link do udostępnienia" onclick="copyToClipBoard({{ $index++}})">
+                        @endif
 
                         <input type="hidden" class="copy" value="{{ route('subcategory.public', ['id' => $subcategory->id]) }}">
                     </div>

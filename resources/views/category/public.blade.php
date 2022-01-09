@@ -12,19 +12,19 @@
 
         <div class="flex flex-wrap px-1">
             @foreach ($category->subcategories as $subcategory)
-                <?php if ($subcategory->public == 0) continue ?>
+            <?php if ($subcategory->public == 0) continue ?>
 
-                <x-item hidden="{{ $subcategory->hidden }}">
-                    <x-slot name="title">{{ $subcategory->name }}</x-slot>
-                    <x-slot name="content">
-                        <a href="{{ route('subcategory.public', ['id' => $subcategory->id]) }}">
-                            <img src="{{ $subcategory->image_url }}" alt="Obrazek" class="full">
-                        </a>
-                    </x-slot>
+            <x-item hidden="{{ $subcategory->hidden }}">
+                <x-slot name="title">{{ $subcategory->name }}</x-slot>
+                <x-slot name="content">
+                    <a href="{{ route('subcategory.public', ['id' => $subcategory->id]) }}">
+                        <img src="{{ $subcategory->image_url }}" alt="Obrazek" class="full">
+                    </a>
+                </x-slot>
 
-                    <x-slot name="changeVisibility"></x-slot>
-                    <x-slot name="settings"></x-slot>
-                </x-item>
+                <x-slot name="changeVisibility"></x-slot>
+                <x-slot name="settings"></x-slot>
+            </x-item>
             @endforeach
         </div>
     </div>
@@ -36,19 +36,19 @@
 
         <div class="flex flex-wrap px-1">
             @foreach ($category->pages as $page)
-                <?php if ($page->public == 0) continue ?>
+            <?php if ($page->public == 0) continue ?>
 
-                <x-item hidden="{{ $page->hidden }}">
-                    <x-slot name="title">{{ $page->name }}</x-slot>
-                    <x-slot name="content">
-                        <a href="{{ $page->link }}" target="_blank">
-                            <img src="{{ $page->image_url }}" alt="Obrazek" class="full">
-                        </a>
-                    </x-slot>
+            <x-item hidden="{{ $page->hidden }}">
+                <x-slot name="title">{{ $page->name }}</x-slot>
+                <x-slot name="content">
+                    <a href="{{ $page->link }}" target="_blank">
+                        <img src="{{ $page->image_url }}" alt="Obrazek" class="full">
+                    </a>
+                </x-slot>
 
-                    <x-slot name="changeVisibility"></x-slot>
-                    <x-slot name="settings"></x-slot>
-                </x-item>
+                <x-slot name="changeVisibility"></x-slot>
+                <x-slot name="settings"></x-slot>
+            </x-item>
             @endforeach
         </div>
     </div>

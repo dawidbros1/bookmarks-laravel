@@ -38,20 +38,15 @@ class SubcategoryController extends Controller
 
     public function showPublic($id)
     {
-        // $subcategory = $this->subcategoryRepository->getModel()->find($id);
-        // $this->authorize('author', $subcategory);
+        if (($subcategory = $this->subcategoryRepository->getWithPages($id)) == null) {
+            return $this->error();
+        }
 
-        // if ($subcategory->public == 0) return abort(403, 'Zasób nie jest publiczny');
+        $this->authorize('author', $subcategory);
 
-        // $category = $this->categoryRepository->getModel()->find($subcategory->category_id);
-
-        // $pages = $this->pageRepository->getPublicDataParameters($id, $this->type);
-
-        // return view('subcategory.public', [
-        //     'category' => $category,
-        //     'subcategory' => $subcategory,
-        //     'pages' => $pages,
-        // ]);
+        return view('subcategory.public', [
+            'subcategory' => $subcategory,
+        ]);
     }
 
     public function create(Store $request, $category_id)
