@@ -15,7 +15,7 @@
         </x-jet-input>
 
         @error('name')
-            <div class="simple-error">{{ $message }}</div>
+        <div class="simple-error">{{ $message }}</div>
         @enderror
 
         {{-- Obrazek --}}
@@ -24,19 +24,16 @@
         </x-jet-input>
 
         @error('image_url')
-            <div class="simple-error">{{ $message }}</div>
+        <div class="simple-error">{{ $message }}</div>
         @enderror
 
         <div class="mb-2">
-            Czy kategoria ma być publiczna?
-            <input type="checkbox" name="public" @if ($settings->category_public) checked @endif>
+            Czy kategoria ma być prywatna?
+            <input type="checkbox" name="private">
         </div>
 
         <x-jet-button type="submit" class="">Zapisz</x-jet-button>
     </x-form-section>
 
-    <x-back-button action="
-                {{ route('category.list', ['view' => 'visible']) }}">
-    </x-back-button>
-
+    <x-back-button action=" {{ route('category.list') }}"></x-back-button>
 </x-main-layout>

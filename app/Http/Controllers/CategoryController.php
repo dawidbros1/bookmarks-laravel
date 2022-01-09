@@ -8,16 +8,13 @@ use App\Http\Requests\category\MultiUpdate;
 use App\Http\Requests\Category\Store;
 use App\Models\Category;
 use App\Repository\CategoryRepository;
-use App\Repository\SettingsRepository;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    private CategoryRepository $categoryRepository;
-
     public function __construct(CategoryRepository $categoryRepository, Category $model)
     {
-        $this->categoryRepository = $categoryRepository;
+        $this->repository = $categoryRepository;
         $this->model = $model;
         $this->type = "category";
     }
@@ -25,7 +22,7 @@ class CategoryController extends Controller
     public function list(Request $request)
     {
         $visibility = (int) $request->input('visibility') ?? 0;
-        $categories = $this->categoryRepository->getByParams(['hidden' => $visibility]);
+        $categories = $this->repository->get(['hidden' => $visibility]);
 
         return view('category.list', [
             'categories' => $categories,
@@ -35,40 +32,34 @@ class CategoryController extends Controller
 
     public function show(Request $request, int $id)
     {
-        $category = $this->withRelations($id);
-        $visibility = (int) $request->input('visibility') ?? 0;
-        if ($category == null) {
+        if (($category = $this->repository->getWithRelations(['id' => $id])) == null) {
             return $this->error();
         }
 
         return view('category.show', [
             'category' => $category,
-            'visibility' => $visibility
+            'visibility' => (int) $request->input('visibility') ?? 0
         ]);
     }
 
     public function showPublic($id)
     {
-        $category = $this->withRelations($id);
-        if ($category == null) {
+        if (($category = $this->repository->getWithRelations(['id' => $id, 'private' => 0], false)) == null) {
             return $this->error();
         }
-        if ($category->public == 0) {
-            return abort(403, 'Zasób nie jest publiczny');
-        }
+
         return view('category.public', ['category' => $category]);
     }
 
     public function create(Store $request)
     {
         if ($request->isMethod('GET')) {
-            $settings = SettingsRepository::get();
-            return view('category.create', ['settings' => $settings]);
+            return view('category.create');
         }
 
         if ($request->isMethod('POST')) {
             $data = $request->validated();
-            $data['public'] = Checkbox::get($request->input('public'));
+            $data['private'] = Checkbox::get($request->input('private'));
             $this->model->create($data);
             return redirect(url()->previous())->with('success', $this->message(0));
         }
@@ -76,22 +67,23 @@ class CategoryController extends Controller
 
     public function edit(Store $request, $id)
     {
-        if ($request->isMethod('GET')) {
-            $category = $this->category($id);
+        if (($category = $this->repository->get(['id' => $id])->first()) == null) {
+            return $this->error();
+        }
 
+        if ($request->isMethod('GET')) {
             return view(
                 'category.edit',
                 [
                     'category' => $category,
-                    'visibility' => $request->input('visibility')
+                    'visibility' => $request->input('visibility') ?? 0
                 ]
             );
         }
 
         if ($request->isMethod('POST')) {
-            $category = $this->category($id);
             $data = $request->validated();
-            $data['public'] = Checkbox::get($request->input('public'));
+            $data['private'] = Checkbox::get($request->input('private'));
             $category->update($data);
 
             return redirect(url()->previous())
@@ -109,7 +101,7 @@ class CategoryController extends Controller
     public function manage(MultiUpdate $request)
     {
         if ($request->isMethod('GET')) {
-            $categories = $this->categoryRepository->getByParams();
+            $categories = $this->repository->get();
             return view('category.manage', ['categories' => $categories]);
         }
 
@@ -118,19 +110,18 @@ class CategoryController extends Controller
 
             $ids = $data['ids'];
             $hidden = $data['hidden'];
-            $private = $data['public'];
-            $order = $data['order'];
+            $private = $data['private'];
+            $position = $data['position'];
 
-            if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($order)) {
+            if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($position)) {
                 return $this->error();
             }
 
-            $categories = $this->categoryRepository->getAllByIds($ids);
-            $this->authorize('categories', [new Category, $categories]);
+            $categories = $this->repository->getAllByIds($ids);
 
-            foreach ($order as $key => $value) {
+            foreach ($position as $key => $value) {
                 if (!is_numeric($value)) {
-                    $order[$key] = 0;
+                    $position[$key] = 0;
                 }
             }
 
@@ -140,8 +131,8 @@ class CategoryController extends Controller
                 if ($category != null) {
                     $data = [
                         'hidden' => $hidden[$index],
-                        'public' => !$private[$index],
-                        'order' => $order[$index]
+                        'private' => $private[$index],
+                        'position' => $position[$index]
                     ];
                     $category->update($data);
                 }
@@ -153,9 +144,9 @@ class CategoryController extends Controller
         }
     }
 
-    public function manageSubcategories(Request $request, $id)
+    public function manageSubcategories($id)
     {
-        $category = $this->withRelation($id, 'subcategories');
+        $category = $this->repository->getWithRelation($id, 'subcategories');
         return view('subcategory.manage', ['category' => $category]);
     }
 
@@ -167,39 +158,11 @@ class CategoryController extends Controller
 
     public function delete(Request $request, $id)
     {
-        $category = $this->withRelations($id);
-
-        $this->categoryRepository->delete($category);
+        $category = $this->withRelations(['id' => $id]);
+        $this->repository->delete($category);
 
         return redirect()
             ->route('category.list', ['visibility' => $request->input('visibility')])
             ->with('success', $this->message(1));
-    }
-
-    // Metody prywatne
-
-    private function category($id)
-    {
-        $this->check($category = $this->model->find($id));
-        return $category;
-    }
-
-    private function withRelation($id, $relation)
-    {
-        $this->check($category = $this->categoryRepository->getWithRelation($id, $relation));
-        return $category;
-    }
-
-    private function withRelations($id)
-    {
-        $this->check($category = $this->categoryRepository->getWithRelations($id));
-        return $category;
-    }
-
-    private function check($category)
-    {
-        if ($category != null) {
-            $this->authorize('author', $category);
-        }
     }
 }

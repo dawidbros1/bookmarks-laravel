@@ -6,7 +6,6 @@
     </x-slot>
     <div>
         <x-items-header basic="{{ route('category.list', ['visibility' => '0']) }}" hidden="{{ route('category.list', ['visibility' => '1']) }}" manage="{{ route('category.manage') }}">
-
             <x-slot name="header"> Moje kategorie </x-slot>
         </x-items-header>
 
@@ -22,7 +21,7 @@
                     {{-- Pobranie linku do udostępnienia --}}
                     <div class="bg-gray-100 hover:cursor-pointer absolute right-1 bottom-8">
 
-                        @if ($category->public)
+                        @if ($category->private == false)
                         <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20" title="Skopiuj link do udostępnienia" onclick="copyToClipBoard({{ $loop->index }})">
                         @endif
 

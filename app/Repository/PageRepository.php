@@ -6,9 +6,9 @@ use App\Models\Page;
 use App\Models\Subcategory;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
-class PageRepository
+
+class PageRepository extends Repository
 {
     private Page $model;
 
@@ -23,37 +23,6 @@ class PageRepository
             ->orderBy('order')
             ->whereIN('id', $ids)
             ->get();
-    }
-
-    // parent ID can be INT OR ARRAY OF INT
-    public static function getAllByParameters($parent_ids, string $type, int $hidden = -1)
-    {
-        // $model = new Page;
-
-        // if (gettype($parent_ids) != "array") {
-        //     $parent_ids = [$parent_ids];
-        // }
-
-        // if ($hidden == -1) {
-        //     return $model
-        //         ->orderBy('order')
-        //         ->where('type', $type)
-        //         ->whereIN('parent_id', $parent_ids)
-        //         ->get();
-        // } else {
-        //     return $model
-        //         ->orderBy('order')
-        //         ->where(['parent_id' => $parent_ids, 'type' => $type, 'hidden' => $hidden])
-        //         ->get();
-        // }
-    }
-
-    public function getPublicDataParameters($id, $type)
-    {
-        // return $this->model
-        //     ->orderBy('order')
-        //     ->where(['parent_id' => $id, 'type' => $type, 'public' => 1])
-        //     ->get();
     }
 
     public function getCategories()

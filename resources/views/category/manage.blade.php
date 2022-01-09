@@ -12,44 +12,39 @@
             <thead>
                 <th class="text-left w-8/12 md:w-9/12 xl:w-10/12">Nazwa kategorii</th>
                 <th></th>
-                <x-manage.table-th type="order"></x-manage.table-th>
+                <x-manage.table-th type="position"></x-manage.table-th>
                 <th colspan="3"></th>
                 <x-manage.table-th type="hidden"></x-manage.table-th>
-                <x-manage.table-th type="public"></x-manage.table-th>
+                <x-manage.table-th type="private"></x-manage.table-th>
             </thead>
 
             <tbody>
                 <tr class="border-b-2 border-blue-600">
                     <td colspan="6"></td>
                     <td class="text-center"><input type="checkbox" id="hiddenCheckboxButton"></td>
-                    <td class="text-center"><input type="checkbox" id="publicCheckboxButton"></td>
+                    <td class="text-center"><input type="checkbox" id="privateCheckboxButton"></td>
                 </tr>
 
                 @foreach ($categories as $key => $category)
                 <tr class="border-b">
+
                     <td>
                         {{ $category->name }}
                     </td>
 
-                    <td class="text-center">
-                        <div class="char minus"></div>
+                    <x-manage.sorting position="{{ $category->position }}"></x-manage.sorting>
+
+                    <td>
+                        <a class="text-blue-400" href="{{ route('category.manage.subcategories', ['id' => $category->id]) }}">
+                            <img class="block m-auto" src="{{ URL::asset('/images/folder.png') }}" alt="profile Pic" height="20" width="20" )>
+                        </a>
                     </td>
 
-                    <td class="text-center">
-                        <div class="lh-order">
-                            <input type="number" value="{{ $category->order }}" class="order" name="order[]">
-                        </div>
+                    <td>
+                        <a class="text-blue-400" href="{{ route('category.manage.pages', ['id' => $category->id]) }}">
+                            <img class="block m-auto" src="{{ URL::asset('/images/page.png') }}" alt="profile Pic" height="20" width="20" )>
+                        </a>
                     </td>
-
-                    <td class="text-center">
-                        <div class="char plus"></div>
-                    </td>
-
-                    <x-manage.table-column-image-link link="{{ route('manage.category.subcategories', ['id' => $category->id]) }}" image_name="folder.png">
-                    </x-manage.table-column-image-link>
-
-                    <x-manage.table-column-image-link link="{{ route('manage.category.pages', ['id' => $category->id]) }}" image_name="page.png">
-                    </x-manage.table-column-image-link>
 
                     <td class="text-center">
                         <input name="hidden[{{ $key }}]" type="hidden" value="0">
@@ -57,8 +52,8 @@
                     </td>
 
                     <td class="text-center">
-                        <input name="public[{{ $key }}]" type="hidden" value="0">
-                        <input name="public[{{ $key }}]" type="checkbox" value="1" class="publicCheckbox" @if (!$category->public) checked @endif>
+                        <input name="private[{{ $key }}]" type="hidden" value="0">
+                        <input name="private[{{ $key }}]" type="checkbox" value="1" class="privateCheckbox" @if ($category->private) checked @endif>
                     </td>
                 </tr>
                 <input type="hidden" name="ids[]" value="{{ $category->id }}">
@@ -71,8 +66,8 @@
 </x-main-layout>
 
 <script>
-    initCheckboxButton('public');
+    initCheckboxButton('private');
     initCheckboxButton('hidden');
-    initOrder();
+    initSort();
 
 </script>

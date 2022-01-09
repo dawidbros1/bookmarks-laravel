@@ -1,5 +1,5 @@
 @switch($attributes['type'])
-@case('order')
+@case('position')
 <th>
     <img class="block m-auto" src="{{ URL::asset('/images/order.png') }}" alt="profile Pic" height="25" width="25" title="Kolejność wyświetlania" )>
 </th>
@@ -11,7 +11,7 @@
 </th>
 @break
 
-@case('public')
+@case('private')
 <th>
     <img class="block m-auto" src="{{ URL::asset('/images/lock.png') }}" alt="profile Pic" height="25" width="25" title="Czy element ma być prywatny" )>
 </th>

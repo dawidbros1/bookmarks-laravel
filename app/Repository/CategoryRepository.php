@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class CategoryRepository extends Repository
 {
@@ -17,32 +16,35 @@ class CategoryRepository extends Repository
 
     public function getAllByIds($ids)
     {
-        return $this->model->orderBy('order')
-            ->whereIN('id', $ids)->get();
+        return $this->model->orderBy('position')
+            ->whereIN('id', $ids)
+            ->where('user_id', Auth::id())->get();
     }
 
-    public function getByParams(array $args = [])
+    public function get(array $args = [], $auth = true)
     {
-        $args['user_id'] = Auth::id();
+        if ($auth) {
+            $args['user_id'] = Auth::id();
+        }
 
-        return $this->model->orderBy('order')->where($args)->get();
+        return $this->model->orderBy('position')->where($args)->get();
     }
 
-
-    public function getWithRelations(int $id)
+    public function getWithRelations(array $args, $auth = true)
     {
-        return $this->model
-            ->orderBy('order')
-            ->where(['user_id' => Auth::id(), 'id' => $id])
-            ->with('subcategories.pages')
-            ->with('pages')
+        if ($auth) {
+            $args['user_id'] = Auth::id();
+        }
+
+        return $this->model->orderBy('position')->where($args)
+            ->with('subcategories.pages')->with('pages')
             ->get()->first();
     }
 
     public function getWithRelation(int $id, string $relation)
     {
         return $this->model
-            ->orderBy('order')
+            ->orderBy('position')
             ->where(['user_id' => Auth::id(), 'id' => $id])
             ->with($relation)
             ->get()
@@ -64,51 +66,4 @@ class CategoryRepository extends Repository
         $this->deleteSubcategories($subcategories);
         $this->model->destroy($category->id);
     }
-
-    // Pobieranie danych z relacjami
-    // public function getAllWithSubcategories()
-    // {
-    //     return $this->model
-    //         ->orderBy('order')
-    //         ->where('user_id', Auth::id())
-    //         ->with('subcategories')
-    //         ->get();
-    // }
-
-    // public function getAllWithPages()
-    // {
-    //     return $this->model
-    //         ->orderBy('order')
-    //         ->where('user_id', Auth::id())
-    //         ->with('pages')
-    //         ->get();
-    // }
-
-    // public function getAllWithSubcategoriesWithPages()
-    // {
-    //     return $this->model
-    //         ->orderBy('order')
-    //         ->where('user_id', Auth::id())
-    //         ->with('subcategories.pages')
-    //         ->get();
-    // }
-
-    // Pojedyncze po ID z relacjami
-    // public function getWithPages($id)
-    // {
-    //     return $this->model
-    //         ->orderBy('order')
-    //         ->where(['user_id' => Auth::id(), 'id' => $id])
-    //         ->with('pages')
-    //         ->get();
-    // }
-
-    // public function getWithSubcategories($id)
-    // {
-    //     return $this->model
-    //         ->orderBy('order')
-    //         ->where(['user_id' => Auth::id(), 'id' => $id])
-    //         ->with('subcategories')
-    //         ->get();
-    // }
 }

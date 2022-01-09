@@ -2117,7 +2117,7 @@ input[type=number]::-webkit-outer-spin-button {
 .plus::before {
     content: "+";
   }
-.order{
+.position{
     border: 1px solid black;
     width: 25px;
     height: 15px;
@@ -2129,7 +2129,7 @@ input[type=number]::-webkit-outer-spin-button {
     line-height: 14px;
     margin: auto;
 }
-.lh-order{
+.lh-position{
     line-height: 11px;
 }
 /* Items-header */

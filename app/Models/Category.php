@@ -12,21 +12,33 @@ class Category extends Model
 
     public $timestamps = false;
 
-    protected $fillable = [
-        'name',
-        'image_url',
-        'hidden',
-        'public',
-        'order'
-    ];
+    protected $fillable = ['name', 'image_url', 'hidden', 'private', 'position'];
 
     public function create(array $data)
     {
         $this->user_id = Auth::id();
         $this->name = $data['name'];
         $this->image_url = $data['image_url'];
-        $this->public = $data['public'];
+        $this->private = $data['private'];
         $this->save();
+    }
+
+    public function isPrivate()
+    {
+        if ($this->private == 1) return true;
+        else return false;
+    }
+
+    public function isPublic()
+    {
+        if ($this->private == 0) return true;
+        else return false;
+    }
+
+    public function isHidden()
+    {
+        if ($this->hidden == 1) return true;
+        else return false;
     }
 
     // Relacje

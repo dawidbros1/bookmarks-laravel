@@ -36,22 +36,22 @@ window.initCheckboxButton = function (name) {
 }
 
 // MANAGE FUNCTION
-window.initOrder = function () {
+window.initSort = function () {
     var minuses = document.getElementsByClassName('minus');
-    var orders = document.getElementsByClassName('order');
+    var position = document.getElementsByClassName('position');
     var pluses = document.getElementsByClassName('plus');
 
-    for (let i = 0; i < orders.length; i++) {
+    for (let i = 0; i < position.length; i++) {
         minuses[i].addEventListener('click', () => {
-            let value = orders[i].value;
+            let value = position[i].value;
             if (value > 0) {
-                orders[i].value = --value;
+                position[i].value = --value;
             }
         })
 
         pluses[i].addEventListener('click', () => {
-            let value = orders[i].value;
-            orders[i].value = ++value;
+            let value = position[i].value;
+            position[i].value = ++value;
         })
     }
 }
