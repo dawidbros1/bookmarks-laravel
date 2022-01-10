@@ -4,7 +4,7 @@ namespace App\View\Components\Manage;
 
 use Illuminate\View\Component;
 
-class TableTh extends Component
+class Checkbox extends Component
 {
     /**
      * Create a new component instance.
@@ -23,6 +23,6 @@ class TableTh extends Component
      */
     public function render()
     {
-        return view('components.manage.table-th');
+        return view('components.manage.checkbox');
     }
 }

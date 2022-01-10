@@ -11,9 +11,9 @@
 
         <x-form.checkbox name="private"> Czy podkategoria ma być prywatna? </x-form.checkbox>
 
-        <x-jet-button type="submit">Zapisz</x-jet-button>
+        <x-form.button>Zapisz</x-form.button>
     </x-form.section>
 
-    <x-back-button action="{{ route('category.show', ['id' => $category->id, 'visibility' => $visibility]) }}">
-    </x-back-button>
+    <x-buttons.back route="{{ route('category.show', ['id' => $category->id, 'visibility' => $visibility]) }}">
+    </x-buttons.back>
 </x-main-layout>

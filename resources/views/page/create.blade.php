@@ -15,9 +15,9 @@
         <input type="hidden" name="type" value="{{ $parent }}">
         <input type="hidden" name="parent_id" value="{{ $id }}">
 
-        <x-jet-button type="submit" class="ml-2">Zapisz</x-jet-button>
+        <x-form.button>Zapisz</x-form.button>
     </x-form.section>
 
-    <x-back-button action="{{ route($parent . '.show', ['id' => $id, 'visibility' => $visibility]) }}">
-    </x-back-button>
+    <x-buttons.back route="{{ route($parent . '.show', ['id' => $id, 'visibility' => $visibility]) }}">
+    </x-buttons.back>
 </x-main-layout>

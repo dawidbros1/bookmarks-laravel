@@ -1,10 +1,10 @@
 <?php
 
-namespace App\View\Components\Manage;
+namespace App\View\Components\Buttons;
 
 use Illuminate\View\Component;
 
-class TableTh extends Component
+class ItemDelete extends Component
 {
     /**
      * Create a new component instance.
@@ -23,6 +23,6 @@ class TableTh extends Component
      */
     public function render()
     {
-        return view('components.manage.table-th');
+        return view('components.buttons.item-delete');
     }
 }

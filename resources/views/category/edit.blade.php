@@ -12,11 +12,12 @@
         <x-form.checkbox name="private" checked="{{ $category->private }}"> Czy kategoria ma być prywatna?
         </x-form.checkbox>
 
-        <x-form.button type="submit">Zapisz</x-form.button>
+        <x-form.button>Edytuj</x-form.button>
     </x-form.section>
 
-    <x-delete-item-button
-        action="{{ route('category.delete', ['id' => $category->id, 'visibility' => $visibility]) }}">
-    </x-delete-item-button>
-    <x-back-button action="{{ route('category.list', ['visibility' => $visibility]) }}"></x-back-button>
+    <x-buttons.item-delete
+        route="{{ route('category.delete', ['id' => $category->id, 'visibility' => $visibility]) }}">
+    </x-buttons.item-delete>
+
+    <x-back-button route="{{ route('category.list', ['visibility' => $visibility]) }}"></x-back-button>
 </x-main-layout>

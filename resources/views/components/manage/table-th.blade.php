@@ -1,19 +1,6 @@
-@switch($attributes['type'])
-@case('position')
-<th>
-    <img class="block m-auto" src="{{ URL::asset('/images/order.png') }}" alt="profile Pic" height="25" width="25" title="Kolejność wyświetlania" )>
+<?php $image = $attributes['image'] ?? ''; ?>
+<?php $colspan = $attributes['colspan'] ?? 1; ?>
+<th colspan="{{ $colspan }}">
+    <img class="block m-auto" src="{{ URL::asset('/images/' . $image . '.png') }}" alt="profile Pic" height="25"
+        width="25" title="Nazwa">
 </th>
-@break
-
-@case('hidden')
-<th>
-    <img class="block m-auto" src="{{ URL::asset('/images/hidden.png') }}" alt="profile Pic" height="25" width="25" title="Czy element ma być ukryty" )>
-</th>
-@break
-
-@case('private')
-<th>
-    <img class="block m-auto" src="{{ URL::asset('/images/lock.png') }}" alt="profile Pic" height="25" width="25" title="Czy element ma być prywatny" )>
-</th>
-@break
-@endswitch

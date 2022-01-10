@@ -1,10 +1,10 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\buttons;
 
 use Illuminate\View\Component;
 
-class DeleteItemButton extends Component
+class Back extends Component
 {
     /**
      * Create a new component instance.
@@ -23,6 +23,6 @@ class DeleteItemButton extends Component
      */
     public function render()
     {
-        return view('components.delete-item-button');
+        return view('components.buttons.back');
     }
 }

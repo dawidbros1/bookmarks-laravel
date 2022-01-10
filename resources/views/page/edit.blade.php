@@ -45,15 +45,15 @@
         <x-form.checkbox name="private" checked="{{ $page->private }}"> Czy strona ma być prywatna?
         </x-form.checkbox>
 
-        <x-jet-button type="submit" class="ml-2">Zapisz</x-jet-button>
+        <x-form.button>Edytuj</x-form.button>
     </x-form.section>
 
-    <x-delete-item-button action="{{ route('page.delete', ['id' => $page->id, 'visibility' => $visibility]) }}">
-    </x-delete-item-button>
+    <x-buttons.item-delete route="{{ route('page.delete', ['id' => $page->id, 'visibility' => $visibility]) }}">
+    </x-buttons.item-delete>
 
-    <x-back-button
-        action="{{ route($page->type . '.show', ['id' => $page->parent_id, 'visibility' => $visibility]) }}">
-    </x-back-button>
+    <x-buttons.back
+        route="{{ route($page->type . '.show', ['id' => $page->parent_id, 'visibility' => $visibility]) }}">
+    </x-buttons.back>
 
     <script src="{{ mix('js/pageEdit.js') }}"></script>
 </x-main-layout>

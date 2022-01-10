@@ -15,7 +15,7 @@
 
         <div class="p-1 text-center">Czy jesteś pewny, ze chcesz usunąć ten element? </div>
 
-        <x-form.section action="{{ $attributes['action'] }}">
+        <x-form.section action="{{ $attributes['route'] }}">
             <input type="hidden" name="_method" value="DELETE">
             <x-jet-button type="submit" class="bg-red-500 absolute right-14 bottom-1 px-2 py-1">Tak
             </x-jet-button>

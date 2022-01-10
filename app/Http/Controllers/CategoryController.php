@@ -157,13 +157,13 @@ class CategoryController extends Controller
 
     public function managePages($id)
     {
-        $category = $this->withRelations($id, 'pages');
+        $category = $this->repository->getWithRelation($id, 'pages');
         return view('page.manage', ['parent' => $category, 'type' => "category"]);
     }
 
     public function delete(Request $request, $id)
     {
-        $category = $this->withRelations(['id' => $id]);
+        $category = $this->repository->getWithRelations(['id' => $id]);
         $this->repository->delete($category);
 
         return redirect()

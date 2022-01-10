@@ -14,5 +14,5 @@
         <x-form.button>Zapisz</x-form.button>
     </x-form.section>
 
-    <x-back-button action=" {{ route('category.list') }}"></x-back-button>
+    <x-buttons.back route="{{ route('category.list') }}"></x-buttons.back>
 </x-main-layout>
