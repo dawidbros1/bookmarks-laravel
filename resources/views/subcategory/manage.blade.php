@@ -3,16 +3,21 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Zarządzaj podkategorią') }}
         </h2>
+
+        <x-buttons.back type="upper" route="{{ route('category.show', ['id' => $category->id]) }}">
+        </x-buttons.back>
     </x-slot>
 
     <x-form.section action="{{ route('subcategory.manage') }}">
         <table class="w-full">
             <thead>
-                <th class="text-left w-8/12 md:w-9/12 xl:w-10/12">{{ $category->name }}</th>
-                <x-manage.table-th colspan="3" image="position"></x-manage.table-th>
-                <th></th>
-                <x-manage.table-th image="hidden"></x-manage.table-th>
-                <x-manage.table-th image="lock"></x-manage.table-th>
+                <tr>
+                    <th class="text-left w-8/12 md:w-9/12 xl:w-10/12">{{ $category->name }}</th>
+                    <x-manage.table-th colspan="3" image="position"></x-manage.table-th>
+                    <th></th>
+                    <x-manage.table-th image="hidden"></x-manage.table-th>
+                    <x-manage.table-th image="lock"></x-manage.table-th>
+                </tr>
             </thead>
 
             <tbody>

@@ -30,7 +30,8 @@
     <x-buttons.item-delete
         route="{{ route('subcategory.delete', ['id' => $subcategory->id, 'visibility' => $visibility]) }}">
     </x-buttons.item-delete>
-    <x-button.back
+
+    <x-buttons.back
         route="{{ route('category.show', ['id' => $subcategory->category_id, 'visibility' => $visibility]) }}">
-    </x-button.back>
+    </x-buttons.back>
 </x-main-layout>

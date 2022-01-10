@@ -19,5 +19,5 @@
         route="{{ route('category.delete', ['id' => $category->id, 'visibility' => $visibility]) }}">
     </x-buttons.item-delete>
 
-    <x-back-button route="{{ route('category.list', ['visibility' => $visibility]) }}"></x-back-button>
+    <x-buttons.back route="{{ route('category.list', ['visibility' => $visibility]) }}"></x-buttons.back>
 </x-main-layout>

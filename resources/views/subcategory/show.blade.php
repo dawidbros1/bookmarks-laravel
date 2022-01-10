@@ -4,9 +4,9 @@
             {{ $subcategory->name }}
         </h2>
 
-        <x-back-button-upper
-            action="{{ route('category.show', ['id' => $subcategory->category_id, 'visibility' => $visibility]) }}">
-        </x-back-button-upper>
+        <x-buttons.back type="upper"
+            route="{{ route('category.show', ['id' => $subcategory->category_id, 'visibility' => $visibility]) }}">
+        </x-buttons.back>
     </x-slot>
 
     <div class="flex flex-wrap text-center py-2">

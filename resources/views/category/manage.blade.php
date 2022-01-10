@@ -28,7 +28,7 @@
 
                     @foreach ($categories as $index => $item)
                         <tr class="border-b">
-                            <td> {{ $category->name }} </td>
+                            <td> {{ $item->name }} </td>
                             <x-manage.sorting position="{{ $item->position }}"></x-manage.sorting>
 
                             <x-manage.icon name="folder"

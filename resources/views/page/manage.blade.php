@@ -3,12 +3,19 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ 'Zarządzaj stronami' }}
         </h2>
+
+        @if ($type == 'category')
+            <x-buttons.back type="upper" route="{{ route('category.show', ['id' => $parent->id]) }}">
+            </x-buttons.back>
+        @elseif($type == 'subcategory')
+            <x-buttons.back type="upper" route="{{ route('subcategory.show', ['id' => $parent->id]) }}">
+            </x-buttons.back>
+        @endif
     </x-slot>
 
     @if (count($parent->pages) > 0)
         <x-form.section action="{{ route('page.manage', ['type' => $type]) }}">
             <table class="w-full">
-
                 <thead>
                     <tr>
                         <th class="text-left w-8/12 md:w-9/12 xl:w-10/12">{{ $parent->name }}</th>

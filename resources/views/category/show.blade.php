@@ -4,8 +4,8 @@
             {{ $category->name }}
         </h2>
 
-        <x-back-button-upper action="{{ route('category.list', ['visibility' => 'visible']) }}">
-        </x-back-button-upper>
+        <x-buttons.back type="upper" route="{{ route('category.list', ['visibility' => 'visible']) }}">
+        </x-buttons.back>
     </x-slot>
 
     <div class="flex flex-wrap text-center py-2">
