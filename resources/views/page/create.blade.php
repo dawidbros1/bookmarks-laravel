@@ -5,9 +5,7 @@
         </h2>
     </x-slot>
 
-    <x-jet-validation-errors> </x-jet-validation-errors>
-
-    <x-form-section action="{{ route('page.create', ['parent' => $parent, 'id' => $id]) }}">
+    <x-form.section action="{{ route('page.create', ['parent' => $parent, 'id' => $id]) }}">
         <x-form.input name="name">Nazwa: </x-form.input>
         <x-form.input name="image_url">Adres obrazka: </x-form.input>
         <x-form.input name="link">Link do strony: </x-form.input>
@@ -18,7 +16,7 @@
         <input type="hidden" name="parent_id" value="{{ $id }}">
 
         <x-jet-button type="submit" class="ml-2">Zapisz</x-jet-button>
-    </x-form-section>
+    </x-form.section>
 
     <x-back-button action="{{ route($parent . '.show', ['id' => $id, 'visibility' => $visibility]) }}">
     </x-back-button>

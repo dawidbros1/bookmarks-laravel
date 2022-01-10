@@ -76,7 +76,7 @@ class PageController extends Controller
 
         if ($request->isMethod('POST')) {
             $data = $request->validated();
-            $data['public'] = Checkbox::get($request->input('public'));
+            $data['private'] = Checkbox::get($request->input('private'));
 
             $subcategory_id = $data['subcategory_id'];
 

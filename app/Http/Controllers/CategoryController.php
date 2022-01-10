@@ -95,7 +95,10 @@ class CategoryController extends Controller
 
     public function changeVisibility($id)
     {
-        $category = $this->category($id);
+        if (($category = $this->repository->get(['id' => $id])->first()) == null) {
+            return $this->error();
+        }
+
         $category->update(['hidden' => !$category->hidden]);
         return redirect(url()->previous())->with('success', $this->message(2));
     }

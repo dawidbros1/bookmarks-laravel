@@ -8,6 +8,7 @@
             action="{{ route('category.show', ['id' => $subcategory->category_id, 'visibility' => $visibility]) }}">
         </x-back-button-upper>
     </x-slot>
+
     <div class="flex flex-wrap text-center py-2">
         <a href="{{ route('page.create', ['parent' => 'subcategory', 'id' => $subcategory->id, 'visibility' => $visibility]) }}"
             class="w-full">
@@ -15,35 +16,33 @@
         </a>
     </div>
 
-    <div class="pb-10">
-        <x-item.header visible="{{ route('subcategory.show', ['id' => $subcategory->id]) }}"
-            hidden="{{ route('subcategory.show', ['id' => $subcategory->id, 'visibility' => '1']) }}"
-            manage="{{ route('subcategory.manage.pages', ['id' => $subcategory->id]) }}">
-            Strony
-        </x-item.header>
+    {{-- Strony --}}
+    <x-items.body>
+        <x-slot name="header">
+            <x-items.header visible="{{ route('subcategory.show', ['id' => $subcategory->id]) }}"
+                hidden="{{ route('subcategory.show', ['id' => $subcategory->id, 'visibility' => 1]) }}"
+                manage="{{ route('subcategory.manage.pages', ['id' => $subcategory->id]) }}">
+                Strony
+            </x-items.header>
+        </x-slot>
 
-        <div class="flex flex-wrap px-1">
-            @foreach ($subcategory->pages ?? [] as $page)
-                <?php if ($page->hidden != $visibility) {
-                    continue;
-                } ?>
-                <x-item hidden="{{ $page->hidden }}">
-                    <x-slot name="title">{{ $page->name }}</x-slot>
-                    <x-slot name="content">
-                        <a href="{{ $page->link }}">
-                            <img src="{{ $page->image_url }}" alt="Obrazek" class="full">
-                        </a>
-                    </x-slot>
+        <x-slot name="items">
+            @foreach ($subcategory->pages as $item)
+                @if ($item->hidden == $visibility)
+                    <x-item.body>
+                        <x-item.title>{{ $item->name }}</x-item.title>
+                        <x-item.image route="{{ $item->link }}" image="{{ $item->image_url }}"></x-item.image>
 
-                    <x-slot name="changeVisibility">
-                        {{ route('page.changeVisibility', ['id' => $page->id]) }}
-                    </x-slot>
+                        <x-item.settings
+                            route="{{ route('page.edit', ['id' => $item->id, 'visibility' => $visibility, 'type' => 'subcategory']) }}">
+                        </x-item.settings>
 
-                    <x-slot name="settings">
-                        {{ route('page.edit', ['id' => $page->id, 'type' => 'subcategory', 'visibility' => $visibility]) }}
-                    </x-slot>
-                </x-item>
+                        <x-item.change-visibility hidden="{{ $item->hidden }}"
+                            route="{{ route('page.changeVisibility', ['id' => $item->id, 'visibility' => $visibility]) }}">
+                        </x-item.change-visibility>
+                    </x-item.body>
+                @endif
             @endforeach
-        </div>
-    </div>
+        </x-slot>
+    </x-items.body>
 </x-main-layout>

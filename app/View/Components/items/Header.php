@@ -1,6 +1,6 @@
 <?php
 
-namespace App\View\Components\item;
+namespace App\View\Components\items;
 
 use Illuminate\View\Component;
 
@@ -23,6 +23,6 @@ class Header extends Component
      */
     public function render()
     {
-        return view('components.item.header');
+        return view('components.items.header');
     }
 }

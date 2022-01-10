@@ -15,11 +15,11 @@
 
         <div class="p-1 text-center">Czy jesteś pewny, ze chcesz usunąć ten element? </div>
 
-        <x-form-section action="{{ $attributes['action'] }}">
+        <x-form.section action="{{ $attributes['action'] }}">
             <input type="hidden" name="_method" value="DELETE">
             <x-jet-button type="submit" class="bg-red-500 absolute right-14 bottom-1 px-2 py-1">Tak
             </x-jet-button>
-        </x-form-section>
+        </x-form.section>
 
         <x-jet-button @click="open = ! open" type="submit" class="bg-green-500 absolute right-2 bottom-1 px-2 py-1">
             Nie

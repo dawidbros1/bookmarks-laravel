@@ -4,45 +4,40 @@
             {{ __('Wszystkie kategorie') }}
         </h2>
     </x-slot>
-    <div>
-        <x-item.header visible="{{ route('category.list') }}"
-            hidden="{{ route('category.list', ['visibility' => 1]) }}" manage="{{ route('category.manage') }}">
-            Kategorie
-        </x-item.header>
 
-        <div class="flex flex-wrap px-1">
-            @foreach ($categories as $category)
-                <x-item hidden="{{ $category->hidden }}">
-                    <x-slot name="title">{{ $category->name }}</x-slot>
-                    <x-slot name="content">
-                        <a href="{{ route('category.show', ['id' => $category->id]) }}">
-                            <img src="{{ $category->image_url }}" alt="Obrazek" class="full">
-                        </a>
+    <x-items.body>
+        <x-slot name="header">
+            <x-items.header visible="{{ route('category.list') }}"
+                hidden="{{ route('category.list', ['visibility' => 1]) }}" manage="{{ route('category.manage') }}">
+                Kategorie
+            </x-items.header>
+        </x-slot>
 
-                        {{-- Pobranie linku do udostępnienia --}}
-                        <div class="bg-gray-100 hover:cursor-pointer absolute right-1 bottom-8">
+        @php $index = 0; @endphp
 
-                            @if ($category->private == false)
-                                <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20"
-                                    width="20" title="Skopiuj link do udostępnienia"
-                                    onclick="copyToClipBoard({{ $loop->index }})">
-                            @endif
+        <x-slot name="items">
+            @foreach ($categories as $item)
+                <x-item.body>
+                    <x-item.title>{{ $item->name }}</x-item.title>
+                    <x-item.image route="{{ route('category.show', ['id' => $item->id]) }}"
+                        image="{{ $item->image_url }}">
+                    </x-item.image>
 
-                            <input type="hidden" class="copy"
-                                value="{{ route('category.public', ['id' => $category->id]) }}">
-                        </div>
-                    </x-slot>
+                    <x-item.settings
+                        route="{{ route('category.edit', ['id' => $item->id, 'visibility' => $visibility]) }}">
+                    </x-item.settings>
 
-                    <x-slot name="changeVisibility">
-                        {{ route('category.changeVisibility', ['id' => $category->id]) }}
-                    </x-slot>
+                    <x-item.change-visibility hidden="{{ $item->hidden }}"
+                        route="{{ route('category.changeVisibility', ['id' => $item->id, 'visibility' => $visibility]) }}">
+                    </x-item.change-visibility>
 
-                    <x-slot name="settings">
-                        {{ route('category.edit', ['id' => $category->id, 'visibility' => $visibility]) }}
-                    </x-slot>
-                </x-item>
+                    @if ($item->private == false)
+                        <x-item.share index="{{ $index++ }}"
+                            link="{{ route('category.public', ['id' => $item->id]) }}">
+                        </x-item.share>
+                    @endif
+                </x-item.body>
             @endforeach
-        </div>
-    </div>
-
+        </x-slot>
+    </x-items.body>
 </x-main-layout>
