@@ -71,8 +71,6 @@ class CategoryController extends Controller
             return $this->error();
         }
 
-        // return $category;
-
         if ($request->isMethod('GET')) {
             return view(
                 'category.edit',
@@ -112,7 +110,6 @@ class CategoryController extends Controller
 
         if ($request->isMethod('POST')) {
             $data = $request->validated();
-
             $ids = $data['ids'];
             $hidden = $data['hidden'];
             $private = $data['private'];

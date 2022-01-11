@@ -9,7 +9,6 @@ use App\Http\Requests\Page\Store;
 use App\Http\Requests\Page\Update;
 use App\Models\Page;
 use App\Repository\PageRepository;
-use App\Repository\SettingsRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,14 +21,14 @@ class PageController extends Controller
         $this->type = "page";
     }
 
-    public function create(Store $request, $parent, $id)
+    public function create(Store $request, $type, $id)
     {
-        if ($this->author($parent, $id) == false) return $this->error();
+        if ($this->author($type, $id) == false) return $this->error();
 
         if ($request->isMethod('GET')) {
 
             return view('page.create', [
-                'parent' => $parent,
+                'type' => $type,
                 'id' => $id,
                 'visibility' => $request->input('visibility') ?? 0
             ]);
@@ -66,7 +65,6 @@ class PageController extends Controller
                 [
                     'page' => $page,
                     'visibility' => $request->input('visibility'),
-                    'parent' => $parent,
                     'categories' => $categories,
                     'subcategories' => $subcategories,
                     'category_id' => $category_id

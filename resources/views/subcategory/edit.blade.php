@@ -15,13 +15,13 @@
                 class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
                 @foreach ($categories as $category)
                     <option value="{{ $category->id }}" @if ($category->id == $subcategory->category_id) selected @endif>
-
-                        {{ $category->name }} </option>
+                        {{ $category->name }}
+                    </option>
                 @endforeach
             </select>
         </div>
 
-        <x-form.checkbox name="private" checked="{{ $subcategory->private }}"> Czy kategoria ma być prywatna?
+        <x-form.checkbox name="private" checked="{{ $subcategory->private }}"> Czy podkategoria ma być prywatna?
         </x-form.checkbox>
 
         <x-form.button>Edytuj</x-form.button>

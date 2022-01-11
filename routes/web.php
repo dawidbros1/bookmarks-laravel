@@ -39,7 +39,6 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/news', function () {
 
 // Dla zalogowanego użytkownika
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    //! Categories
     Route::group(
         [
             'prefix' => "category",
@@ -58,7 +57,6 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         }
     );
 
-    //! Subcategories
     Route::group(
         [
             'prefix' => "subcategory",
@@ -76,14 +74,13 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         }
     );
 
-    //! Pages
     Route::group(
         [
             'prefix' => "page",
             'as' => 'page.'
         ],
         function () {
-            Route::match(array('GET', 'POST'), '/{parent}/{id}/create', [PageController::class, 'create'])->name('create');
+            Route::match(array('GET', 'POST'), '/{type}/{id}/create', [PageController::class, 'create'])->name('create');
             Route::match(array('GET', 'POST'), '/edit/{id}', [PageController::class, 'edit'])->name('edit');
             Route::delete('/delete/{id}', [PageController::class, 'delete'])->name('delete');
             Route::get('/changeVisibility/{id}', [PageController::class, 'changeVisibility'])->name('changeVisibility');

@@ -7,8 +7,7 @@ use App\Models\Subcategory;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 
-
-class PageRepository extends Repository
+class PageRepository
 {
     private Page $model;
 

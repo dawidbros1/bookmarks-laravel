@@ -57,12 +57,10 @@ class SubcategoryController extends Controller
         }
 
         if ($request->isMethod('GET')) {
-            $settings = SettingsRepository::get();
 
             return view('subcategory.create', [
                 'category' => $category,
-                'visibility' => $request->input('visibility'),
-                'settings' => $settings,
+                'visibility' => $request->input('visibility')
             ]);
         }
 
@@ -125,7 +123,6 @@ class SubcategoryController extends Controller
         }
 
         $this->authorize('author', $subcategory);
-
         $subcategory->update(['hidden' => !$subcategory->hidden]);
         return redirect(url()->previous())->with('success', $this->message(2));
     }

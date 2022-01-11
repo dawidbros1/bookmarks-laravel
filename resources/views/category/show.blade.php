@@ -13,7 +13,7 @@
             class="w-2/4 border-r-2">
             Dodaj podkategorię
         </a>
-        <a href="{{ route('page.create', ['parent' => 'category', 'id' => $category->id, 'visibility' => $visibility]) }}"
+        <a href="{{ route('page.create', ['type' => 'category', 'id' => $category->id, 'visibility' => $visibility]) }}"
             class="w-2/4">
             Dodaj stronę
         </a>

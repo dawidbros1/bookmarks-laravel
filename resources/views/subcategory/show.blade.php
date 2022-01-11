@@ -10,7 +10,7 @@
     </x-slot>
 
     <div class="flex flex-wrap text-center py-2">
-        <a href="{{ route('page.create', ['parent' => 'subcategory', 'id' => $subcategory->id, 'visibility' => $visibility]) }}"
+        <a href="{{ route('page.create', ['type' => 'subcategory', 'id' => $subcategory->id, 'visibility' => $visibility]) }}"
             class="w-full">
             Dodaj stronę
         </a>

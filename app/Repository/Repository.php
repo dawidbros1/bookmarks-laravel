@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Models\Category;
 use App\Models\Page;
 use App\Models\Subcategory;
 
