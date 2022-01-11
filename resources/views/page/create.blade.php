@@ -5,57 +5,19 @@
         </h2>
     </x-slot>
 
-    <x-jet-validation-errors> </x-jet-validation-errors>
+    <x-form.section action="{{ route('page.create', ['type' => $type, 'id' => $id]) }}">
+        <x-form.input name="name">Nazwa: </x-form.input>
+        <x-form.input name="image_url">Adres obrazka: </x-form.input>
+        <x-form.input name="link">Link do strony: </x-form.input>
 
-    <x-form-section action="{{ route('page.store') }}">
-        {{-- Tutył --}}
-        <x-jet-label for="name" class="pl-2"> Nazwa: </x-jet-label>
-        <x-jet-input name="name" value="{{ old('name') }}" type="text" class="border px-2 min-w-full mb-3">
-        </x-jet-input>
-
-        @error('name')
-            <div class="simple-error">{{ $message }}</div>
-        @enderror
-
-        {{-- Obrazek --}}
-        <div class="relative">
-            <x-jet-label for="image_url" class="pl-2"> Adres obrazka: </x-jet-label>
-            <x-jet-input name="image_url" value="{{ old('image_url') }}" type="text"
-                class="border px-2 min-w-full mb-3" id="image_url">
-            </x-jet-input>
-
-            <img src="{{ URL::asset('/images/paste.png') }}" alt="profile Pic" height="20" width="20"
-                class="bg-gray-100 absolute right-1 bottom-1 hover:cursor-pointer" title="Wklej obrazek podkategorii"
-                onclick="pasteImg('{{ $parent->image_url }}');">
-        </div>
-
-        @error('image_url')
-            <div class=" simple-error">{{ $message }}
-            </div>
-        @enderror
-
-        {{-- Obrazek --}}
-        <x-jet-label for="link" class="pl-2"> Link do strony: </x-jet-label>
-        <x-jet-input name="link" value="{{ old('link') }}" type="text" class="border px-2 min-w-full mb-3">
-        </x-jet-input>
-
-        @error('link')
-            <div class="simple-error">{{ $message }}</div>
-        @enderror
-
-        <div class="mb-2">
-            Czy strona ma być publiczna?
-            <input type="checkbox" name="public" @if ($settings->page_public) checked
-
-            @endif>
-        </div>
+        <x-form.checkbox name="private"> Czy strona ma być prywatna? </x-form.checkbox>
 
         <input type="hidden" name="type" value="{{ $type }}">
-        <input type="hidden" name="parent_id" value="{{ $parent->id }}">
+        <input type="hidden" name="parent_id" value="{{ $id }}">
 
-        <x-jet-button type="submit" class="ml-2">Zapisz</x-jet-button>
-    </x-form-section>
+        <x-form.button>Zapisz</x-form.button>
+    </x-form.section>
 
-    <x-back-button action="{{ route($type . '.show', ['id' => $parent->id, 'view' => $view]) }}">
-    </x-back-button>
+    <x-buttons.back route="{{ route($type . '.show', ['id' => $id, 'visibility' => $visibility]) }}">
+    </x-buttons.back>
 </x-main-layout>

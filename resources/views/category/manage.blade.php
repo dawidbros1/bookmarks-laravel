@@ -5,76 +5,60 @@
         </h2>
     </x-slot>
 
-    <x-manage.main>
+    @if (count($categories) > 0)
 
-        @if (count($categories) > 0)
+        <x-form.section action="{{ route('category.manage') }}">
+            <table class="w-full">
+                <thead>
+                    <tr>
+                        <th class="text-left w-8/12 md:w-9/12 xl:w-10/12">Nazwa kategorii</th>
+                        <x-manage.table-th colspan="3" image="position"></x-manage.table-th>
+                        <th colspan="2"></th>
+                        <x-manage.table-th image="hidden"></x-manage.table-th>
+                        <x-manage.table-th image="lock"></x-manage.table-th>
+                    </tr>
+                </thead>
 
-            <x-form-section action="{{ route('update.categories') }}">
-                <table class="w-full">
-                    <x-manage.table-head.category></x-manage.table-head.category>
+                <tbody>
+                    <tr class="border-b-2 border-blue-600">
+                        <td colspan="6"></td>
+                        <td class="text-center"><input type="checkbox" id="hiddenCheckboxButton"></td>
+                        <td class="text-center"><input type="checkbox" id="privateCheckboxButton"></td>
+                    </tr>
 
-                    <tbody>
-                        <tr class="border-b-2 border-blue-600">
-                            <td colspan="6"></td>
-                            <td class="text-center"><input type="checkbox" id="hiddenCheckboxButton"></td>
-                            <td class="text-center"><input type="checkbox" id="publicCheckboxButton"></td>
+                    @foreach ($categories as $index => $item)
+                        <tr class="border-b">
+                            <td> {{ $item->name }} </td>
+                            <x-manage.sorting position="{{ $item->position }}"></x-manage.sorting>
+
+                            <x-manage.icon name="folder"
+                                route="{{ route('category.manage.subcategories', ['id' => $item->id]) }}">
+                            </x-manage.icon>
+
+                            <x-manage.icon name="page"
+                                route="{{ route('category.manage.pages', ['id' => $item->id]) }}">
+                            </x-manage.icon>
+
+                            <x-manage.checkbox name="hidden" index="{{ $index }}"
+                                checked="{{ $item->hidden }}">
+                            </x-manage.checkbox>
+
+                            <x-manage.checkbox name="private" index="{{ $index }}"
+                                checked="{{ $item->private }}">
+                            </x-manage.checkbox>
+
                         </tr>
-
-                        @foreach ($categories as $key => $category)
-                            <tr class="border-b">
-                                <td>
-                                    {{ $category->name }}
-                                </td>
-
-                                <td class="text-center">
-                                    <div class="char minus"></div>
-                                </td>
-
-                                <td class="text-center">
-                                    <div class="lh-order">
-                                        <input type="number" value="{{ $category->order }}" class="order"
-                                            name="order[]">
-                                    </div>
-                                </td>
-
-                                <td class="text-center">
-                                    <div class="char plus"></div>
-                                </td>
-
-                                <x-manage.table-column-image-link
-                                    link="{{ route('manage.category.subcategories', ['id' => $category->id]) }}"
-                                    image_name="folder.png">
-                                </x-manage.table-column-image-link>
-
-                                <x-manage.table-column-image-link
-                                    link="{{ route('manage.category.pages', ['id' => $category->id]) }}"
-                                    image_name="page.png">
-                                </x-manage.table-column-image-link>
-
-                                <td class="text-center">
-                                    <input name="hidden[{{ $key }}]" type="hidden" value="0">
-                                    <input name="hidden[{{ $key }}]" type="checkbox" value="1"
-                                        class="hiddenCheckbox" @if ($category->hidden) checked @endif>
-                                </td>
-
-                                <td class="text-center">
-                                    <input name="public[{{ $key }}]" type="hidden" value="0">
-                                    <input name="public[{{ $key }}]" type="checkbox" value="1"
-                                        class="publicCheckbox" @if (!$category->public) checked @endif>
-                                </td>
-                            </tr>
-                            <input type="hidden" name="ids[]" value="{{ $category->id }}">
-                        @endforeach
-                    </tbody>
-                </table>
-                <x-jet-button type="submit" class="mt-2">Zapisz</x-jet-button>
-            </x-form-section>
-        @endif
-    </x-manage.main>
+                        <input type="hidden" name="ids[]" value="{{ $item->id }}">
+                    @endforeach
+                </tbody>
+            </table>
+            <x-jet-button type="submit" class="mt-2">Zapisz</x-jet-button>
+        </x-form.section>
+    @endif
 </x-main-layout>
 
 <script>
-    initCheckboxButton('public');
+    initCheckboxButton('private');
     initCheckboxButton('hidden');
-    initOrder();
+    initSort();
 </script>

@@ -5,39 +5,19 @@
         </h2>
     </x-slot>
 
-    <x-jet-validation-errors> </x-jet-validation-errors>
+    <x-form.section action="{{ route('category.edit', ['id' => $category->id]) }}">
+        <x-form.input name="name" value="{{ $category->name }}">Nazwa: </x-form.input>
+        <x-form.input name="image_url" value="{{ $category->image_url }}">Adres obrazka: </x-form.input>
 
-    <x-form-section action="{{ route('category.update', ['id' => $category->id]) }}">
-        {{-- Tutył --}}
-        <x-jet-label for="name" class="pl-2"> Nazwa: </x-jet-label>
-        <x-jet-input name="name" value="{{ old('name', $category->name) }}" type="text"
-            class="border px-2 min-w-full mb-3">
-        </x-jet-input>
+        <x-form.checkbox name="private" checked="{{ $category->private }}"> Czy kategoria ma być prywatna?
+        </x-form.checkbox>
 
-        @error('name')
-            <div class="simple-error">{{ $message }}</div>
-        @enderror
+        <x-form.button>Edytuj</x-form.button>
+    </x-form.section>
 
-        {{-- Obrazek --}}
-        <x-jet-label for="image_url" class="pl-2"> Obrazek: </x-jet-label>
-        <x-jet-input name="image_url" value="{{ old('image_url', $category->image_url) }}" type="text"
-            class="border px-2 min-w-full mb-3">
-        </x-jet-input>
+    <x-buttons.item-delete
+        route="{{ route('category.delete', ['id' => $category->id, 'visibility' => $visibility]) }}">
+    </x-buttons.item-delete>
 
-        @error('image_url')
-            <div class="simple-error">{{ $message }}</div>
-        @enderror
-
-        <div class="mb-2">
-            Czy kategoria ma być publiczna?
-            <input type="checkbox" name="public" @if ($category->public) checked @endif>
-        </div>
-
-        <x-jet-button type="submit">Zapisz</x-jet-button>
-    </x-form-section>
-
-    <x-delete-item-button action="{{ route('category.delete', ['id' => $category->id, 'view' => $view]) }}">
-    </x-delete-item-button>
-    <x-back-button action="{{ route('category.list', ['view' => $view]) }}"></x-back-button>
-
+    <x-buttons.back route="{{ route('category.list', ['visibility' => $visibility]) }}"></x-buttons.back>
 </x-main-layout>

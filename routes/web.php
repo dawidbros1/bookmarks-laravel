@@ -39,93 +39,52 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/news', function () {
 
 // Dla zalogowanego użytkownika
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    //! Categories
     Route::group(
         [
             'prefix' => "category",
             'as' => 'category.'
         ],
         function () {
-            // CREATE
-            Route::get('/create', [CategoryController::class, 'create'])->name('create');
-            Route::post('/store', [CategoryController::class, 'store'])->name('store');
-            // LIST & SHOW
-            Route::get('/{view}/list', [CategoryController::class, 'list'])->name('list');
-            Route::get('/{view}/show/{id}', [CategoryController::class, 'show'])->name('show');
-            // EDIT
-            Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('edit');
-            Route::post('/update/{id}', [CategoryController::class, 'update'])->name('update');
-            Route::get('/changeVisibility/{id}', [CategoryController::class, 'changeVisibility'])->name('changeVisibility');
-            // DELETE
+            Route::get('/list', [CategoryController::class, 'list'])->name('list');
+            Route::get('/show/{id}', [CategoryController::class, 'show'])->name('show');
+            Route::match(array('GET', 'POST'), '/create', [CategoryController::class, 'create'])->name('create');
+            Route::match(array('GET', 'POST'), '/edit/{id}', [CategoryController::class, 'edit'])->name('edit');
+            Route::match(array('GET', 'POST'), '/manage', [CategoryController::class, 'manage'])->name('manage');
             Route::delete('/delete/{id}', [CategoryController::class, 'delete'])->name('delete');
+            Route::get('/changeVisibility/{id}', [CategoryController::class, 'changeVisibility'])->name('changeVisibility');
+            Route::get('/{id}/manage/pages', [CategoryController::class, 'managePages'])->name('manage.pages');
+            Route::get('/{id}/manage/subcategories', [CategoryController::class, 'manageSubcategories'])->name('manage.subcategories');
         }
     );
 
-    //! Subcategories
     Route::group(
         [
             'prefix' => "subcategory",
             'as' => 'subcategory.'
         ],
         function () {
-            Route::get('/create/{category_id}', [SubcategoryController::class, 'create'])->name('create');
-            Route::post('/store', [SubcategoryController::class, 'store'])->name('store');
-            Route::get('/show/{view}/{id}', [SubcategoryController::class, 'show'])->name('show');
-            Route::get('/edit/{id}', [SubcategoryController::class, 'edit'])->name('edit');
-            Route::post('/update/{id}', [SubcategoryController::class, 'update'])->name('update');
-            Route::get('/changeVisibility/{id}', [SubcategoryController::class, 'changeVisibility'])->name('changeVisibility');
+
+            Route::match(array('GET', 'POST'), '/create/{category_id}', [SubcategoryController::class, 'create'])->name('create');
+            Route::match(array('GET', 'POST'), '/edit/{id}', [SubcategoryController::class, 'edit'])->name('edit');
             Route::delete('/delete/{id}', [SubcategoryController::class, 'delete'])->name('delete');
+            Route::get('/show/{id}', [SubcategoryController::class, 'show'])->name('show');
+            Route::get('/changeVisibility/{id}', [SubcategoryController::class, 'changeVisibility'])->name('changeVisibility');
+            Route::post('/manage', [SubcategoryController::class, 'manage'])->name('manage');
+            Route::get('/{id}/manage/pages', [SubcategoryController::class, 'managePages'])->name('manage.pages');
         }
     );
 
-    //! Pages
     Route::group(
         [
             'prefix' => "page",
             'as' => 'page.'
         ],
         function () {
-            Route::get('/create/{type}/{parent_id}', [PageController::class, 'create'])->name('create');
-            Route::post('/store', [PageController::class, 'store'])->name('store');
-            Route::get('/edit/{id}', [PageController::class, 'edit'])->name('edit');
-            Route::post('/update/{id}', [PageController::class, 'update'])->name('update');
-            Route::get('/changeVisibility/{id}', [PageController::class, 'changeVisibility'])->name('changeVisibility');
+            Route::match(array('GET', 'POST'), '/{type}/{id}/create', [PageController::class, 'create'])->name('create');
+            Route::match(array('GET', 'POST'), '/edit/{id}', [PageController::class, 'edit'])->name('edit');
             Route::delete('/delete/{id}', [PageController::class, 'delete'])->name('delete');
-        }
-    );
-
-
-    //! MANAGE VIEW
-    Route::group(
-        [
-            'prefix' => "manage",
-            'as' => 'manage.'
-        ],
-        function () {
-            Route::get('/settings', [SettingsController::class, 'manage'])->name('settings');
-            Route::get('/categories', [CategoryController::class, 'manage'])->name('categories');
-            Route::get('/subcategories', [SubcategoryController::class, 'manage'])->name('subcategories');
-            Route::get('/categories/pages', [PageController::class, 'manage'])->name('categories.pages');
-            Route::get('/subcategories/pages', [PageController::class, 'manage'])->name('subcategories.pages');
-
-            // Dla pojedynczych elementów
-            Route::get('/category/{id}/pages', [PageController::class, 'managePagesFromCategory'])->name('category.pages');
-            Route::get('/category/{id}/subcategories', [SubcategoryController::class, 'manageAllFromCategory'])->name('category.subcategories');
-            Route::get('/subcategory/{id}/pages', [PageController::class, 'manageAllFromSubcategory'])->name('subcategory.pages');
-        }
-    );
-
-    //! MANAGE UPDATA
-    Route::group(
-        [
-            'prefix' => "update",
-            'as' => 'update.'
-        ],
-        function () {
-            Route::post('/settings', [SettingsController::class, 'update'])->name('settings');
-            Route::post('/categories', [CategoryController::class, 'multiUpdate'])->name('categories');
-            Route::post('/subcategories', [SubcategoryController::class, 'multiUpdate'])->name('subcategories');
-            Route::post('/{type}/pages', [PageController::class, 'multiUpdate'])->name('pages');
+            Route::get('/changeVisibility/{id}', [PageController::class, 'changeVisibility'])->name('changeVisibility');
+            Route::post('/manage', [PageController::class, 'manage'])->name('manage');
         }
     );
 });

@@ -17,8 +17,7 @@ class DatabaseSeeder extends Seeder
             CategoriesSeeder::class,
             PagesSeeder::class,
             SubcategoriesSeeder::class,
-            UsersSeeder::class,
-            SettingsSeeder::class,
+            UsersSeeder::class
         ]);
     }
 }

@@ -11,16 +11,16 @@ class Page extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['parent_id', 'name', 'image_url', 'hidden', 'link', 'public', 'type', 'order'];
+    protected $fillable = ['parent_id', 'name', 'image_url', 'hidden', 'link', 'private', 'type', 'position'];
 
-    public function store(array $data)
+    public function create(array $data)
     {
         $this->parent_id = $data['parent_id'];
         $this->type = $data['type'];
         $this->name = $data['name'];
         $this->image_url = $data['image_url'];
         $this->link = $data['link'];
-        $this->public = $data['public'];
+        $this->private = $data['private'];
         $this->save();
     }
 }

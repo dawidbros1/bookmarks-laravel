@@ -23,12 +23,16 @@ class MultiUpdate extends FormRequest
      */
     public function rules()
     {
-        return [
-            'ids' => ['required', 'array'],
-            'hidden' => ['required', 'array'],
-            'public' => ['required', 'array'],
-            'order' => ['required', 'array'],
-        ];
+        if ($this->method() == "POST") {
+            return [
+                'ids' => ['required', 'array'],
+                'hidden' => ['required', 'array'],
+                'private' => ['required', 'array'],
+                'position' => ['required', 'array'],
+            ];
+        }
+
+        return [];
     }
 
     public function messages()
@@ -36,8 +40,8 @@ class MultiUpdate extends FormRequest
         return [
             'ids.required'  => 'Pole ids[] jest wymagane',
             'hidden.required'  => 'Pole hidden[] jest wymagane',
-            'public.required' => 'Pole public[] jest wymagane',
-            'order.required' => 'Pole order[] jest wymagane',
+            'private.required' => 'Pole private[] jest wymagane',
+            'position.required' => 'Pole position[] jest wymagane',
         ];
     }
 }

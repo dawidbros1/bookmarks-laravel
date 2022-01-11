@@ -8,219 +8,163 @@ use App\Http\Requests\category\MultiUpdate;
 use App\Http\Requests\Category\Store;
 use App\Models\Category;
 use App\Repository\CategoryRepository;
-use App\Repository\PageRepository;
-use App\Repository\SettingsRepository;
-use App\Repository\SubcategoryRepository;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    private CategoryRepository $categoryRepository;
-    private SubcategoryRepository $subcategoryRepository;
-    private PageRepository $pageRepository;
-    private string $type;
-
-    public function __construct(CategoryRepository $categoryRepository)
+    public function __construct(CategoryRepository $categoryRepository, Category $model)
     {
-        $this->categoryRepository = $categoryRepository;
-        $this->subcategoryRepository = $this->categoryRepository->getSubcategoryRepository();
-        $this->pageRepository = $this->subcategoryRepository->getPageRepository();
+        $this->repository = $categoryRepository;
+        $this->model = $model;
         $this->type = "category";
     }
 
-    //! Pokazanie zawartości
-    public function list($view)
+    public function list(Request $request)
     {
-        if ($view == 'visible') $categories = $this->categoryRepository->getAllByParameters(0);
-        else if ($view == "hidden") $categories = $this->categoryRepository->getAllByParameters(1);
-        else if ($view == "all") $categories = $this->categoryRepository->getAllByParameters();
+        $visibility = (int) $request->input('visibility') ?? 0;
+        $categories = $this->repository->get(['hidden' => $visibility]);
 
         return view('category.list', [
             'categories' => $categories,
-            'view' => $view
+            'visibility' => $visibility
         ]);
     }
 
-    public function show($view, int $id)
+    public function show(Request $request, int $id)
     {
-        $category = $this->categoryRepository->getModel()->find($id);
-        if ($this->empty($category)) return $this->error();
-        $this->authorize('author', $category);
-
-        if ($view == "visible") {
-            $subcategories = $this->subcategoryRepository->getAllByParameters($id, 0);
-            $pages = $this->pageRepository->getAllByParameters($id, $this->type, 0);
-        } else if ($view == "hidden") {
-            $subcategories = $this->subcategoryRepository->getAllByParameters($id, 1);
-            $pages = $this->pageRepository->getAllByParameters($id, $this->type, 1);
-        } else if ($view == "all") {
-            $subcategories = $this->subcategoryRepository->getAllByParameters($id);
-            $pages = $this->pageRepository->getAllByParameters($id, $this->type);
+        if (($category = $this->repository->getWithRelations(['id' => $id])) == null) {
+            return $this->error();
         }
 
         return view('category.show', [
             'category' => $category,
-            'subcategories' => $subcategories,
-            'pages' => $pages,
-            'view' => $view
+            'visibility' => (int) $request->input('visibility') ?? 0
         ]);
     }
 
     public function showPublic($id)
     {
-        $category = $this->categoryRepository->getModel()->find($id);
-        if ($this->empty($category)) return $this->error();
-
-        if ($category->public == 0) {
-            return abort(403, 'Zasób nie jest publiczny');
+        if (($category = $this->repository->getWithRelations(['id' => $id, 'private' => 0], false)) == null) {
+            return $this->error();
         }
 
-        $subcategories = $this->subcategoryRepository->getPublicDataByCategoryId($id);
-        $pages = $this->pageRepository->getPublicDataParameters($id, $this->type);
-
-        return view('category.public', [
-            'category' => $category,
-            'subcategories' => $subcategories,
-            'pages' => $pages,
-        ]);
+        return view('category.public', ['category' => $category]);
     }
 
-    //! CREATE
-    public function create()
+    public function create(Store $request)
     {
-        $settings = SettingsRepository::get();
-        return view('category.create', ['settings' => $settings]);
+        if ($request->isMethod('GET')) {
+            return view('category.create');
+        }
+
+        if ($request->isMethod('POST')) {
+            $data = $request->validated();
+            $data['private'] = Checkbox::get($request->input('private'));
+            $this->model->create($data);
+            return redirect(url()->previous())->with('success', $this->message(0));
+        }
     }
 
-    public function store(Store $request)
+    public function edit(Store $request, $id)
     {
-        $data = $request->validated();
-        $data['public'] = Checkbox::get($request->input('public'));
-        $this->categoryRepository->getModel()->store($data);
+        if (($category = $this->repository->get(['id' => $id])->first()) == null) {
+            return $this->error();
+        }
 
-        return redirect(url()->previous())
-            ->with('success', $this->message(0));
-    }
+        if ($request->isMethod('GET')) {
+            return view(
+                'category.edit',
+                [
+                    'category' => $category,
+                    'visibility' => $request->input('visibility') ?? 0
+                ]
+            );
+        }
 
-    //! EDIT
-    public function edit(Request $request, $id)
-    {
-        $category = $this->categoryRepository->getModel()->find($id);
-        if ($this->empty($category)) return $this->error();
-        $this->authorize('author', $category);
+        if ($request->isMethod('POST')) {
+            $data = $request->validated();
+            $data['private'] = Checkbox::get($request->input('private'));
+            $category->update($data);
 
-        return view(
-            'category.edit',
-            [
-                'category' => $category,
-                'view' => $request->input('view')
-            ]
-        );
-    }
-
-    public function update(Store $request, $id)
-    {
-        $category = $this->categoryRepository->getModel()->find($id);
-        if ($this->empty($category)) return $this->error();
-        $this->authorize('author', $category);
-        $data = $request->validated();
-        $data['public'] = Checkbox::get($request->input('public'));
-        $category->update($data);
-
-        return redirect(url()->previous())
-            ->with('success', Message::get(1));
+            return redirect(url()->previous())
+                ->with('success', Message::get(1));
+        }
     }
 
     public function changeVisibility($id)
     {
-        $category = $this->categoryRepository->getModel()->find($id);
-        if ($this->empty($category)) return $this->error();
-        $this->authorize('author', $category);
-        $category->update(['hidden' => !$category->hidden]);
-
-        return redirect(url()->previous())
-            ->with('success', $this->message(2));
-    }
-
-    //! MANAGE
-    public function manage()
-    {
-        $categories = $this->categoryRepository->getAllByParameters();
-        return view('category.manage', ['categories' => $categories]);
-    }
-
-    public function multiUpdate(MultiUpdate $request)
-    {
-        $data = $request->validated();
-
-        $ids = $data['ids'];
-        $hidden = $data['hidden'];
-        $private = $data['public'];
-        $order = $data['order'];
-
-        if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($order)) {
-            // Być może jakiś inny błąd tutaj
+        if (($category = $this->repository->get(['id' => $id])->first()) == null) {
             return $this->error();
         }
 
-        $categories = $this->categoryRepository->getAllByIds($ids);
-        $this->authorize('categories', [new Category, $categories]);
-
-        foreach ($order as $key => $value) {
-            if (!is_numeric($value)) {
-                $order[$key] = 0;
-            }
-        }
-
-        foreach ($ids as $index => $id) {
-            $category = $this->categoryRepository->getModel()->find($id);
-
-            if ($category != null) {
-                $data = [
-                    'hidden' => $hidden[$index],
-                    'public' => !$private[$index],
-                    'order' => $order[$index]
-                ];
-                $category->update($data);
-            }
-        }
-
-        return redirect()
-            ->route('manage.categories')
-            ->with('success', Message::get(1));
+        $category->update(['hidden' => !$category->hidden]);
+        return redirect(url()->previous())->with('success', $this->message(2));
     }
 
-    //! DELETE
+    public function manage(MultiUpdate $request)
+    {
+        if ($request->isMethod('GET')) {
+            $categories = $this->repository->get();
+            return view('category.manage', ['categories' => $categories]);
+        }
+
+        if ($request->isMethod('POST')) {
+            $data = $request->validated();
+            $ids = $data['ids'];
+            $hidden = $data['hidden'];
+            $private = $data['private'];
+            $position = $data['position'];
+
+            if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($position)) {
+                return $this->error();
+            }
+
+            $categories = $this->repository->getAllByIds($ids);
+
+            foreach ($position as $key => $value) {
+                if (!is_numeric($value)) {
+                    $position[$key] = 0;
+                }
+            }
+
+            foreach ($ids as $index => $id) {
+                $category = $this->model->find($id);
+
+                if ($category != null) {
+                    $data = [
+                        'hidden' => $hidden[$index],
+                        'private' => $private[$index],
+                        'position' => $position[$index]
+                    ];
+                    $category->update($data);
+                }
+            }
+
+            return redirect()
+                ->route('category.manage')
+                ->with('success', Message::get(1));
+        }
+    }
+
+    public function manageSubcategories($id)
+    {
+        $category = $this->repository->getWithRelation($id, 'subcategories');
+        return view('subcategory.manage', ['category' => $category]);
+    }
+
+    public function managePages($id)
+    {
+        $category = $this->repository->getWithRelation($id, 'pages');
+        return view('page.manage', ['parent' => $category, 'type' => "category"]);
+    }
+
     public function delete(Request $request, $id)
     {
-        $category = $this->categoryRepository->getModel()->find($id);
-        if ($this->empty($category)) return $this->error();
-        $this->authorize('author', $category);
-        $category->deleteWithContent($this->subcategoryRepository);
+        $category = $this->repository->getWithRelations(['id' => $id]);
+        $this->repository->delete($category);
 
         return redirect()
-            ->route('category.list', ['view' => $request->input('view')])
+            ->route('category.list', ['visibility' => $request->input('visibility')])
             ->with('success', $this->message(1));
-    }
-
-    // Metody prywatne
-
-    private function message($id)
-    {
-        return Message::get($id, $this->type);
-    }
-
-    private function empty($category)
-    {
-        if ($category == null) return true;
-        else return false;
-    }
-
-    private function error()
-    {
-        return redirect()
-            ->route('category.list', ['view' => 'visible'])
-            ->with('error', Message::get(0));
-        exit();
     }
 }

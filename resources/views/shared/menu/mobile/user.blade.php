@@ -22,7 +22,7 @@
                     <div class="font-medium text-sm text-gray-500">Kategorie</div>
                 </div>
 
-                <x-jet-responsive-nav-link href="{{ route('category.list', ['view' => 'visible']) }}"
+                <x-jet-responsive-nav-link href="{{ route('category.list') }}"
                     :active="request()->routeIs('category.list')" class="py-1">
                     {{ __('Moje kategorie') }}
                 </x-jet-responsive-nav-link>

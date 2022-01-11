@@ -4,31 +4,28 @@
             {{ $subcategory->name }}
         </h2>
 
-        @if ($category->public == 1)
+        @if ($subcategory->category->private == false)
             <x-back-button-upper action="{{ route('category.public', ['id' => $subcategory->category_id]) }}">
             </x-back-button-upper>
         @endif
     </x-slot>
 
-    <div class="pb-10">
-        <x-items-header>
-            <x-slot name="header"> Strony </x-slot>
-        </x-items-header>
+    <x-items.body>
+        <x-slot name="header">
+            <x-items.header>
+                Strony
+            </x-items.header>
+        </x-slot>
 
-        <div class="flex flex-wrap px-1">
-            @foreach ($pages as $page)
-                <x-item hidden="{{ $page->hidden }}">
-                    <x-slot name="title">{{ $page->name }}</x-slot>
-                    <x-slot name="content">
-                        <a href="{{ $page->link }}" target="_blank">
-                            <img src="{{ $page->image_url }}" alt="Obrazek" class="full">
-                        </a>
-                    </x-slot>
-
-                    <x-slot name="changeVisibility"></x-slot>
-                    <x-slot name="settings"></x-slot>
-                </x-item>
+        <x-slot name="items">
+            @foreach ($subcategory->pages as $item)
+                @if ($item->private == false)
+                    <x-item.body>
+                        <x-item.title>{{ $item->name }}</x-item.title>
+                        <x-item.image route="{{ $item->link }}" image="{{ $item->image_url }}"></x-item.image>
+                    </x-item.body>
+                @endif
             @endforeach
-        </div>
-    </div>
+        </x-slot>
+    </x-items.body>
 </x-main-layout>

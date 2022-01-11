@@ -3,7 +3,6 @@
 namespace App\Actions\Jetstream;
 
 use App\Models\User;
-use App\Repository\SettingsRepository;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Jetstream\Contracts\DeletesUsers;
 
@@ -25,8 +24,6 @@ class DeleteUser implements DeletesUsers
             exit();
         } else {
             User::deleteContent();
-            $settings = SettingsRepository::get();
-            $settings->destroy($settings->id);
         }
 
         $user->deleteProfilePhoto();

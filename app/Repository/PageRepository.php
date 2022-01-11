@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Models\Page;
-use Illuminate\Support\Facades\DB;
+use App\Models\Subcategory;
+use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 
 class PageRepository
 {
@@ -14,52 +16,38 @@ class PageRepository
         $this->model = $model;
     }
 
-    public function getModel()
-    {
-        return $this->model;
-    }
-
     public function getAllByIds($ids)
     {
         return $this->model
-            ->orderBy('order')
+            ->orderBy('position')
             ->whereIN('id', $ids)
             ->get();
     }
 
-    // parent ID can be INT OR ARRAY OF INT
-    public static function getAllByParameters($parent_ids, string $type, int $hidden = -1)
+    public function getCategories()
     {
-        $model = new Page;
-
-        if (gettype($parent_ids) != "array") {
-            $parent_ids = [$parent_ids];
-        }
-
-        if ($hidden == -1) {
-            return $model
-                ->orderBy('order')
-                ->where('type', $type)
-                ->whereIN('parent_id', $parent_ids)
-                ->get();
-        } else {
-            return $model
-                ->orderBy('order')
-                ->where(['parent_id' => $parent_ids, 'type' => $type, 'hidden' => $hidden])
-                ->get();
-        }
+        return (new Category())->orderBy('position')->where(['user_id' => Auth::id()])->get();
     }
 
-    public function getPublicDataParameters($id, $type)
+    public static function getSubcategoriesByCategoryIds(array $ids)
     {
-        return $this->model
-            ->orderBy('order')
-            ->where(['parent_id' => $id, 'type' => $type, 'public' => 1])
-            ->get();
+        return (new Subcategory())->orderBy('position')
+            ->whereIN('category_id', $ids)->get();
     }
 
-    public function updateColumn(array $ids, string $column, int $value)
+    public function getSubcategory($id)
     {
-        DB::table('pages')->whereIn('id', $ids)->update(array($column => $value));
+        return (new Subcategory)->where('id', $id)->with('category')->get()->first();
+    }
+
+    public function getCategory($id)
+    {
+        return (new Category)->where(['id' => $id, 'user_id' => Auth::id()])->get()->first();
+    }
+
+    public function get($id)
+    {
+        return $this->model->orderBy('position')
+            ->where(['id' => $id])->get()->first();
     }
 }
