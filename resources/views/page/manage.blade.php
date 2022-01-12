@@ -53,6 +53,8 @@
 
             <x-jet-button type="submit" class="mt-2">Zapisz</x-jet-button>
             </x-form-section>
+        @else
+            <p class="text-center font-bold mt-5 text-xl"> Brak danych do wyświetlenia</p>
     @endif
 </x-main-layout>
 

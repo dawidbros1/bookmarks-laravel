@@ -30,12 +30,7 @@ class SubcategoryRepository  extends Repository
 
     public function getWithPages($id)
     {
-        return $this->model->where(['id' => $id])->with('pages')->get()->first();
-    }
-
-    public function getCategories()
-    {
-        return (new Category())->orderBy('position')->where('user_id', Auth::id())->get();
+        return $this->model->where(['id' => $id])->with('pages')->with('category')->get()->first();
     }
 
     public function getAllByIds(array $ids)

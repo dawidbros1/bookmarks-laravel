@@ -7,7 +7,7 @@ use App\Models\Subcategory;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 
-class PageRepository
+class PageRepository extends Repository
 {
     private Page $model;
 
@@ -22,11 +22,6 @@ class PageRepository
             ->orderBy('position')
             ->whereIN('id', $ids)
             ->get();
-    }
-
-    public function getCategories()
-    {
-        return (new Category())->orderBy('position')->where(['user_id' => Auth::id()])->get();
     }
 
     public static function getSubcategoriesByCategoryIds(array $ids)

@@ -19,17 +19,11 @@ class Controller extends BaseController
         return Message::get($id, $this->type);
     }
 
-    protected function empty($item)
-    {
-        if ($item == null) return true;
-        else return false;
-    }
-
-    protected function error()
+    protected function error($id = 0)
     {
         return redirect()
             ->route('category.list', ['view' => 'visible'])
-            ->with('error', Message::get(0));
+            ->with('error', Message::get($id));
         exit();
     }
 }

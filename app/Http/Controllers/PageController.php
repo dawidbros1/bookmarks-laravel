@@ -26,7 +26,6 @@ class PageController extends Controller
         if ($this->author($type, $id) == false) return $this->error();
 
         if ($request->isMethod('GET')) {
-
             return view('page.create', [
                 'type' => $type,
                 'id' => $id,
@@ -82,10 +81,8 @@ class PageController extends Controller
                 // Umieszczenie w głównej kategorii
                 $category_id = $data['category_id'];
                 // Czy kategoria się zmieniła
-                if ($category_id != $page->parent_id) {
-                    $category = $this->pageRepository->getCategory($category_id);
-                    if ($this->empty($category)) return $this->error();
-
+                if ($category_id != $page->parent_id) {;
+                    if ($this->pageRepository->getCategory($category_id) == null) return $this->error();
                     $data['parent_id'] = $category_id;
                     $data['type'] = 'category';
                 }
@@ -138,21 +135,23 @@ class PageController extends Controller
         $position = $data['position'];
         $type = $data['type'];
 
-        if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($position)) {
-            return $this->error();
+        $unique = array_unique([count($ids), count($hidden), count($private), count($position)]);
+
+        if (count($unique) != 1) {
+            return $this->error(4);
         }
 
         $pages = $this->pageRepository->getAllByIds($ids);
-        if (count($pages) == 0) return $this->error();
-
-        $id  = array_unique($pages->pluck('parent_id')->toArray());
-        if (count($id) != 1) return $this->error();
+        $id = array_unique($pages->pluck('parent_id')->toArray());
+        if (count($id) != 1) return $this->error(4);
 
         if ($type == "category") {
             if ($this->pageRepository->getCategory($id) == null) return $this->error();
         } else if ($type == "subcategory") {
             if (($subcategory = $this->pageRepository->getSubcategory($id)) == null) return $this->error();
             if ($subcategory->category == null) return $this->error();
+        } else {
+            $this->error(4);
         }
 
         foreach ($ids as $index => $id) {
@@ -174,7 +173,7 @@ class PageController extends Controller
 
     private function author($parent, $id)
     {
-        $author = false;
+        $category = null;
 
         if ($parent == "subcategory") {
             if (($subcategory = $this->pageRepository->getSubcategory($id)) != null) {
@@ -184,8 +183,10 @@ class PageController extends Controller
             $category = $this->pageRepository->getCategory($id);
         }
 
-        if ($category->user_id == Auth::id()) $author = true;
+        if ($category != null && $category->user_id == Auth::id()) {
+            return true;
+        }
 
-        return $author;
+        return false;
     }
 }

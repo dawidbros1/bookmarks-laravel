@@ -14,12 +14,12 @@ class CategoryRepository extends Repository
         $this->model = $model;
     }
 
-    public function getAllByIds($ids)
-    {
-        return $this->model->orderBy('position')
-            ->whereIN('id', $ids)
-            ->where('user_id', Auth::id())->get();
-    }
+    // public function getAllByIds($ids)
+    // {
+    //     return $this->model->orderBy('position')
+    //         ->whereIN('id', $ids)
+    //         ->where('user_id', Auth::id())->get();
+    // }
 
     public function get(array $args = [], $auth = true)
     {

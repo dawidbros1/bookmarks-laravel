@@ -45,7 +45,7 @@ class CategoryController extends Controller
     public function showPublic($id)
     {
         if (($category = $this->repository->getWithRelations(['id' => $id, 'private' => 0], false)) == null) {
-            return $this->error();
+            return $this->error(2);
         }
 
         return view('category.public', ['category' => $category]);
@@ -115,11 +115,11 @@ class CategoryController extends Controller
             $private = $data['private'];
             $position = $data['position'];
 
-            if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($position)) {
-                return $this->error();
-            }
+            $unique = array_unique([count($ids), count($hidden), count($private), count($position)]);
 
-            $categories = $this->repository->getAllByIds($ids);
+            if (count($unique) != 1) {
+                return $this->error(4);
+            }
 
             foreach ($position as $key => $value) {
                 if (!is_numeric($value)) {
@@ -128,7 +128,7 @@ class CategoryController extends Controller
             }
 
             foreach ($ids as $index => $id) {
-                $category = $this->model->find($id);
+                $category = $this->repository->get(['id' => $id])->first();
 
                 if ($category != null) {
                     $data = [
@@ -148,19 +148,28 @@ class CategoryController extends Controller
 
     public function manageSubcategories($id)
     {
-        $category = $this->repository->getWithRelation($id, 'subcategories');
+        if (($category = $this->repository->getWithRelation($id, 'subcategories')) == null) {
+            return $this->error();
+        }
+
         return view('subcategory.manage', ['category' => $category]);
     }
 
     public function managePages($id)
     {
-        $category = $this->repository->getWithRelation($id, 'pages');
+        if (($category = $this->repository->getWithRelation($id, 'pages')) == null) {
+            return $this->error();
+        }
+
         return view('page.manage', ['parent' => $category, 'type' => "category"]);
     }
 
     public function delete(Request $request, $id)
     {
-        $category = $this->repository->getWithRelations(['id' => $id]);
+        if (($category = $this->repository->getWithRelations(['id' => $id])) == null) {
+            return $this->error();
+        }
+
         $this->repository->delete($category);
 
         return redirect()

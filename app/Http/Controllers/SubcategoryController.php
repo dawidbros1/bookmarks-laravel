@@ -7,16 +7,13 @@ use App\Helpers\Message;
 use App\Http\Requests\Subcategory\MultiUpdate;
 use App\Http\Requests\Subcategory\Store;
 use App\Models\Subcategory;
-use App\Repository\SettingsRepository;
 use App\Repository\SubcategoryRepository;
 use Illuminate\Http\Request;
 
 class SubcategoryController extends Controller
 {
-    public function __construct(
-        SubcategoryRepository $subcategoryRepository,
-        Subcategory $model
-    ) {
+    public function __construct(SubcategoryRepository $subcategoryRepository, Subcategory $model)
+    {
         $this->repository = $subcategoryRepository;
         $this->model = $model;
         $this->type = 'subcategory';
@@ -39,10 +36,8 @@ class SubcategoryController extends Controller
     public function showPublic($id)
     {
         if (($subcategory = $this->repository->getWithPages($id)) == null) {
-            return $this->error();
+            return $this->error(3);
         }
-
-        $this->authorize('author', $subcategory);
 
         return view('subcategory.public', [
             'subcategory' => $subcategory,
@@ -51,13 +46,11 @@ class SubcategoryController extends Controller
 
     public function create(Store $request, $category_id)
     {
-        $category = $this->repository->getCategory($category_id);
-        if ($this->empty($category)) {
+        if (($category = $this->repository->getCategory($category_id)) == null) {
             return $this->error();
         }
 
         if ($request->isMethod('GET')) {
-
             return view('subcategory.create', [
                 'category' => $category,
                 'visibility' => $request->input('visibility')
@@ -70,10 +63,7 @@ class SubcategoryController extends Controller
             $data['category_id'] = $category_id;
 
             $this->model->create($data);
-            return redirect(url()->previous())->with(
-                'success',
-                $this->message(0)
-            );
+            return redirect(url()->previous())->with('success', $this->message(0));
         }
     }
 
@@ -89,7 +79,7 @@ class SubcategoryController extends Controller
             return view('subcategory.edit', [
                 'subcategory' => $subcategory,
                 'visibility' => $request->input('visibility') ?? 0,
-                'categories' => $this->repository->getCategories(),
+                'categories' => $this->repository->getCategories()
             ]);
         }
 
@@ -99,20 +89,13 @@ class SubcategoryController extends Controller
             $data['category_id'] = $request->input('category_id');
 
             if ($data['category_id'] != $subcategory->category_id) {
-                $category = $this->repository->getCategory(
-                    $data['category_id']
-                );
-                if ($this->empty($category)) {
+                if ($this->repository->getCategory($data['category_id']) == null) {
                     return $this->error();
                 }
             }
 
             $subcategory->update($data);
-
-            return redirect(url()->previous())->with(
-                'success',
-                Message::get(1)
-            );
+            return redirect(url()->previous())->with('success', Message::get(1));
         }
     }
 
@@ -150,13 +133,15 @@ class SubcategoryController extends Controller
         $private = $data['private'];
         $position = $data['position'];
 
-        if (count($ids) != count($hidden) || count($hidden) != count($private) || count($private) != count($position)) {
-            return $this->error();
+        $unique = array_unique([count($ids), count($hidden), count($private), count($position)]);
+
+        if (count($unique) != 1) {
+            return $this->error(4);
         }
 
         $subcategories = $this->repository->getAllByIds($ids);
         $id  = array_unique($subcategories->pluck('category_id')->toArray());
-        if (count($id) != 1) return $this->error();
+        if (count($id) != 1) return $this->error(4);
 
         $this->authorize('author', $subcategories[0]);
 
@@ -185,11 +170,11 @@ class SubcategoryController extends Controller
 
     public function managePages($id)
     {
-        $subcategory = $this->repository->getWithPages($id);
-        if ($this->repository->getCategory($subcategory->category_id) == null) {
+        if (($subcategory = $this->repository->getWithPages($id)) == null) {
             return $this->error();
         }
 
+        $this->authorize('author', $subcategory);
         return view('page.manage', ['parent' => $subcategory, 'type' => "subcategory"]);
     }
 }
