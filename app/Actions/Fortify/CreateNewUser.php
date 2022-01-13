@@ -2,7 +2,6 @@
 
 namespace App\Actions\Fortify;
 
-use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -33,10 +32,6 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
-
-        $user_id = $user->id;
-        $settings = new Settings();
-        $settings->saveDefault($user_id);
 
         return $user;
     }

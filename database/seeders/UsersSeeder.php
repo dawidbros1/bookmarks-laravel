@@ -18,8 +18,8 @@ class UsersSeeder extends Seeder
 
         DB::table('users')->insert(
             [
-                ['id' => 1, 'name' => "dawidbros1", 'email' => 'dawidbros1@wp.pl', 'password' => '$2y$10$ktDLb.p.l8u2RrJMyoX5/uh0QbjtBnkDuqLSUKA94beTzDfIvFtuS'],
-                ['id' => 2, 'name' => "konto2", 'email' => 'konto2@wp.pl', 'password' => '$2y$10$7k0fafV7fvFeaAXdO19ZzuqiZM91RVcmyzQlxaVDoQ.2HoeyiV4hO'],
+                ['id' => 1, 'name' => "admin123", 'email' => 'admin123@wp.pl', 'password' => '$2y$10$VPFV/bdUB.N9dMIWl0IozO1qpCdTfMynAlQ0ouWafxymxlJFDps5W'],
+                // ['id' => 2, 'name' => "konto2", 'email' => 'konto2@wp.pl', 'password' => '$2y$10$7k0fafV7fvFeaAXdO19ZzuqiZM91RVcmyzQlxaVDoQ.2HoeyiV4hO'],
             ],
         );
     }
