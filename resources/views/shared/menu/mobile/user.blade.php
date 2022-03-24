@@ -1,12 +1,6 @@
 <!-- Responsive Navigation Menu -->
 <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
     @auth
-        <div class="pt-2 pb-3 space-y-1">
-            <x-jet-responsive-nav-link href="{{ route('news') }}" :active="request()->routeIs('news')">
-                {{ __('Aktualności') }}
-            </x-jet-responsive-nav-link>
-        </div>
-
         <!-- Responsive Settings Options -->
         <div class="pb-1 pt-2 border-t border-gray-200">
             <div class="flex items-center px-4">
@@ -50,7 +44,8 @@
                     @csrf
 
                     <x-jet-responsive-nav-link href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                                this.closest('form').submit();" class="py-1">
+                                                                            this.closest('form').submit();"
+                        class="py-1">
                         {{ __('Log Out') }}
                     </x-jet-responsive-nav-link>
                 </form>

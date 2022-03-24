@@ -4,7 +4,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SubcategoryController;
-use App\Http\Middleware\redirectLoggedInUserToNews;
+use App\Http\Middleware\redirectLoggedInUserToCategoryList;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,11 +18,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Jeżeli użytkownik jest zalogowany to przekerujemy go na stronę news
+// Jeżeli użytkownik jest zalogowany to przekerujemy go na stronę category.list
 Route::group(
     [
         'as' => 'name',
-        'middleware' => redirectLoggedInUserToNews::class
+        'middleware' => redirectLoggedInUserToCategoryList::class
     ],
 
     function () {
@@ -31,11 +31,6 @@ Route::group(
         });
     }
 );
-
-Route::middleware(['auth:sanctum', 'verified'])->get('/news', function () {
-    return view('news');
-})->name('news');
-
 
 // Dla zalogowanego użytkownika
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {

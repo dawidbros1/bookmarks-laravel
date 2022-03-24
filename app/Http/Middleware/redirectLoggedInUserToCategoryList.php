@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class redirectLoggedInUserToNews
+class redirectLoggedInUserToCategoryList
 {
     /**
      * Handle an incoming request.
@@ -18,7 +18,7 @@ class redirectLoggedInUserToNews
     public function handle(Request $request, Closure $next)
     {
         if (Auth::user()) {
-            return redirect()->route('news');
+            return redirect()->route('category.list');
         }
 
         return $next($request);
