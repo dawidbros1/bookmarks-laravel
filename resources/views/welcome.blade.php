@@ -68,7 +68,6 @@
                     height: 200px;
                 }
             }
-
         </style>
     </x-slot>
 
@@ -82,8 +81,6 @@
             pojedynczego linka. Swoje elementy możesz umieszczać w podkatalogach, a także możesz je dowolnie
             rozmieszczać.
         </p>
-
-        <p class="mb-2">Dlaczego powinieneś korzystać z naszych usług?</p>
 
         <div class="justify-center flex flex-wrap">
             <div class="box-item">
