@@ -7,7 +7,7 @@
 
     <x-form.section action="{{ route('page.create', ['type' => $type, 'id' => $id]) }}">
         <x-form.input name="name">Nazwa: </x-form.input>
-        <x-form.input name="image_url">Adres obrazka: </x-form.input>
+        <x-form.input name="image_url">Adres obrazka </x-form.input>
         <x-form.input name="link">Link do strony: </x-form.input>
 
         <x-form.checkbox name="private"> Czy strona ma być prywatna? </x-form.checkbox>
