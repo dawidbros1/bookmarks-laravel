@@ -73,7 +73,7 @@
 
 
     <div class="px-6 py-1 container">
-        <h1 class="text-center font-bold text-2xl mb-4">Serderznie witamy na naszej stronie</h1>
+        <h1 class="text-center font-bold text-2xl mb-4">Serdecznie witamy na naszej stronie</h1>
 
         <p class="mb-4">
             Serwis, na którym właśnie się znajdujesz, służy do tworzenia linków do zewnętrznych stron. Korzystając z
