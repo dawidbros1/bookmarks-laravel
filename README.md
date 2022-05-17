@@ -17,6 +17,5 @@ Jest to system, który umożliwia udostępnienie wielu linków za pomocą jedneg
 • Utworzenie bazy dancy \
 • Konfiguracja połączenia z bazą danych w pliku **.env** \
 • Uruchomienie polecenia `composer install` \
-• Uruchomienie polecenia `npm install` \
 • Uruchomienie polecenia `php artisan migrate` \
 • Uruchomienie polecenia `php artisan serve`
