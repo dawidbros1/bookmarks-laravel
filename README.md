@@ -1,21 +1,23 @@
 # Bookmarks
-Jest to system, który umożliwia udostępnienie wielu linków za pomocą jednego linka.
+It is a system that allows you to share multiple links with a single link.
 
-## Użyte technologie
-• LARAVEl 8 \
-• BOOTSTRAP 5
+### Build with
+1. LARAVEl 8
+2. BOOTSTRAP 5
 
-## Funkcjonalności
-• Dodawanie kategorii, podkategorii oraz stron \
-• Sortowanie elementów \
-• Zmiana statusu elementów \
-• Zmiana rodzica dla podkategorii oraz stron \
-• Dostęp do publicznej zawartości bez konieczności logowania
+### Features
+1. Adding categories, subcategories and pages
+2. Sorting items
+3. Change the status of items
+4. Changing the parent for subcategories and pages
+5. Access to public content without logging in
 
-## Instalacja
-• Pobranie repozytoroum \
-• Utworzenie bazy dancy \
-• Konfiguracja połączenia z bazą danych w pliku **.env** \
-• Uruchomienie polecenia `composer install` \
-• Uruchomienie polecenia `php artisan migrate` \
-• Uruchomienie polecenia `php artisan serve`
+### Installation Instructions
+1. Run `git clone https://github.com/dawidbros1/bookmarks-laravel`
+2. Create a MySQL database for the project
+3. Configure your `.env` file
+4. Run `composer install`
+5. Run `php artisan migrate`
+6. Run `php artisan serve`
+
+# Documentation - IN FUTURE
