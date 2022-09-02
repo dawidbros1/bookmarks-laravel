@@ -7,7 +7,7 @@
 
     <x-items.body>
         <x-slot name="header">
-            <x-items.header visible="{{ route('category.list') }}"
+            <x-items.header visibility={{$visibility}} visible="{{ route('category.list') }}"
                 hidden="{{ route('category.list', ['visibility' => 1]) }}" manage="{{ route('category.manage') }}">
                 Kategorie
             </x-items.header>

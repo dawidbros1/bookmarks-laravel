@@ -22,7 +22,7 @@
     {{-- Podkategorie --}}
     <x-items.body>
         <x-slot name="header">
-            <x-items.header visible="{{ route('category.show', ['id' => $category->id]) }}"
+            <x-items.header visibility={{$visibility}} visible="{{ route('category.show', ['id' => $category->id]) }}"
                 hidden="{{ route('category.show', ['id' => $category->id, 'visibility' => 1]) }}"
                 manage="{{ route('category.manage.subcategories', ['id' => $category->id]) }} ">
                 Podkategorie
@@ -62,7 +62,7 @@
     {{-- Strony --}}
     <x-items.body>
         <x-slot name="header">
-            <x-items.header visible="{{ route('category.show', ['id' => $category->id]) }}"
+            <x-items.header visibility={{$visibility}} visible="{{ route('category.show', ['id' => $category->id]) }}"
                 hidden="{{ route('category.show', ['id' => $category->id, 'visibility' => 1]) }}"
                 manage="{{ route('category.manage.pages', ['id' => $category->id]) }}">
                 Strony

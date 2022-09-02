@@ -19,7 +19,7 @@
     {{-- Strony --}}
     <x-items.body>
         <x-slot name="header">
-            <x-items.header visible="{{ route('subcategory.show', ['id' => $subcategory->id]) }}"
+            <x-items.header visibility={{$visibility}} visible="{{ route('subcategory.show', ['id' => $subcategory->id]) }}"
                 hidden="{{ route('subcategory.show', ['id' => $subcategory->id, 'visibility' => 1]) }}"
                 manage="{{ route('subcategory.manage.pages', ['id' => $subcategory->id]) }}">
                 Strony

@@ -19,14 +19,13 @@ class CategoryController extends Controller
         $this->type = "category";
     }
 
-    public function list(Request $request)
-    {
+    function list(Request $request) {
         $visibility = (int) $request->input('visibility') ?? 0;
         $categories = $this->repository->get(['hidden' => $visibility]);
 
         return view('category.list', [
             'categories' => $categories,
-            'visibility' => $visibility
+            'visibility' => $visibility,
         ]);
     }
 
@@ -38,7 +37,7 @@ class CategoryController extends Controller
 
         return view('category.show', [
             'category' => $category,
-            'visibility' => (int) $request->input('visibility') ?? 0
+            'visibility' => (int) $request->input('visibility') ?? 0,
         ]);
     }
 
@@ -76,7 +75,7 @@ class CategoryController extends Controller
                 'category.edit',
                 [
                     'category' => $category,
-                    'visibility' => $request->input('visibility') ?? 0
+                    'visibility' => $request->input('visibility') ?? 0,
                 ]
             );
         }
@@ -134,7 +133,7 @@ class CategoryController extends Controller
                     $data = [
                         'hidden' => $hidden[$index],
                         'private' => $private[$index],
-                        'position' => $position[$index]
+                        'position' => $position[$index],
                     ];
                     $category->update($data);
                 }
