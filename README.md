@@ -14,10 +14,10 @@ It is a system that allows you to share multiple links with a single link.
 
 ## Installation Instructions
 1. Run `git clone https://github.com/dawidbros1/bookmarks-laravel`
-2. Run `cd bookmarks-laravel` and next run `copy .env.example .env`
+2. Run `composer install` and `npm-install`
 3. Create database for the project 
-4. Configure your `.env` file 
-5. Run `composer install` and `npm-install`
+4. Run `copy .env.example .env`
+5. Configure your `.env` file 
 6. Run `php artisan migrate`
 7. Run `php artisan serve`
 
